@@ -1,0 +1,38 @@
+{
+  "classname" : "gr.uoa.di.rdf.Geographica3.runtime.querysets.partofworkload.impl.MacroGeocodingQS",
+  "name" : "geocoding",
+  "relativeBaseDir" : "",
+  "hasPredicateQueriesAlso" : false,
+  "mapQueries" : {
+    "0" : {
+      "label" : "Geocode_left",
+      "text" : "SELECT ?lfromhn ?ltohn ?wkt \n((<HOUSE_NO>-?lfromhn)*((?x1-?x0)/(?ltohn-?lfromhn))+?x1 AS ?x) \n((<HOUSE_NO>-?lfromhn)*((?y1-?y0)/(?ltohn-?lfromhn))+?y1 AS ?y) \nWHERE { \n\t?f census:lfromhn ?lfromhn. \n\t?f census:ltohn ?ltohn. \n\t?f census:parityl <PARITY> . \n\t?f census:fullname <STREET_NAME> . \n\t?f census:zipl \"<ZIP>\"^^xsd:integer. \n\t?f census:hasGeometry ?geo. \n\t?f census:minx ?x0. \n\t?f census:miny ?y0. \n\t?f census:maxx ?x1. \n\t?f census:maxy ?y1. \n\t?geo census:asWKT ?wkt. \n\tFILTER( (?lfromhn <= \"<HOUSE_NO>\"^^xsd:integer && \"<HOUSE_NO>\"^^xsd:integer <= ?ltohn) \n\t\t || (?ltohn <= \"<HOUSE_NO>\"^^xsd:integer && \"<HOUSE_NO>\"^^xsd:integer <= ?lfromhn) ). \n}",
+      "usePredicate" : false,
+      "expectedResults" : -2
+    },
+    "1" : {
+      "label" : "Geocode_right",
+      "text" : "SELECT ?rfromhn ?rtohn ?wkt \n((<HOUSE_NO>-?rfromhn)*((?x1-?x0)/(?rtohn-?rfromhn))+?x1 AS ?x) \n((<HOUSE_NO>-?rfromhn)*((?y1-?y0)/(?rtohn-?rfromhn))+?y1 AS ?y) \nWHERE { \n\t?f census:rfromhn ?rfromhn. \n\t?f census:rtohn ?rtohn. \n\t?f census:parityr <PARITY> . \n\t?f census:fullname <STREET_NAME> . \n\t?f census:zipr \"<ZIP>\"^^xsd:integer. \n\t?f census:hasGeometry ?geo. \n\t?f census:minx ?x0. \n\t?f census:miny ?y0. \n\t?f census:maxx ?x1. \n\t?f census:maxy ?y1. \n\t?geo census:asWKT ?wkt. \n\tFILTER( (?rfromhn <= \"<HOUSE_NO>\"^^xsd:integer && \"<HOUSE_NO>\"^^xsd:integer <= ?rtohn) \n\t\t || (?rtohn <= \"<HOUSE_NO>\"^^xsd:integer && \"<HOUSE_NO>\"^^xsd:integer <= ?rfromhn) ). \n}",
+      "usePredicate" : false,
+      "expectedResults" : -2
+    }
+  },
+  "mapUsefulNamespacePrefixes" : {
+    "census" : "<http://geographica.di.uoa.gr/cencus/ontology#>"
+  },
+  "executionSpec" : {
+    "execTypeReps" : {
+      "COLD_CONTINUOUS" : -1
+    },
+    "maxDurationSecsPerQueryRep" : 3610,
+    "maxDurationSecs" : 3600,
+    "action" : "RUN",
+    "avgFunc" : "QUERYSET_MEAN",
+    "onColdFailure" : "EXCLUDE_AND_PROCEED",
+    "clearCacheDelaymSecs" : 5000
+  },
+  "streetNameTemplateName" : "<STREET_NAME>",
+  "houseNoTemplateName" : "<HOUSE_NO>",
+  "zipTemplateName" : "<ZIP>",
+  "parityTemplateName" : "<PARITY>"
+}

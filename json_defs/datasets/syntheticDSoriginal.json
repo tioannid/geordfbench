@@ -1,0 +1,117 @@
+{
+  "classname" : "gr.uoa.di.rdf.Geographica3.runtime.datasets.complex.impl.GeographicaDS",
+  "name" : "synthetic",
+  "relativeBaseDir" : "SyntheticWorkload",
+  "simpleGeospatialDataSetList" : [ {
+    "name" : "hexagonlarge",
+    "relativeBaseDir" : "Synthetic",
+    "dataFile" : "HEXAGON_LARGE.nt",
+    "rdfFormat" : "N-TRIPLES",
+    "mapUsefulNamespacePrefixes" : {
+      "geo" : "<http://www.opengis.net/ont/geosparql#>",
+      "rdf" : "<http://www.w3.org/1999/02/22-rdf-syntax-ns#>",
+      "owl" : "<http://www.w3.org/2002/07/owl#>",
+      "geof" : "<http://www.opengis.net/def/function/geosparql/>",
+      "xsd" : "<http://www.w3.org/2001/XMLSchema#>",
+      "rdfs" : "<http://www.w3.org/2000/01/rdf-schema#>",
+      "geo-sf" : "<http://www.opengis.net/ont/sf#>",
+      "state" : "<http://geographica.di.uoa.gr/generator/state/>"
+    },
+    "mapAsWKT" : {
+      "stateAsWKT" : "<http://geographica.di.uoa.gr/generator/state/asWKT>"
+    },
+    "mapHasGeometry" : {
+      "stateHasGeometry" : "<http://geographica.di.uoa.gr/generator/state/hasGeometry>"
+    }
+  }, {
+    "name" : "hexagonlargecenter",
+    "relativeBaseDir" : "Synthetic",
+    "dataFile" : "HEXAGON_LARGE_CENTER.nt",
+    "rdfFormat" : "N-TRIPLES",
+    "mapUsefulNamespacePrefixes" : {
+      "geo" : "<http://www.opengis.net/ont/geosparql#>",
+      "rdf" : "<http://www.w3.org/1999/02/22-rdf-syntax-ns#>",
+      "owl" : "<http://www.w3.org/2002/07/owl#>",
+      "geof" : "<http://www.opengis.net/def/function/geosparql/>",
+      "xsd" : "<http://www.w3.org/2001/XMLSchema#>",
+      "rdfs" : "<http://www.w3.org/2000/01/rdf-schema#>",
+      "geo-sf" : "<http://www.opengis.net/ont/sf#>"
+    },
+    "mapAsWKT" : {
+      "stateCenterAsWKT" : "<http://geographica.di.uoa.gr/generator/stateCenter/asWKT>"
+    },
+    "mapHasGeometry" : {
+      "stateCenterHasGeometry" : "<http://geographica.di.uoa.gr/generator/stateCenter/hasGeometry>"
+    }
+  }, {
+    "name" : "hexagonsmall",
+    "relativeBaseDir" : "Synthetic",
+    "dataFile" : "HEXAGON_SMALL.nt",
+    "rdfFormat" : "N-TRIPLES",
+    "mapUsefulNamespacePrefixes" : {
+      "geo" : "<http://www.opengis.net/ont/geosparql#>",
+      "rdf" : "<http://www.w3.org/1999/02/22-rdf-syntax-ns#>",
+      "owl" : "<http://www.w3.org/2002/07/owl#>",
+      "geof" : "<http://www.opengis.net/def/function/geosparql/>",
+      "xsd" : "<http://www.w3.org/2001/XMLSchema#>",
+      "rdfs" : "<http://www.w3.org/2000/01/rdf-schema#>",
+      "geo-sf" : "<http://www.opengis.net/ont/sf#>",
+      "landOwnership" : "<http://geographica.di.uoa.gr/generator/landOwnership/>"
+    },
+    "mapAsWKT" : {
+      "landOwnershipAsWKT" : "<http://geographica.di.uoa.gr/generator/landOwnership/asWKT>"
+    },
+    "mapHasGeometry" : {
+      "landOwnershipHasGeometry" : "<http://geographica.di.uoa.gr/generator/landOwnership/hasGeometry>"
+    }
+  }, {
+    "name" : "linestring",
+    "relativeBaseDir" : "Synthetic",
+    "dataFile" : "LINESTRING.nt",
+    "rdfFormat" : "N-TRIPLES",
+    "mapUsefulNamespacePrefixes" : {
+      "geo" : "<http://www.opengis.net/ont/geosparql#>",
+      "rdf" : "<http://www.w3.org/1999/02/22-rdf-syntax-ns#>",
+      "owl" : "<http://www.w3.org/2002/07/owl#>",
+      "geof" : "<http://www.opengis.net/def/function/geosparql/>",
+      "xsd" : "<http://www.w3.org/2001/XMLSchema#>",
+      "rdfs" : "<http://www.w3.org/2000/01/rdf-schema#>",
+      "geo-sf" : "<http://www.opengis.net/ont/sf#>"
+    },
+    "mapAsWKT" : {
+      "roadAsWKT" : "<http://geographica.di.uoa.gr/generator/road/asWKT>"
+    },
+    "mapHasGeometry" : {
+      "roadHasGeometry" : "<http://geographica.di.uoa.gr/generator/road/hasGeometry>"
+    }
+  }, {
+    "name" : "point",
+    "relativeBaseDir" : "Synthetic",
+    "dataFile" : "POINT.nt",
+    "rdfFormat" : "N-TRIPLES",
+    "mapUsefulNamespacePrefixes" : {
+      "geo" : "<http://www.opengis.net/ont/geosparql#>",
+      "rdf" : "<http://www.w3.org/1999/02/22-rdf-syntax-ns#>",
+      "owl" : "<http://www.w3.org/2002/07/owl#>",
+      "geof" : "<http://www.opengis.net/def/function/geosparql/>",
+      "pointOfInterest" : "<http://geographica.di.uoa.gr/generator/pointOfInterest/>",
+      "xsd" : "<http://www.w3.org/2001/XMLSchema#>",
+      "rdfs" : "<http://www.w3.org/2000/01/rdf-schema#>",
+      "geo-sf" : "<http://www.opengis.net/ont/sf#>"
+    },
+    "mapAsWKT" : {
+      "pointOfInterestAsWKT" : "<http://geographica.di.uoa.gr/generator/pointOfInterest/asWKT>"
+    },
+    "mapHasGeometry" : {
+      "pointOfInterestHasGeometry" : "<http://geographica.di.uoa.gr/generator/pointOfInterest/hasGeometry>"
+    }
+  } ],
+  "mapDataSetContexts" : {
+    "linesting" : "",
+    "hexagonlargecenter" : "",
+    "hexagonlarge" : "",
+    "hexagonsmall" : "",
+    "point" : ""
+  },
+  "n" : 512
+}

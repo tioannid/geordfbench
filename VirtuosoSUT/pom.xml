@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<project
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+    xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>gr.uoa.di.rdf</groupId>
+        <artifactId>GeoRDFBench</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>VirtuosoSUT</artifactId>
+    <name>VirtuosoSUT</name>
+    <description>A client SUT for Virtuoso</description>
+
+    <properties>
+        <aduna.appbase.version>3.5.0</aduna.appbase.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <!-- setup BOM (Bill Of Materials) to avoid version mismatch and
+                duplication of libraries in the classpath -->
+                <groupId>org.eclipse.rdf4j</groupId>
+                <artifactId>rdf4j-bom</artifactId>
+                <version>${virtuoso.rdf4j.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>    
+    </dependencyManagement>
+    
+    <dependencies>
+        <!-- Basic dependency on the Runtime module of GeoRDFBench -->
+        <dependency>
+            <groupId>gr.uoa.di.rdf</groupId>
+            <artifactId>runtime</artifactId>
+            <version>${gr.uoa.di.rdf.geordfbench.version}</version>
+        </dependency>
+        <!--  Virtuoso -->
+<!--        <dependency>
+            <groupId>com.virtuoso.openlink</groupId>
+            <artifactId>virt_rdf4j</artifactId>
+            <version>2.1.4</version>
+        </dependency>-->
+        <dependency>
+            <groupId>com.openlinksw</groupId>
+            <artifactId>virt_rdf4j_v3_7</artifactId>
+            <version>1.16</version>
+        </dependency>
+<!--        <dependency>
+            <groupId>com.virtuoso.openlink</groupId>
+            <artifactId>virtjdbc4_2</artifactId>
+            <version>4.2</version>
+        </dependency>-->
+        <dependency>
+            <groupId>com.openlinksw</groupId>
+            <artifactId>virtjdbc4_2</artifactId>
+            <version>3.122</version>
+        </dependency>
+
+        <!--  Virtuoso end -->
+        <!-- 1. RDF4J Dependencies -->
+        <dependency>
+            <!-- the RDF4J core framework -->
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-runtime</artifactId>
+        </dependency>
+        <dependency>
+            <!-- ability to query RDF with the RDF4J framework -->
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-repository-sail</artifactId>
+        </dependency>
+        <dependency>
+            <!-- persistent/native storage backend module of RDF4J -->
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-sail-nativerdf</artifactId>
+        </dependency>
+        <dependency>
+            <!-- Turtle module of the RDF4J RIO parser -->
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-rio-turtle</artifactId>
+        </dependency>
+        <dependency>
+            <!-- N-Triples module of the RDF4J RIO parser -->
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-rio-ntriples</artifactId>
+        </dependency>
+        <dependency>
+            <!-- TRIG module of the RDF4J RIO parser -->
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-rio-trig</artifactId>
+        </dependency>
+        <dependency>
+            <!--  GeoSparql support for RDF4J RIO parser -->
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-queryalgebra-geosparql</artifactId>
+        </dependency>
+    </dependencies>
+</project>

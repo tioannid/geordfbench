@@ -1,0 +1,10 @@
+# Original commands for the paper version 1
+
+# Postgres start-stop-restart commands
+POSTGRES_STOP=service postgresql stop
+POSTGRES_START=service postgresql start
+POSTGRES_RESTART=service postgresql restart
+
+# System sync-clearcache commands
+SYSCMD_SYNC=sync
+SYSCMD_CLEARCACHE=echo 3 > /proc/sys/vm/drop_caches

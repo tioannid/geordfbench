@@ -1,0 +1,30 @@
+{
+  "classname" : "gr.uoa.di.rdf.Geographica3.runtime.querysets.complex.impl.MacroComputeStatisticsQS",
+  "name" : "computestatistics",
+  "relativeBaseDir" : "",
+  "hasPredicateQueriesAlso" : false,
+  "mapQueries" : {
+    "0" : {
+      "label" : "Count_CLC_categories",
+      "text" : "SELECT ?clcLandUse (COUNT(DISTINCT ?clc) AS ?count) \nWHERE { \n\tGRAPH <http://geographica.di.uoa.gr/dataset/clc> { \n\t\t?clc rdf:type clc:Area. \n\t\t?clc clc:hasLandUse ?clcLandUse. \n\t\t?clc clc:hasGeometry ?clcGeo. \n\t\t?clcGeo clc:asWKT ?clcWkt. \n\t\tFILTER(geof:sfIntersects(?clcWkt, \"<MUNICIPALITY_WKT>\"^^geo:wktLiteral)). \n}} \nGROUP BY ?clcLandUse",
+      "usePredicate" : false,
+      "expectedResults" : -2
+    },
+    "1" : {
+      "label" : "Count_GeoNames_categories",
+      "text" : "SELECT ?fClass ?fCode (COUNT(DISTINCT ?f) as ?count) \nWHERE  \n{ \n\tGRAPH <http://geographica.di.uoa.gr/dataset/geonames> { \n\t\t?f rdf:type geonames:Feature. \n\t\t?f geonames:featureClass ?fClass. \n\t\t?f geonames:featureCode ?fCode. \n\t\t?f geonames:hasGeometry ?fGeo. \n\t\t?fGeo geonames:asWKT ?fWkt. \n\t\tFILTER(geof:sfIntersects(?fWkt, \"<MUNICIPALITY_WKT>\"^^geo:wktLiteral)). \n }} \nGROUP BY ?fClass ?fCode",
+      "usePredicate" : false,
+      "expectedResults" : -2
+    },
+    "2" : {
+      "label" : "Count_GeoNames_categories_in_ContinuousUrbanFabric",
+      "text" : "SELECT ?fClass (COUNT(DISTINCT ?f) as ?count) \nWHERE { \n\tGRAPH <http://geographica.di.uoa.gr/dataset/clc> { \n\t\t?clc rdf:type clc:Area. \n\t\t?clc clc:hasLandUse clc:continuousUrbanFabric. \n\t\t?clc clc:hasGeometry ?clcGeo. \n\t\t?clcGeo clc:asWKT ?clcWkt. \n\t\tFILTER(geof:sfIntersects(?clcWkt, \"<MUNICIPALITY_WKT>\"^^geo:wktLiteral)). \n} \n\tGRAPH <http://geographica.di.uoa.gr/dataset/geonames> { \n\t\t?f rdf:type geonames:Feature. \n\t\t?f geonames:featureClass ?fClass. \n\t\t?f geonames:hasGeometry ?fGeo. \n\t\t?fGeo geonames:asWKT ?fWkt. \n\t\tFILTER(geof:sfIntersects(?fWkt, \"<MUNICIPALITY_WKT>\"^^geo:wktLiteral)). \n } \n\tFILTER(geof:sfIntersects(?clcWkt, ?fWkt)). \n} \nGROUP BY ?fClass",
+      "usePredicate" : false,
+      "expectedResults" : -2
+    }
+  },
+  "mapUsefulNamespacePrefixes" : {
+    "lgo" : "<http://linkedgeodata.org/ontology/>"
+  },
+  "municipalityWKTTemplateName" : "<MUNICIPALITY_WKT>"
+}

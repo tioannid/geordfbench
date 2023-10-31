@@ -1,0 +1,35 @@
+{
+  "classname" : "gr.uoa.di.rdf.Geographica3.runtime.querysets.partofworkload.impl.MacroReverseGeocodingQS",
+  "name" : "reversegeocoding",
+  "relativeBaseDir" : "",
+  "hasPredicateQueriesAlso" : false,
+  "mapQueries" : {
+    "0" : {
+      "label" : "Find_Closest_Populated_Place",
+      "text" : "SELECT ?f (geof:distance(?cGeoWKT, <POINT_LITERAL>, uom:metre) AS ?distance)\nWHERE {\n\tGRAPH <http://geographica.di.uoa.gr/dataset/geonames> {\n\t\t?f geonames:featureCode geonames:P.PPL;\n\t\t\t<http://www.geonames.org/ontology#hasGeometry> ?cGeo.\n\t\t?cGeo <http://www.geonames.org/ontology#asWKT> ?cGeoWKT.\n\t}\n}\nORDER BY ASC(?distance)\nLIMIT 1",
+      "usePredicate" : false,
+      "expectedResults" : -2
+    },
+    "1" : {
+      "label" : "Find_Closest_Motorway",
+      "text" : "SELECT ?c ?type ?label (geof:distance(?cGeoWKT, <POINT_LITERAL>, uom:metre) AS ?distance) ?cGeoWKT\nWHERE {\n\tGRAPH <http://geographica.di.uoa.gr/dataset/lgd> {\n\t\t?c rdf:type lgdo:Motorway;\n\t\t\trdfs:label ?label;\n\t\t\t<http://linkedgeodata.org/ontology/hasGeometry> ?cGeo.\n\t\t?cGeo <http://linkedgeodata.org/ontology/asWKT> ?cGeoWKT.\n\t}\n}\nORDER BY ASC(?distance)\nLIMIT 1",
+      "usePredicate" : false,
+      "expectedResults" : -2
+    }
+  },
+  "mapUsefulNamespacePrefixes" : {
+    "uom" : "<http://www.opengis.net/def/uom/OGC/1.0/>"
+  },
+  "executionSpec" : {
+    "execTypeReps" : {
+      "COLD_CONTINUOUS" : -1
+    },
+    "maxDurationSecsPerQueryRep" : 3610,
+    "maxDurationSecs" : 3600,
+    "action" : "RUN",
+    "avgFunc" : "QUERYSET_MEAN",
+    "onColdFailure" : "EXCLUDE_AND_PROCEED",
+    "clearCacheDelaymSecs" : 5000
+  },
+  "templateParamName" : "<POINT_LITERAL>"
+}

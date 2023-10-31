@@ -1,0 +1,14 @@
+# Original commands for the paper version 2
+
+# The following commands run on TELEIOS3 UBUNTU 12.04.5LTS
+# and demands that the <sudo xxx> commands are added to
+# /etc/sudoers for the user <journal> that will be running the test
+
+# Postgres start-stop-restart commands
+POSTGRES_STOP=sudo /home/journal/stopdb
+POSTGRES_START=sudo /home/journal/startdb
+POSTGRES_RESTART=sudo /home/journal/restartdb
+
+# System sync-clearcache commands
+SYSCMD_SYNC=sudo sync
+SYSCMD_CLEARCACHE=sudo /sbin/sysctl vm.drop_caches=3

@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>gr.uoa.di.rdf</groupId>
+    <artifactId>GeoRDFBench</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+    <name>GeoRDFBench</name>
+
+    <modules>
+        <module>generators</module>
+        <module>runtime</module>
+        <module>StrabonSUT</module>
+        <module>GraphDBSUT</module>
+        <module>RDF4JSUT</module>
+        <module>VirtuosoSUT</module>
+        <module>StardogSUT</module>
+        <module>JenaGeoSPARQLSUT</module>
+    </modules>
+	
+    <properties>
+        <eu.earthobservatory.version>3.3.2-SNAPSHOT</eu.earthobservatory.version>
+        <gr.uoa.di.rdf.geordfbench.version>${project.version}</gr.uoa.di.rdf.geordfbench.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <slf4j.version>1.7.30</slf4j.version>
+        <jts.version>1.17.1</jts.version>
+        <sesame.version>2.6.10</sesame.version>
+        <rdf4j.version>3.7.7</rdf4j.version>
+        <graphdb.version>9.11.2</graphdb.version>
+        <graphdb.rdf4j.version>3.7.6</graphdb.rdf4j.version>
+        <virtuoso.rdf4j.version>2.4.1</virtuoso.rdf4j.version>
+        <stardog.rdf4j.version>7.9.1</stardog.rdf4j.version>
+        <jenageosparql.version>3.17.0</jenageosparql.version>
+        <jena.version>3.17.0</jena.version>
+    </properties>
+
+    <profiles>
+        <profile>
+            <id>official</id>
+            <repositories>
+                <repository>
+                    <releases>
+                        <enabled>false</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                    <id>strabon.snapshot</id>
+                    <name>Strabon - maven repository - snapshots</name>
+                    <url>http://maven.strabon.di.uoa.gr/content/repositories/snapshots</url>
+                </repository>
+            </repositories>
+            <distributionManagement>
+                <repository>
+                    <id>strabon</id>
+                    <name>Strabon maven repo</name>
+                    <url>http://maven.strabon.di.uoa.gr/content/repositories/releases</url>
+                </repository>
+                <snapshotRepository>
+                    <id>strabon.snapshot</id>
+                    <name>Strabon maven repo</name>
+                    <url>http://maven.strabon.di.uoa.gr/content/repositories/snapshots</url>
+                </snapshotRepository>
+            </distributionManagement>
+        </profile>
+        <profile>
+            <!-- Use local VM Sonatype OSS -->
+            <id>localvm</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <repositories>
+                <repository>
+                    <releases>
+                        <enabled>false</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                    <id>strabon.snapshot</id>
+                    <name>Strabon - maven repository - snapshots</name>
+                    <url>http://localhost:9081/repository/UoASnapshots/</url>
+                </repository>
+            </repositories>
+            <distributionManagement>
+                <repository>
+                    <id>strabon</id>
+                    <name>Strabon maven repo</name>
+                    <url>http://maven.strabon.di.uoa.gr/content/repositories/releases</url>
+                </repository>
+                <snapshotRepository>
+                    <id>strabon.snapshot</id>
+                    <name>Strabon maven repo</name>
+                    <url>http://localhost:9081/repository/UoASnapshots/</url>
+                </snapshotRepository>
+            </distributionManagement>
+        </profile>  
+        <profile>
+            <!-- Use local VM Sonatype OSS -->
+            <id>homepc</id>
+            <repositories>
+                <repository>
+                    <releases>
+                        <enabled>false</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                    <id>strabon.snapshot</id>
+                    <name>Strabon - maven repository - snapshots</name>
+                    <url>http://192.168.1.66:9081/repository/UoASnapshots/</url>
+                </repository>
+            </repositories>
+            <distributionManagement>
+                <repository>
+                    <id>strabon</id>
+                    <name>Strabon maven repo</name>
+                    <url>http://maven.strabon.di.uoa.gr/content/repositories/releases</url>
+                </repository>
+                <snapshotRepository>
+                    <id>strabon.snapshot</id>
+                    <name>Strabon maven repo</name>
+                    <url>http://192.168.1.66:9081/repository/UoASnapshots/</url>
+                </snapshotRepository>
+            </distributionManagement>
+        </profile>  
+    </profiles>
+    
+    <dependencies>
+        <dependency> 
+            <!-- use log4j as the underlying logging framework -->
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+    </dependencies>
+    <!-- Repositories -->
+    <repositories>
+        <repository>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>jena</id>
+            <name>Jena - maven repository</name>
+            <url>https://repository.apache.org/content/repositories/releases/</url>
+        </repository>
+        <repository>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>strabon</id>
+            <name>Strabon - maven repository</name>
+            <url>http://maven.strabon.di.uoa.gr/content/repositories/releases</url>
+        </repository>
+        <repository>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>strabon.sesame</id>
+            <name>Strabon - maven repository - sesame artifacts (temporary)</name>
+            <url>http://maven.strabon.di.uoa.gr/content/repositories/strabon.sesame/</url>
+        </repository>
+        <repository>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>strabon.testing</id>
+            <name>Strabon - maven repository</name>
+            <url>http://maven.strabon.di.uoa.gr/content/repositories/testing/</url>
+        </repository>
+        <repository>
+            <id>maven2-repository.dev.java.net</id>
+            <name>Java.net repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
+        <repository>
+            <id>osgeo</id>
+            <name>OSGeo Release Repository</name>
+            <url>https://repo.osgeo.org/repository/release/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+        <repository>
+            <id>osgeo-snapshot</id>
+            <name>OSGeo Snapshot Repository</name>
+            <url>https://repo.osgeo.org/repository/snapshot/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </repository>
+        <repository>
+            <id>stardog-public</id>
+            <url>https://maven.stardog.com</url>
+        </repository>
+    </repositories>
+
+    <build>
+        <plugins>
+            <!-- Enable generics -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <!-- Enable generics end -->
+            <!-- Copy dependencies -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.1.1</version>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>false</overWriteSnapshots>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Copy dependencies end -->
+        </plugins>
+        <!-- Copy dependencies -->
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>org.apache.maven.plugins</groupId>
+                                        <artifactId>maven-dependency-plugin</artifactId>
+                                        <versionRange>[2.3,)</versionRange>
+                                        <goals>
+                                            <goal>copy-dependencies</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore />
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <!-- Copy dependencies end -->
+    </build>
+</project>

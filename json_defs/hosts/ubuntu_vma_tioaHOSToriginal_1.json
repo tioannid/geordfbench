@@ -1,0 +1,15 @@
+{
+  "classname" : "gr.uoa.di.rdf.Geographica3.runtime.hosts.impl.SimpleHost",
+  "name" : "ubuntu-vma-tioa",
+  "ipAddr" : "10.0.2.15",
+  "ram" : 11,
+  "os" : {
+    "name" : "Ubuntu-bionic",
+    "shell_cmd" : "/bin/sh",
+    "sync_cmd" : "sync",
+    "clearcache_cmd" : "sudo /sbin/sysctl vm.drop_caches=3"
+  },
+  "sourceFileDir" : "/media/sf_VM_Shared/PHD/Geographica2_Datasets",
+  "reposBaseDir" : "/home/tioannid/Downloads",
+  "reportsBaseDir" : "/media/sf_VM_Shared/PHD/Results_Store/VM_Results"
+}

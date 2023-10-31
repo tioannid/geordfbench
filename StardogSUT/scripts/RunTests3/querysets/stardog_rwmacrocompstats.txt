@@ -1,0 +1,172 @@
+Restarting Stradog server, in order for memory configuration to take effect
+Stardog server successfully received the shutdown request.
+Waiting for running tasks to complete...done. Executor service has been shut down.
+Stardog server 7.9.1 shutdown on Tue Mar 14 19:03:17 EET 2023.
+
+
+
+************************************************************
+This copy of Stardog is licensed to GeoRDFBench Creator (GeoRDFBench@Univ), Kapodistrian University of Athens
+This is a Enterprise license
+This license will expire in 66 days on Sat May 20 14:18:28 EEST 2023
+************************************************************
+
+                                                             :;   
+                                      ;;                   `;`:   
+  `'+',    ::                        `++                    `;:`  
+ +###++,  ,#+                        `++                    .     
+ ##+.,',  '#+                         ++                     +    
+,##      ####++  ####+:   ##,++` .###+++   .####+    ####++++#    
+`##+     ####+'  ##+#++   ###++``###'+++  `###'+++  ###`,++,:     
+ ####+    ##+        ++.  ##:   ###  `++  ###  `++` ##`  ++:      
+  ###++,  ##+        ++,  ##`   ##;  `++  ##:   ++; ##,  ++:      
+    ;+++  ##+    ####++,  ##`   ##:  `++  ##:   ++' ;##'#++       
+     ;++  ##+   ###  ++,  ##`   ##'  `++  ##;   ++:  ####+        
+,.   +++  ##+   ##:  ++,  ##`   ###  `++  ###  .++  '#;           
+,####++'  +##++ ###+#+++` ##`   :####+++  `####++'  ;####++`      
+`####+;    ##++  ###+,++` ##`    ;###:++   `###+;   `###++++      
+                                                    ##   `++      
+                                                   .##   ;++      
+                                                    #####++`      
+                                                     `;;;.        
+************************************************************
+
+
+Stardog server 7.9.1 started on Tue Mar 14 19:03:21 EET 2023.
+
+Stardog server is listening on all network interfaces.
+HTTP server available at http://localhost:5820.
+
+STARDOG=/media/sf_VM_Shared/PHD/stardog-7.9.1/bin/..
+
+STARDOG_EXT=/media/sf_VM_Shared/PHD/stardog-7.9.1/server/ext
+
+STARDOG_HOME=/home/tioannid/Downloads/StarDog/
+
+ARGS = -surl http://localhost:5820 -susr admin -spwd admin -rbd Stardog -expdesc 190#_2023-03-14_StardogSUT_Print_RWMacroCompStats -ds /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/datasets/realworldDSoriginal.json -h /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/hosts/ubuntu_vma_tioaHOSToriginal_1.json -rs /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/reportspecs/simplereportspec_original.json -rpsr /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/reportsources/ubuntu_vma_tioaRepSrcoriginal.json -es /media/sf_VM_Shared/microESoriginal.json -qs /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/querysets/rwmacrocomputestatisticsQSoriginal.json
+log4j:ERROR Could not connect to remote log4j server at [localhost]. We will try again later.
+0    [main] INFO  RunSUTExperiment  - args[0] = -surl
+1    [main] INFO  RunSUTExperiment  - args[1] = http://localhost:5820
+1    [main] INFO  RunSUTExperiment  - args[2] = -susr
+1    [main] INFO  RunSUTExperiment  - args[3] = admin
+1    [main] INFO  RunSUTExperiment  - args[4] = -spwd
+1    [main] INFO  RunSUTExperiment  - args[5] = admin
+1    [main] INFO  RunSUTExperiment  - args[6] = -rbd
+2    [main] INFO  RunSUTExperiment  - args[7] = Stardog
+2    [main] INFO  RunSUTExperiment  - args[8] = -expdesc
+2    [main] INFO  RunSUTExperiment  - args[9] = 190#_2023-03-14_StardogSUT_Print_RWMacroCompStats
+2    [main] INFO  RunSUTExperiment  - args[10] = -ds
+2    [main] INFO  RunSUTExperiment  - args[11] = /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/datasets/realworldDSoriginal.json
+2    [main] INFO  RunSUTExperiment  - args[12] = -h
+2    [main] INFO  RunSUTExperiment  - args[13] = /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/hosts/ubuntu_vma_tioaHOSToriginal_1.json
+2    [main] INFO  RunSUTExperiment  - args[14] = -rs
+2    [main] INFO  RunSUTExperiment  - args[15] = /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/reportspecs/simplereportspec_original.json
+2    [main] INFO  RunSUTExperiment  - args[16] = -rpsr
+3    [main] INFO  RunSUTExperiment  - args[17] = /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/reportsources/ubuntu_vma_tioaRepSrcoriginal.json
+3    [main] INFO  RunSUTExperiment  - args[18] = -es
+3    [main] INFO  RunSUTExperiment  - args[19] = /media/sf_VM_Shared/microESoriginal.json
+3    [main] INFO  RunSUTExperiment  - args[20] = -qs
+3    [main] INFO  RunSUTExperiment  - args[21] = /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/querysets/rwmacrocomputestatisticsQSoriginal.json
+8    [main] INFO  RunSUTExperiment  - |==> Dataset, Host, Report, Execution, QuerySet related options
+8    [main] INFO  RunSUTExperiment  - Experiment description:	190#_2023-03-14_StardogSUT_Print_RWMacroCompStats
+8    [main] INFO  RunSUTExperiment  - Dataset configuration JSON file:	/home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/datasets/realworldDSoriginal.json
+9    [main] INFO  RunSUTExperiment  - Host configuration JSON file:	/home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/hosts/ubuntu_vma_tioaHOSToriginal_1.json
+9    [main] INFO  RunSUTExperiment  - Report specs configuration JSON file:	/home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/reportspecs/simplereportspec_original.json
+9    [main] INFO  RunSUTExperiment  - Report source specs configuration JSON file:	/home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/reportsources/ubuntu_vma_tioaRepSrcoriginal.json
+9    [main] INFO  RunSUTExperiment  - Execution specs configuration JSON file:	/media/sf_VM_Shared/microESoriginal.json
+9    [main] INFO  RunSUTExperiment  - Queryset configuration JSON file:	/home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/querysets/rwmacrocomputestatisticsQSoriginal.json
+9    [main] INFO  RunSUTExperiment  - List of queries to include in the run:	all
+9    [main] INFO  RunStardogExperiment  - |==> Repository/Store options
+9    [main] INFO  RunStardogExperiment  - Server endpoint URL:	http://localhost:5820
+10   [main] INFO  RunStardogExperiment  - Stradog server username:	admin
+10   [main] INFO  RunStardogExperiment  - Strardog server password:	admin
+10   [main] INFO  RunStardogExperiment  - |==> System options
+10   [main] INFO  RunStardogExperiment  - BaseDir:	Stardog
+423  [main] INFO  RunSUTExperiment  - {GeographicaDS: realworld, RealWorldWorkload,
+	{GenericGeospatialSimpleDS: corine, N-TRIPLES}
+	{GenericGeospatialSimpleDS: dbpedia, N-TRIPLES}
+	{GenericGeospatialSimpleDS: gag, N-TRIPLES}
+	{GenericGeospatialSimpleDS: geonames, N-TRIPLES}
+	{GenericGeospatialSimpleDS: hotspots, N-TRIPLES}
+	{GenericGeospatialSimpleDS: linkedgeodata, N-TRIPLES}}
+1335 [main] INFO  RDF4JBasedSUT  - Reading StardogSUT properties from file : jar:file:/home/tioannid/NetBeansProjects/PhD/Geographica3/StardogSUT/target/StardogSUT-3.0-M6-SNAPSHOT.jar!/stardog.properties
+1338 [main] INFO  StardogSUT  - Initializing..
+2268 [main] INFO  Experiment  - StardogSystem-dependent translation of the queryset computestatistics
+2269 [main] INFO  Experiment  - StardogSystem-dependent namespace prefixes merged with the prefixes of queryset computestatistics
+2271 [main] INFO  StardogSUT  - Closing..
+2271 [main] INFO  StardogSystem  - Closing connection...
+2279 [main] INFO  StardogSystem  - Repository closed.
+4372 [main] INFO  StardogSUT  - Closed (caches not cleared)
+MacroComputeStatistics
+computestatistics
+
+PREFIX clc: <http://geo.linkedopendata.gr/corine/ontology#> 
+PREFIX gag: <http://geo.linkedopendata.gr/gag/ontology/> 
+PREFIX geo: <http://www.opengis.net/ont/geosparql#> 
+PREFIX geo-sf: <http://www.opengis.net/ont/sf#> 
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/> 
+PREFIX geonames: <http://www.geonames.org/ontology#> 
+PREFIX lgdo: <http://linkedgeodata.org/ontology/> 
+PREFIX lgo: <http://linkedgeodata.org/ontology/> 
+PREFIX noa: <http://teleios.di.uoa.gr/ontologies/noaOntology.owl#> 
+PREFIX owl: <http://www.w3.org/2002/07/owl#> 
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+PREFIX unit: <http://qudt.org/vocab/unit#> 
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
+
+
+Query 0 - Count_CLC_categories:
+SELECT ?clcLandUse (COUNT(DISTINCT ?clc) AS ?count) 
+WHERE { 
+	GRAPH <http://geographica.di.uoa.gr/dataset/clc> { 
+		?clc rdf:type clc:Area. 
+		?clc clc:hasLandUse ?clcLandUse. 
+		?clc clc:hasGeometry ?clcGeo. 
+		?clcGeo clc:asWKT ?clcWkt. 
+?relation geof:relate(?clcWkt "<MUNICIPALITY_WKT>"^^geo:wktLiteral) .
+FILTER(?relation != geo:disjoint) .
+}} 
+GROUP BY ?clcLandUse
+
+
+Query 1 - Count_GeoNames_categories:
+SELECT ?fClass ?fCode (COUNT(DISTINCT ?f) as ?count) 
+WHERE  
+{ 
+	GRAPH <http://geographica.di.uoa.gr/dataset/geonames> { 
+		?f rdf:type geonames:Feature. 
+		?f geonames:featureClass ?fClass. 
+		?f geonames:featureCode ?fCode. 
+		?f geonames:hasGeometry ?fGeo. 
+		?fGeo geonames:asWKT ?fWkt. 
+?relation geof:relate(?fWkt "<MUNICIPALITY_WKT>"^^geo:wktLiteral) .
+FILTER(?relation != geo:disjoint) .
+ }} 
+GROUP BY ?fClass ?fCode
+
+
+Query 2 - Count_GeoNames_categories_in_ContinuousUrbanFabric:
+SELECT ?fClass (COUNT(DISTINCT ?f) as ?count) 
+WHERE { 
+	GRAPH <http://geographica.di.uoa.gr/dataset/clc> { 
+		?clc rdf:type clc:Area. 
+		?clc clc:hasLandUse clc:continuousUrbanFabric. 
+		?clc clc:hasGeometry ?clcGeo. 
+		?clcGeo clc:asWKT ?clcWkt. 
+?relation geof:relate(?clcWkt "<MUNICIPALITY_WKT>"^^geo:wktLiteral) .
+FILTER(?relation != geo:disjoint) .
+} 
+	GRAPH <http://geographica.di.uoa.gr/dataset/geonames> { 
+		?f rdf:type geonames:Feature. 
+		?f geonames:featureClass ?fClass. 
+		?f geonames:hasGeometry ?fGeo. 
+		?fGeo geonames:asWKT ?fWkt. 
+		FILTER(geof:sfIntersects(?fWkt, "<MUNICIPALITY_WKT>"^^geo:wktLiteral)). 
+ } 
+	FILTER(geof:sfIntersects(?clcWkt, ?fWkt)). 
+} 
+GROUP BY ?fClass
+
+Start time = Τρι 14 Μαρ 2023 07:03:22 μμ EET
+End time = Τρι 14 Μαρ 2023 07:03:27 μμ EET

@@ -1,0 +1,12 @@
+{
+  "classname" : "gr.uoa.di.rdf.Geographica3.runtime.executionspecs.impl.SimpleES",
+  "execTypeReps" : {
+    "COLD_CONTINUOUS" : -1
+  },
+  "maxDurationSecsPerQueryRep" : 3610,
+  "maxDurationSecs" : 3600,
+  "action" : "RUN",
+  "avgFunc" : "QUERYSET_MEAN",
+  "onColdFailure" : "EXCLUDE_AND_PROCEED",
+  "clearCacheDelaymSecs" : 5000
+}

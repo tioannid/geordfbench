@@ -1,0 +1,79 @@
+{
+  "classname" : "gr.uoa.di.rdf.Geographica3.runtime.workloadspecs.impl.SimpleGeospatialWL",
+  "name" : "ScalabilityPred",
+  "relativeBaseDir" : "",
+  "geospatialDataset" : {
+    "name" : "scalability_10M",
+    "relativeBaseDir" : "Scalability/10M",
+    "simpleGeospatialDataSetList" : [ {
+      "name" : "scalability_10M",
+      "relativeBaseDir" : "Scalability/10M",
+      "dataFile" : "scalability_10M.nt",
+      "rdfFormat" : "N-TRIPLES",
+      "mapUsefulNamespacePrefixes" : {
+        "geo" : "<http://www.opengis.net/ont/geosparql#>",
+        "rdf" : "<http://www.w3.org/1999/02/22-rdf-syntax-ns#>",
+        "owl" : "<http://www.w3.org/2002/07/owl#>",
+        "geof" : "<http://www.opengis.net/def/function/geosparql/>",
+        "lgo" : "<http://data.linkedeodata.eu/ontology#>",
+        "xsd" : "<http://www.w3.org/2001/XMLSchema#>",
+        "rdfs" : "<http://www.w3.org/2000/01/rdf-schema#>",
+        "geo-sf" : "<http://www.opengis.net/ont/sf#>"
+      },
+      "mapAsWKT" : {
+        "scalabilityAsWKT" : "<http://www.opengis.net/ont/geosparql#asWKT>"
+      },
+      "mapHasGeometry" : {
+        "scalabilityHasGeometry" : "<http://www.opengis.net/ont/geosparql#hasGeometry>"
+      }
+    } ],
+    "mapDataSetContexts" : {
+      "scalability_10M" : ""
+    },
+    "n" : 0
+  },
+  "geospatialQueryset" : {
+    "classname" : "gr.uoa.di.rdf.Geographica3.runtime.querysets.partofworkload.impl.StaticTempParamQS",
+    "name" : "scalabilityPred",
+    "relativeBaseDir" : "",
+    "hasPredicateQueriesAlso" : true,
+    "mapQueries" : {
+      "0" : {
+        "label" : "SC1_Geometries_Intersects_GivenPolygon",
+        "text" : "SELECT ?s1 ?o1 WHERE { \n ?s1 geo:asWKT ?o1 . \n ?s1 geo:sfIntersects \"POLYGON((23.708496093749996 37.95719224376526,22.906494140625 40.659805938378526,11.524658203125002 48.16425348854739,-0.1181030273437499 51.49506473014367,-3.2189941406250004 55.92766341247031,-5.940856933593749 54.59116279530599,-3.1668090820312504 51.47967237816337,23.708496093749996 37.95719224376526))\"^^<http://www.opengis.net/ont/geosparql#wktLiteral> . \n} \n",
+        "usePredicate" : true,
+        "expectedResults" : -1
+      },
+      "1" : {
+        "label" : "SC2_Intensive_Geometries_Intersect_Geometries",
+        "text" : "SELECT ?s1 ?s2 \nWHERE { \n ?s1 geo:hasGeometry ?g1 ;\n    lgo:has_code \"1001\"^^xsd:integer . \n ?s2 geo:hasGeometry ?g2 ;\n    lgo:has_code ?code2 .  \n ?g1 geo:sfIntersects ?g2 . \n FILTER(?code2>5000 && ?code2<6000 && ?code2 != 5260) .\n} \n",
+        "usePredicate" : true,
+        "expectedResults" : -1
+      },
+      "2" : {
+        "label" : "SC3_Relaxed_Geometries_Intersect_Geometries",
+        "text" : "SELECT ?s1 ?s2\nWHERE {\n ?s1 geo:hasGeometry ?g1 ;\n    lgo:has_code \"1001\"^^xsd:integer .\n ?s2 geo:hasGeometry ?g2 ;\n    lgo:has_code ?code2 .\n ?g1 geo:sfIntersects ?g2 . \n FILTER(?code2 IN (5622, 5601, 5641, 5621, 5661)) .\n} \n",
+        "usePredicate" : true,
+        "expectedResults" : -1
+      }
+    },
+    "mapUsefulNamespacePrefixes" : { },
+    "executionSpec" : {
+      "execTypeReps" : {
+        "COLD" : 3,
+        "WARM" : 3
+      },
+      "maxDurationSecsPerQueryRep" : 86400,
+      "maxDurationSecs" : 604800,
+      "action" : "RUN",
+      "avgFunc" : "QUERY_MEDIAN",
+      "onColdFailure" : "SKIP_REMAINING_ALL_QUERY_EXECUTIONS",
+      "clearCacheDelaymSecs" : 5000
+    },
+    "mapTemplateParams" : {
+      "GIVEN_SPATIAL_LITERAL" : "\"POLYGON((23.708496093749996 37.95719224376526,22.906494140625 40.659805938378526,11.524658203125002 48.16425348854739,-0.1181030273437499 51.49506473014367,-3.2189941406250004 55.92766341247031,-5.940856933593749 54.59116279530599,-3.1668090820312504 51.47967237816337,23.708496093749996 37.95719224376526))\"^^<http://www.opengis.net/ont/geosparql#wktLiteral>",
+      "FUNCTION" : "sfIntersects"
+    },
+    "mapGraphPrefixes" : { }
+  }
+}

@@ -1,0 +1,128 @@
+bash: ./runTestsForStrabonSUT.sh.sh: No such file or directory
+ARGS = -dbh localhost -dbp 5432 -dbn scalability_10K -dbu postgres -dbps postgres -expdesc 190#_2023-03-14_StrabonSUT_Print_RWMacroCompStats -ds /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/datasets/realworldDSoriginal.json -h /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/hosts/ubuntu_vma_tioaHOSToriginal_1.json -rs /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/reportspecs/simplereportspec_original.json -rpsr /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/reportsources/ubuntu_vma_tioaRepSrcoriginal.json -es /media/sf_VM_Shared/microESoriginal.json -qs /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/querysets/rwmacrocomputestatisticsQSoriginal.json
+log4j:ERROR Could not connect to remote log4j server at [localhost]. We will try again later.
+0    [main] INFO  RunStrabonExperiment  - args[0] = -dbh
+1    [main] INFO  RunStrabonExperiment  - args[1] = localhost
+1    [main] INFO  RunStrabonExperiment  - args[2] = -dbp
+1    [main] INFO  RunStrabonExperiment  - args[3] = 5432
+1    [main] INFO  RunStrabonExperiment  - args[4] = -dbn
+1    [main] INFO  RunStrabonExperiment  - args[5] = scalability_10K
+2    [main] INFO  RunStrabonExperiment  - args[6] = -dbu
+2    [main] INFO  RunStrabonExperiment  - args[7] = postgres
+2    [main] INFO  RunStrabonExperiment  - args[8] = -dbps
+2    [main] INFO  RunStrabonExperiment  - args[9] = postgres
+2    [main] INFO  RunStrabonExperiment  - args[10] = -expdesc
+2    [main] INFO  RunStrabonExperiment  - args[11] = 190#_2023-03-14_StrabonSUT_Print_RWMacroCompStats
+3    [main] INFO  RunStrabonExperiment  - args[12] = -ds
+3    [main] INFO  RunStrabonExperiment  - args[13] = /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/datasets/realworldDSoriginal.json
+3    [main] INFO  RunStrabonExperiment  - args[14] = -h
+3    [main] INFO  RunStrabonExperiment  - args[15] = /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/hosts/ubuntu_vma_tioaHOSToriginal_1.json
+3    [main] INFO  RunStrabonExperiment  - args[16] = -rs
+3    [main] INFO  RunStrabonExperiment  - args[17] = /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/reportspecs/simplereportspec_original.json
+4    [main] INFO  RunStrabonExperiment  - args[18] = -rpsr
+4    [main] INFO  RunStrabonExperiment  - args[19] = /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/reportsources/ubuntu_vma_tioaRepSrcoriginal.json
+4    [main] INFO  RunStrabonExperiment  - args[20] = -es
+4    [main] INFO  RunStrabonExperiment  - args[21] = /media/sf_VM_Shared/microESoriginal.json
+4    [main] INFO  RunStrabonExperiment  - args[22] = -qs
+4    [main] INFO  RunStrabonExperiment  - args[23] = /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/querysets/rwmacrocomputestatisticsQSoriginal.json
+14   [main] INFO  RunStrabonExperiment  - |==> Dataset, Host, Report, Execution, QuerySet related options
+14   [main] INFO  RunStrabonExperiment  - Experiment description:	190#_2023-03-14_StrabonSUT_Print_RWMacroCompStats
+15   [main] INFO  RunStrabonExperiment  - Dataset configuration JSON file:	/home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/datasets/realworldDSoriginal.json
+15   [main] INFO  RunStrabonExperiment  - Host configuration JSON file:	/home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/hosts/ubuntu_vma_tioaHOSToriginal_1.json
+15   [main] INFO  RunStrabonExperiment  - Report specs configuration JSON file:	/home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/reportspecs/simplereportspec_original.json
+15   [main] INFO  RunStrabonExperiment  - Report source specs configuration JSON file:	/home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/reportsources/ubuntu_vma_tioaRepSrcoriginal.json
+15   [main] INFO  RunStrabonExperiment  - Execution specs configuration JSON file:	/media/sf_VM_Shared/microESoriginal.json
+15   [main] INFO  RunStrabonExperiment  - Queryset configuration JSON file:	/home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/querysets/rwmacrocomputestatisticsQSoriginal.json
+15   [main] INFO  RunStrabonExperiment  - List of queries to include in the run:	all
+15   [main] INFO  RunStrabonExperiment  - |==> System options
+15   [main] INFO  RunStrabonExperiment  - Server:	localhost
+16   [main] INFO  RunStrabonExperiment  - Database:	scalability_10K
+16   [main] INFO  RunStrabonExperiment  - Port:	5432
+16   [main] INFO  RunStrabonExperiment  - Username:	postgres
+16   [main] INFO  RunStrabonExperiment  - Password:	postgres
+433  [main] INFO  RunStrabonExperiment  - {GeographicaDS: realworld, RealWorldWorkload,
+	{GenericGeospatialSimpleDS: corine, N-TRIPLES}
+	{GenericGeospatialSimpleDS: dbpedia, N-TRIPLES}
+	{GenericGeospatialSimpleDS: gag, N-TRIPLES}
+	{GenericGeospatialSimpleDS: geonames, N-TRIPLES}
+	{GenericGeospatialSimpleDS: hotspots, N-TRIPLES}
+	{GenericGeospatialSimpleDS: linkedgeodata, N-TRIPLES}}
+1176 [main] INFO  SesamePostGISBasedSUT  - Reading SesamePostGISBasedSUT properties from file : jar:file:/home/tioannid/NetBeansProjects/PhD/Geographica3/StrabonSUT/target/runtime-3.0-M6-SNAPSHOT.jar!/postgresql.properties
+1177 [main] INFO  SesamePostGISBasedSUT  - Checking if PostgreSQL is running...
+1238 [main] INFO  SesamePostGISBasedSUT  - PostgreSQL is currently running
+1241 [main] INFO  StrabonSUT  - Initializing..
+1274 [main] INFO  eu.earthobservatory.runtime.postgis.Strabon  - [Strabon] Cleaning...
+1445 [main] INFO  eu.earthobservatory.runtime.postgis.Strabon  - [Strabon] Clearing Successful.
+2292 [main] INFO  eu.earthobservatory.runtime.postgis.Strabon  - [Strabon] Initialization completed.
+2294 [main] INFO  eu.earthobservatory.runtime.generaldb.Strabon  - [Strabon] Initialization took 846 ms.
+2294 [main] INFO  Experiment  - StrabonSystem-dependent translation of the queryset computestatistics
+2295 [main] INFO  Experiment  - StrabonSystem-dependent namespace prefixes merged with the prefixes of queryset computestatistics
+2297 [main] INFO  StrabonSUT  - Closing..
+4361 [main] INFO  StrabonSUT  - Closed (caches not cleared)
+4361 [main] INFO  StrabonSUT  - Restoring PostgreSQL to its original running state...
+MacroComputeStatistics
+computestatistics
+
+PREFIX clc: <http://geo.linkedopendata.gr/corine/ontology#> 
+PREFIX gag: <http://geo.linkedopendata.gr/gag/ontology/> 
+PREFIX geo: <http://www.opengis.net/ont/geosparql#> 
+PREFIX geo-sf: <http://www.opengis.net/ont/sf#> 
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/> 
+PREFIX geonames: <http://www.geonames.org/ontology#> 
+PREFIX lgdo: <http://linkedgeodata.org/ontology/> 
+PREFIX lgo: <http://linkedgeodata.org/ontology/> 
+PREFIX noa: <http://teleios.di.uoa.gr/ontologies/noaOntology.owl#> 
+PREFIX owl: <http://www.w3.org/2002/07/owl#> 
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
+
+
+Query 0 - Count_CLC_categories:
+SELECT ?clcLandUse (COUNT(DISTINCT ?clc) AS ?count) 
+WHERE { 
+	GRAPH <http://geographica.di.uoa.gr/dataset/clc> { 
+		?clc rdf:type clc:Area. 
+		?clc clc:hasLandUse ?clcLandUse. 
+		?clc clc:hasGeometry ?clcGeo. 
+		?clcGeo clc:asWKT ?clcWkt. 
+		FILTER(geof:sfIntersects(?clcWkt, "<MUNICIPALITY_WKT>"^^geo:wktLiteral)). 
+}} 
+GROUP BY ?clcLandUse
+
+Query 1 - Count_GeoNames_categories:
+SELECT ?fClass ?fCode (COUNT(DISTINCT ?f) as ?count) 
+WHERE  
+{ 
+	GRAPH <http://geographica.di.uoa.gr/dataset/geonames> { 
+		?f rdf:type geonames:Feature. 
+		?f geonames:featureClass ?fClass. 
+		?f geonames:featureCode ?fCode. 
+		?f geonames:hasGeometry ?fGeo. 
+		?fGeo geonames:asWKT ?fWkt. 
+		FILTER(geof:sfIntersects(?fWkt, "<MUNICIPALITY_WKT>"^^geo:wktLiteral)). 
+ }} 
+GROUP BY ?fClass ?fCode
+
+Query 2 - Count_GeoNames_categories_in_ContinuousUrbanFabric:
+SELECT ?fClass (COUNT(DISTINCT ?f) as ?count) 
+WHERE { 
+	GRAPH <http://geographica.di.uoa.gr/dataset/clc> { 
+		?clc rdf:type clc:Area. 
+		?clc clc:hasLandUse clc:continuousUrbanFabric. 
+		?clc clc:hasGeometry ?clcGeo. 
+		?clcGeo clc:asWKT ?clcWkt. 
+		FILTER(geof:sfIntersects(?clcWkt, "<MUNICIPALITY_WKT>"^^geo:wktLiteral)). 
+} 
+	GRAPH <http://geographica.di.uoa.gr/dataset/geonames> { 
+		?f rdf:type geonames:Feature. 
+		?f geonames:featureClass ?fClass. 
+		?f geonames:hasGeometry ?fGeo. 
+		?fGeo geonames:asWKT ?fWkt. 
+		FILTER(geof:sfIntersects(?fWkt, "<MUNICIPALITY_WKT>"^^geo:wktLiteral)). 
+ } 
+	FILTER(geof:sfIntersects(?clcWkt, ?fWkt)). 
+} 
+GROUP BY ?fClass
+Start time = Τρι 14 Μαρ 2023 06:50:04 μμ EET
+End time = Τρι 14 Μαρ 2023 06:50:09 μμ EET

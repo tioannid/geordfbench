@@ -1,0 +1,183 @@
+{
+  "classname" : "gr.uoa.di.rdf.Geographica3.runtime.workloadspecs.impl.SimpleGeospatialWL",
+  "name" : "RWMacroMapSearch",
+  "relativeBaseDir" : "",
+  "geospatialDataset" : {
+    "name" : "realworld",
+    "relativeBaseDir" : "RealWorldWorkload",
+    "simpleGeospatialDataSetList" : [ {
+      "name" : "corine",
+      "relativeBaseDir" : "NO_CRS/RealWorld",
+      "dataFile" : "corine.nt",
+      "rdfFormat" : "N-TRIPLES",
+      "mapUsefulNamespacePrefixes" : {
+        "geo" : "<http://www.opengis.net/ont/geosparql#>",
+        "rdf" : "<http://www.w3.org/1999/02/22-rdf-syntax-ns#>",
+        "owl" : "<http://www.w3.org/2002/07/owl#>",
+        "geof" : "<http://www.opengis.net/def/function/geosparql/>",
+        "xsd" : "<http://www.w3.org/2001/XMLSchema#>",
+        "rdfs" : "<http://www.w3.org/2000/01/rdf-schema#>",
+        "geo-sf" : "<http://www.opengis.net/ont/sf#>",
+        "clc" : "<http://geo.linkedopendata.gr/corine/ontology#>"
+      },
+      "mapAsWKT" : {
+        "corineAsWKT" : "<http://geo.linkedopendata.gr/corine/ontology#asWKT>"
+      },
+      "mapHasGeometry" : {
+        "corineHasGeometry" : "<http://geo.linkedopendata.gr/corine/ontology#hasGeometry>"
+      }
+    }, {
+      "name" : "dbpedia",
+      "relativeBaseDir" : "NO_CRS/RealWorld",
+      "dataFile" : "dbpedia.nt",
+      "rdfFormat" : "N-TRIPLES",
+      "mapUsefulNamespacePrefixes" : {
+        "geo" : "<http://www.opengis.net/ont/geosparql#>",
+        "rdf" : "<http://www.w3.org/1999/02/22-rdf-syntax-ns#>",
+        "owl" : "<http://www.w3.org/2002/07/owl#>",
+        "geof" : "<http://www.opengis.net/def/function/geosparql/>",
+        "xsd" : "<http://www.w3.org/2001/XMLSchema#>",
+        "rdfs" : "<http://www.w3.org/2000/01/rdf-schema#>",
+        "geo-sf" : "<http://www.opengis.net/ont/sf#>"
+      },
+      "mapAsWKT" : {
+        "dbpediaAsWKT" : "<http://dbpedia.org/property/asWKT>"
+      }
+    }, {
+      "name" : "gag",
+      "relativeBaseDir" : "NO_CRS/RealWorld",
+      "dataFile" : "gag.nt",
+      "rdfFormat" : "N-TRIPLES",
+      "mapUsefulNamespacePrefixes" : {
+        "geo" : "<http://www.opengis.net/ont/geosparql#>",
+        "rdf" : "<http://www.w3.org/1999/02/22-rdf-syntax-ns#>",
+        "owl" : "<http://www.w3.org/2002/07/owl#>",
+        "geof" : "<http://www.opengis.net/def/function/geosparql/>",
+        "xsd" : "<http://www.w3.org/2001/XMLSchema#>",
+        "rdfs" : "<http://www.w3.org/2000/01/rdf-schema#>",
+        "geo-sf" : "<http://www.opengis.net/ont/sf#>",
+        "gag" : "<http://geo.linkedopendata.gr/gag/ontology/>"
+      },
+      "mapAsWKT" : {
+        "gagAsWKT" : "<http://geo.linkedopendata.gr/gag/ontology/asWKT>"
+      },
+      "mapHasGeometry" : {
+        "gagHasGeometry" : "<http://geo.linkedopendata.gr/gag/ontology/hasGeometry>"
+      }
+    }, {
+      "name" : "geonames",
+      "relativeBaseDir" : "NO_CRS/RealWorld",
+      "dataFile" : "geonames.nt",
+      "rdfFormat" : "N-TRIPLES",
+      "mapUsefulNamespacePrefixes" : {
+        "geo" : "<http://www.opengis.net/ont/geosparql#>",
+        "geonames" : "<http://www.geonames.org/ontology#>",
+        "rdf" : "<http://www.w3.org/1999/02/22-rdf-syntax-ns#>",
+        "owl" : "<http://www.w3.org/2002/07/owl#>",
+        "geof" : "<http://www.opengis.net/def/function/geosparql/>",
+        "xsd" : "<http://www.w3.org/2001/XMLSchema#>",
+        "rdfs" : "<http://www.w3.org/2000/01/rdf-schema#>",
+        "geo-sf" : "<http://www.opengis.net/ont/sf#>"
+      },
+      "mapAsWKT" : {
+        "geonamesAsWKT" : "<http://www.geonames.org/ontology#asWKT>"
+      },
+      "mapHasGeometry" : {
+        "geonamesHasGeometry" : "<http://www.geonames.org/ontology#hasGeometry>"
+      }
+    }, {
+      "name" : "hotspots",
+      "relativeBaseDir" : "NO_CRS/RealWorld",
+      "dataFile" : "hotspots.nt",
+      "rdfFormat" : "N-TRIPLES",
+      "mapUsefulNamespacePrefixes" : {
+        "geo" : "<http://www.opengis.net/ont/geosparql#>",
+        "noa" : "<http://teleios.di.uoa.gr/ontologies/noaOntology.owl#>",
+        "rdf" : "<http://www.w3.org/1999/02/22-rdf-syntax-ns#>",
+        "owl" : "<http://www.w3.org/2002/07/owl#>",
+        "geof" : "<http://www.opengis.net/def/function/geosparql/>",
+        "xsd" : "<http://www.w3.org/2001/XMLSchema#>",
+        "rdfs" : "<http://www.w3.org/2000/01/rdf-schema#>",
+        "geo-sf" : "<http://www.opengis.net/ont/sf#>"
+      },
+      "mapAsWKT" : {
+        "noaAsWKT" : "<http://teleios.di.uoa.gr/ontologies/noaOntology.owl#asWKT>"
+      },
+      "mapHasGeometry" : {
+        "noaHasGeometry" : "<http://teleios.di.uoa.gr/ontologies/noaOntology.owl#hasGeometry>"
+      }
+    }, {
+      "name" : "linkedgeodata",
+      "relativeBaseDir" : "NO_CRS/RealWorld",
+      "dataFile" : "linkedgeodata.nt",
+      "rdfFormat" : "N-TRIPLES",
+      "mapUsefulNamespacePrefixes" : {
+        "geo" : "<http://www.opengis.net/ont/geosparql#>",
+        "lgdo" : "<http://linkedgeodata.org/ontology/>",
+        "rdf" : "<http://www.w3.org/1999/02/22-rdf-syntax-ns#>",
+        "owl" : "<http://www.w3.org/2002/07/owl#>",
+        "geof" : "<http://www.opengis.net/def/function/geosparql/>",
+        "xsd" : "<http://www.w3.org/2001/XMLSchema#>",
+        "rdfs" : "<http://www.w3.org/2000/01/rdf-schema#>",
+        "geo-sf" : "<http://www.opengis.net/ont/sf#>"
+      },
+      "mapAsWKT" : {
+        "lgdAsWKT" : "<http://linkedgeodata.org/ontology/asWKT>"
+      },
+      "mapHasGeometry" : {
+        "lgdHasGeometry" : "<http://linkedgeodata.org/ontology/hasGeometry>"
+      }
+    } ],
+    "mapDataSetContexts" : {
+      "geonames" : "<http://geographica.di.uoa.gr/dataset/geonames>",
+      "hotspot" : "<http://geographica.di.uoa.gr/dataset/hotspots>",
+      "lgd" : "<http://geographica.di.uoa.gr/dataset/lgd>",
+      "dbpedia" : "<http://geographica.di.uoa.gr/dataset/dbpedia>",
+      "clc" : "<http://geographica.di.uoa.gr/dataset/clc>",
+      "gag" : "<http://geographica.di.uoa.gr/dataset/gag>"
+    },
+    "n" : 0
+  },
+  "geospatialQueryset" : {
+    "classname" : "gr.uoa.di.rdf.Geographica3.runtime.querysets.partofworkload.impl.MacroMapSearchQS",
+    "name" : "mapsearch",
+    "relativeBaseDir" : "",
+    "hasPredicateQueriesAlso" : false,
+    "mapQueries" : {
+      "0" : {
+        "label" : "Thematic_Search",
+        "text" : "SELECT ?f ?name ?geo ?wkt\nWHERE {\n\tGRAPH <http://geographica.di.uoa.gr/dataset/geonames> {\n\t\t?f geonames:name ?name;\n\t\t\t<http://www.geonames.org/ontology#hasGeometry> ?geo.\n\t\t?geo <http://www.geonames.org/ontology#asWKT> ?wkt.\n\t\tFILTER(?name = \"<TOPONYME>\"^^xsd:string)\n\t}\n}",
+        "usePredicate" : false,
+        "expectedResults" : -2
+      },
+      "1" : {
+        "label" : "Get_Around_POIs",
+        "text" : "SELECT ?f ?name ?fGeo ?code ?parent ?class ?fGeoWKT\nWHERE {\n\tGRAPH <http://geographica.di.uoa.gr/dataset/geonames> {\n\t\t?f geonames:name ?name;\n\t\t\tgeonames:hasGeometry ?fGeo;\n\t\t\tgeonames:featureCode ?code;\n\t\t\tgeonames:parentFeature ?parent;\n\t\t\tgeonames:featureClass ?class.\n\t\t?fGeo geonames:asWKT ?fGeoWKT.\n\t\tFILTER(geof:sfIntersects(?fGeoWKT, \"<RECTANGLE_LITERAL>\"^^geo:wktLiteral)).\n\t}\n}",
+        "usePredicate" : false,
+        "expectedResults" : -2
+      },
+      "2" : {
+        "label" : "Get_Around_Roads",
+        "text" : "SELECT ?r ?label ?rGeo ?rGeoWKT\nWHERE {\n\tGRAPH <http://geographica.di.uoa.gr/dataset/lgd> {\n\t\t?r rdf:type ?type.\n\t\tOPTIONAL{ ?r rdfs:label ?label }.\n\t\t?r lgo:hasGeometry ?rGeo.\n\t\t?rGeo lgo:asWKT ?rGeoWKT.\n\t\tFILTER(geof:sfIntersects(?rGeoWKT, \"<RECTANGLE_LITERAL>\"^^geo:wktLiteral)).\n\t}\n}",
+        "usePredicate" : false,
+        "expectedResults" : -2
+      }
+    },
+    "mapUsefulNamespacePrefixes" : {
+      "lgo" : "<http://linkedgeodata.org/ontology/>"
+    },
+    "executionSpec" : {
+      "execTypeReps" : {
+        "COLD_CONTINUOUS" : -1
+      },
+      "maxDurationSecsPerQueryRep" : 3610,
+      "maxDurationSecs" : 3600,
+      "action" : "RUN",
+      "avgFunc" : "QUERYSET_MEAN",
+      "onColdFailure" : "EXCLUDE_AND_PROCEED",
+      "clearCacheDelaymSecs" : 5000
+    },
+    "toponymTemplateName" : "<TOPONYME>",
+    "rectangleTemplateName" : "<RECTANGLE_LITERAL>"
+  }
+}

@@ -1,0 +1,115 @@
+ARGS = -rbd GraphDB_Repos -expdesc 190#_2023-03-14_GraphDBSUT_Print_RWMacroRevGeo -ds /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/datasets/realworldDSoriginal.json -h /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/hosts/ubuntu_vma_tioaHOSToriginal_1.json -rs /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/reportspecs/simplereportspec_original.json -rpsr /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/reportsources/ubuntu_vma_tioaRepSrcoriginal.json -es /media/sf_VM_Shared/microESoriginal.json -qs /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/querysets/rwmacroreversegeocodingQSoriginal.json
+log4j:ERROR Could not connect to remote log4j server at [localhost]. We will try again later.
+0    [main] INFO  RunSUTExperiment  - args[0] = -rbd
+1    [main] INFO  RunSUTExperiment  - args[1] = GraphDB_Repos
+1    [main] INFO  RunSUTExperiment  - args[2] = -expdesc
+1    [main] INFO  RunSUTExperiment  - args[3] = 190#_2023-03-14_GraphDBSUT_Print_RWMacroRevGeo
+2    [main] INFO  RunSUTExperiment  - args[4] = -ds
+2    [main] INFO  RunSUTExperiment  - args[5] = /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/datasets/realworldDSoriginal.json
+2    [main] INFO  RunSUTExperiment  - args[6] = -h
+2    [main] INFO  RunSUTExperiment  - args[7] = /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/hosts/ubuntu_vma_tioaHOSToriginal_1.json
+2    [main] INFO  RunSUTExperiment  - args[8] = -rs
+2    [main] INFO  RunSUTExperiment  - args[9] = /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/reportspecs/simplereportspec_original.json
+2    [main] INFO  RunSUTExperiment  - args[10] = -rpsr
+2    [main] INFO  RunSUTExperiment  - args[11] = /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/reportsources/ubuntu_vma_tioaRepSrcoriginal.json
+3    [main] INFO  RunSUTExperiment  - args[12] = -es
+3    [main] INFO  RunSUTExperiment  - args[13] = /media/sf_VM_Shared/microESoriginal.json
+3    [main] INFO  RunSUTExperiment  - args[14] = -qs
+3    [main] INFO  RunSUTExperiment  - args[15] = /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/querysets/rwmacroreversegeocodingQSoriginal.json
+7    [main] INFO  RunSUTExperiment  - |==> Dataset, Host, Report, Execution, QuerySet related options
+7    [main] INFO  RunSUTExperiment  - Experiment description:	190#_2023-03-14_GraphDBSUT_Print_RWMacroRevGeo
+7    [main] INFO  RunSUTExperiment  - Dataset configuration JSON file:	/home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/datasets/realworldDSoriginal.json
+7    [main] INFO  RunSUTExperiment  - Host configuration JSON file:	/home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/hosts/ubuntu_vma_tioaHOSToriginal_1.json
+8    [main] INFO  RunSUTExperiment  - Report specs configuration JSON file:	/home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/reportspecs/simplereportspec_original.json
+8    [main] INFO  RunSUTExperiment  - Report source specs configuration JSON file:	/home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/reportsources/ubuntu_vma_tioaRepSrcoriginal.json
+8    [main] INFO  RunSUTExperiment  - Execution specs configuration JSON file:	/media/sf_VM_Shared/microESoriginal.json
+8    [main] INFO  RunSUTExperiment  - Queryset configuration JSON file:	/home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/querysets/rwmacroreversegeocodingQSoriginal.json
+8    [main] INFO  RunSUTExperiment  - List of queries to include in the run:	all
+8    [main] INFO  RunGraphDBExperiment  - |==> System options
+9    [main] INFO  RunGraphDBExperiment  - BaseDir:	GraphDB_Repos
+387  [main] INFO  RunSUTExperiment  - {GeographicaDS: realworld, RealWorldWorkload,
+	{GenericGeospatialSimpleDS: corine, N-TRIPLES}
+	{GenericGeospatialSimpleDS: dbpedia, N-TRIPLES}
+	{GenericGeospatialSimpleDS: gag, N-TRIPLES}
+	{GenericGeospatialSimpleDS: geonames, N-TRIPLES}
+	{GenericGeospatialSimpleDS: hotspots, N-TRIPLES}
+	{GenericGeospatialSimpleDS: linkedgeodata, N-TRIPLES}}
+1173 [main] INFO  GraphDBSUT  - Initializing..
+SLF4J: Class path contains multiple SLF4J bindings.
+SLF4J: Found binding in [jar:file:/home/tioannid/NetBeansProjects/PhD/Geographica3/GraphDBSUT/target/logback-classic-1.2.11.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: Found binding in [jar:file:/home/tioannid/NetBeansProjects/PhD/Geographica3/GraphDBSUT/target/slf4j-log4j12-1.7.30.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+18:32:13,686 |-INFO in ch.qos.logback.classic.LoggerContext[default] - Found resource [logback-test.xml] at [jar:file:/home/tioannid/NetBeansProjects/PhD/Geographica3/GraphDBSUT/target/GraphDBSUT-3.0-M6-SNAPSHOT.jar!/logback-test.xml]
+18:32:13,689 |-WARN in ch.qos.logback.classic.LoggerContext[default] - Resource [logback-test.xml] occurs multiple times on the classpath.
+18:32:13,689 |-WARN in ch.qos.logback.classic.LoggerContext[default] - Resource [logback-test.xml] occurs at [file:/home/tioannid/NetBeansProjects/PhD/Geographica3/GraphDBSUT/target/classes/logback-test.xml]
+18:32:13,689 |-WARN in ch.qos.logback.classic.LoggerContext[default] - Resource [logback-test.xml] occurs at [jar:file:/home/tioannid/NetBeansProjects/PhD/Geographica3/GraphDBSUT/target/GraphDBSUT-3.0-M6-SNAPSHOT.jar!/logback-test.xml]
+18:32:13,710 |-INFO in ch.qos.logback.core.joran.spi.ConfigurationWatchList@37fb0bed - URL [jar:file:/home/tioannid/NetBeansProjects/PhD/Geographica3/GraphDBSUT/target/GraphDBSUT-3.0-M6-SNAPSHOT.jar!/logback-test.xml] is not of type file
+18:32:13,983 |-INFO in ch.qos.logback.classic.joran.action.ConfigurationAction - debug attribute not set
+18:32:13,984 |-INFO in ch.qos.logback.core.joran.action.AppenderAction - About to instantiate appender of type [ch.qos.logback.core.ConsoleAppender]
+18:32:13,991 |-INFO in ch.qos.logback.core.joran.action.AppenderAction - Naming appender as [STDOUT]
+18:32:13,997 |-INFO in ch.qos.logback.core.joran.action.NestedComplexPropertyIA - Assuming default type [ch.qos.logback.classic.encoder.PatternLayoutEncoder] for [encoder] property
+18:32:14,039 |-INFO in ch.qos.logback.classic.joran.action.RootLoggerAction - Setting level of ROOT logger to WARN
+18:32:14,039 |-INFO in ch.qos.logback.core.joran.action.AppenderRefAction - Attaching appender named [STDOUT] to Logger[ROOT]
+18:32:14,040 |-INFO in ch.qos.logback.classic.joran.action.LoggerAction - Setting level of logger [com.ontotext.*] to WARN
+18:32:14,040 |-INFO in ch.qos.logback.classic.joran.action.LoggerAction - Setting level of logger [com.ontotext.plugin.GeoSPARQL] to INFO
+18:32:14,040 |-INFO in ch.qos.logback.classic.joran.action.LoggerAction - Setting level of logger [c.o.*] to INFO
+18:32:14,040 |-INFO in ch.qos.logback.classic.joran.action.LoggerAction - Setting level of logger [c.o.trree.sdk.impl.PluginManager] to INFO
+18:32:14,040 |-INFO in ch.qos.logback.classic.joran.action.ConfigurationAction - End of configuration.
+18:32:14,041 |-INFO in ch.qos.logback.classic.joran.JoranConfigurator@a82c5f1 - Registering current configuration as safe fallback point
+
+SLF4J: Actual binding is of type [ch.qos.logback.classic.util.ContextSelectorStaticBinder]
+18:32:15.518 [main] WARN  c.o.t.f.GraphDBFreeSchemaRepository - Rule list configuration present, it will override all other rule sets parameters!
+18:32:15.852 [main] WARN  com.ontotext.GraphDBConfigParameters - Unable to determine distribution plugins directory: graphdb.dist must be set to the GraphDB distribution directory.
+18:32:18.156 [main] INFO  com.ontotext.plugin.GeoSPARQL - >>>>>>>> GeoSPARQL: Initializing Lucene indexer...
+18:32:18.258 [main] INFO  com.ontotext.plugin.GeoSPARQL - >>>>>>>> GeoSPARQL: Lucene indexer initialized!
+6679 [main] INFO  Experiment  - GraphDBSystem-dependent translation of the queryset reversegeocoding
+6680 [main] INFO  Experiment  - GraphDBSystem-dependent namespace prefixes merged with the prefixes of queryset reversegeocoding
+6682 [main] INFO  GraphDBSUT  - Closing..
+6682 [main] INFO  GraphDBSystem  - Closing connection...
+7471 [main] INFO  GraphDBSystem  - Repository closed.
+9618 [main] INFO  GraphDBSUT  - Closed (caches not cleared)
+MacroReverseGeocoding
+reversegeocoding
+
+PREFIX clc: <http://geo.linkedopendata.gr/corine/ontology#> 
+PREFIX ext: <http://rdf.useekm.com/ext#> 
+PREFIX gag: <http://geo.linkedopendata.gr/gag/ontology/> 
+PREFIX geo: <http://www.opengis.net/ont/geosparql#> 
+PREFIX geo-sf: <http://www.opengis.net/ont/sf#> 
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/> 
+PREFIX geonames: <http://www.geonames.org/ontology#> 
+PREFIX lgdo: <http://linkedgeodata.org/ontology/> 
+PREFIX noa: <http://teleios.di.uoa.gr/ontologies/noaOntology.owl#> 
+PREFIX owl: <http://www.w3.org/2002/07/owl#> 
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+PREFIX uom: <http://www.opengis.net/def/uom/OGC/1.0/> 
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
+
+
+Query 0 - Find_Closest_Populated_Place:
+SELECT ?f (geof:distance(?cGeoWKT, <POINT_LITERAL>, uom:metre) AS ?distance)
+WHERE {
+	GRAPH <http://geographica.di.uoa.gr/dataset/geonames> {
+		?f geonames:featureCode geonames:P.PPL;
+			<http://www.geonames.org/ontology#hasGeometry> ?cGeo.
+		?cGeo <http://www.geonames.org/ontology#asWKT> ?cGeoWKT.
+	}
+}
+ORDER BY ASC(?distance)
+LIMIT 1
+
+Query 1 - Find_Closest_Motorway:
+SELECT ?c ?type ?label (geof:distance(?cGeoWKT, <POINT_LITERAL>, uom:metre) AS ?distance) ?cGeoWKT
+WHERE {
+	GRAPH <http://geographica.di.uoa.gr/dataset/lgd> {
+		?c rdf:type lgdo:Motorway;
+			rdfs:label ?label;
+			<http://linkedgeodata.org/ontology/hasGeometry> ?cGeo.
+		?cGeo <http://linkedgeodata.org/ontology/asWKT> ?cGeoWKT.
+	}
+}
+ORDER BY ASC(?distance)
+LIMIT 1
+Start time = Τρι 14 Μαρ 2023 06:32:12 μμ EET
+End time = Τρι 14 Μαρ 2023 06:32:22 μμ EET

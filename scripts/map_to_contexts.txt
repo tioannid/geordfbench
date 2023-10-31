@@ -1,0 +1,6 @@
+corine.nt	<http://geographica.di.uoa.gr/dataset/clc>
+gag.nt	<http://geographica.di.uoa.gr/dataset/gag>
+geonames.nt	<http://geographica.di.uoa.gr/dataset/geonames>
+hotspots.nt	<http://geographica.di.uoa.gr/dataset/hotspots>
+linkedgeodata.nt	<http://geographica.di.uoa.gr/dataset/lgd>
+dbpedia.nt	<http://geographica.di.uoa.gr/dataset/dbpedia>

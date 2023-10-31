@@ -1,0 +1,4 @@
+These three scripts can be used (after being properly customized for each environment) in case there is a postgres installation compiled from sources and all binaries/services are not working as expected.
+They must be owned by root and added to /etc/sudoers.
+They can be used from the terminal or from within the Geographica SUT (System Under Test) java code.
+They were used in the series of tests in teleios3.di.uoa.gr for Geographica v2.

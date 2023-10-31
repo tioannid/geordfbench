@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>gr.uoa.di.rdf</groupId>
+        <artifactId>GeoRDFBench</artifactId>
+        <version>1.0.0</version>
+    </parent>
+    
+    <artifactId>GraphDBSUT</artifactId>
+    <name>GraphDBSUT</name>
+    <description>A client SUT for GraphDB</description>
+    <packaging>jar</packaging>
+    <properties>
+        <rdf4j.version>${graphdb.rdf4j.version}</rdf4j.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>com.ontotext.graphdb</groupId>
+            <artifactId>graphdb-free-runtime</artifactId>
+            <version>${graphdb.version}</version>
+            <!-- suggestion on the "GraphDB 8.6.1 Free - Geospatial predicates don't work with runtime but work with Workbench" 
+            question in https://stackoverflow.com/questions/53651942/graphdb-8-6-1-free-geospatial-predicates-dont-work-with-runtime-but-work-with 
+            -->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.eclipse.rdf4j</groupId>
+                    <artifactId>rdf4j-storage</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.rdf4j</groupId>
+                    <artifactId>rdf4j-sail-lucene</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.rdf4j</groupId>
+                    <artifactId>rdf4j-sail-lucene-spin</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.rdf4j</groupId>
+                    <artifactId>rdf4j-sail-elasticsearch</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.rdf4j</groupId>
+                    <artifactId>rdf4j-sail-solr</artifactId>
+                </exclusion>
+            </exclusions> 
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-repository-manager</artifactId>
+            <version>${rdf4j.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-rio-api</artifactId>
+            <version>${rdf4j.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-rio-rdfxml</artifactId>
+            <version>${rdf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-rio-turtle</artifactId>
+            <version>${rdf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>gr.uoa.di.rdf</groupId>
+            <artifactId>runtime</artifactId>
+            <version>${gr.uoa.di.rdf.geordfbench.version}</version>
+            <type>jar</type>
+<!--            The following 3 exclusions were necessary in order to avoid the
+            runtime exception that occurred during query evaluation of
+            queries with spatial predicates which obviously use Lucene-->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.lucene</groupId>
+                    <artifactId>lucene-queryparser</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.rdf4j</groupId>
+                    <artifactId>rdf4j-sail-elasticsearch</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.rdf4j</groupId>
+                    <artifactId>rdf4j-sail-solr</artifactId>
+                </exclusion>
+            </exclusions> 
+        </dependency>
+    </dependencies>
+</project>

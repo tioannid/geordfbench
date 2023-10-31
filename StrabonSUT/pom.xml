@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<project
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+    xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>gr.uoa.di.rdf</groupId>
+        <artifactId>GeoRDFBench</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>StrabonSUT</artifactId>
+    <name>StrabonSUT</name>
+    <description>A client SUT for Strabon</description>
+
+    <properties>
+        <aduna.appbase.version>3.5.0</aduna.appbase.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>gr.uoa.di.rdf</groupId>
+            <artifactId>runtime</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>eu.earthobservatory</groupId>
+            <artifactId>strabon-runtime</artifactId>
+            <version>${eu.earthobservatory.version}</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+</project>

@@ -1,0 +1,83 @@
+ARGS = -rbd RDF4J_3.7.7_Repos/server -expdesc 190#_2023-03-14_RDF4JSUT_Print_Scalability -ds /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/datasets/scalability_10Koriginal.json -h /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/hosts/ubuntu_vma_tioaHOSToriginal.json -rs /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/reportspecs/simplereportspec_original.json -rpsr /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/reportsources/ubuntu_vma_tioaRepSrcoriginal.json -es /media/sf_VM_Shared/microESoriginal.json -qs /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/querysets/scalabilityFuncQSoriginal.json
+log4j:ERROR Could not connect to remote log4j server at [localhost]. We will try again later.
+0    [main] INFO  RunSUTExperiment  - args[0] = -rbd
+1    [main] INFO  RunSUTExperiment  - args[1] = RDF4J_3.7.7_Repos/server
+1    [main] INFO  RunSUTExperiment  - args[2] = -expdesc
+1    [main] INFO  RunSUTExperiment  - args[3] = 190#_2023-03-14_RDF4JSUT_Print_Scalability
+2    [main] INFO  RunSUTExperiment  - args[4] = -ds
+2    [main] INFO  RunSUTExperiment  - args[5] = /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/datasets/scalability_10Koriginal.json
+2    [main] INFO  RunSUTExperiment  - args[6] = -h
+2    [main] INFO  RunSUTExperiment  - args[7] = /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/hosts/ubuntu_vma_tioaHOSToriginal.json
+2    [main] INFO  RunSUTExperiment  - args[8] = -rs
+2    [main] INFO  RunSUTExperiment  - args[9] = /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/reportspecs/simplereportspec_original.json
+2    [main] INFO  RunSUTExperiment  - args[10] = -rpsr
+2    [main] INFO  RunSUTExperiment  - args[11] = /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/reportsources/ubuntu_vma_tioaRepSrcoriginal.json
+3    [main] INFO  RunSUTExperiment  - args[12] = -es
+3    [main] INFO  RunSUTExperiment  - args[13] = /media/sf_VM_Shared/microESoriginal.json
+3    [main] INFO  RunSUTExperiment  - args[14] = -qs
+3    [main] INFO  RunSUTExperiment  - args[15] = /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/querysets/scalabilityFuncQSoriginal.json
+8    [main] INFO  RunSUTExperiment  - |==> Dataset, Host, Report, Execution, QuerySet related options
+8    [main] INFO  RunSUTExperiment  - Experiment description:	190#_2023-03-14_RDF4JSUT_Print_Scalability
+8    [main] INFO  RunSUTExperiment  - Dataset configuration JSON file:	/home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/datasets/scalability_10Koriginal.json
+8    [main] INFO  RunSUTExperiment  - Host configuration JSON file:	/home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/hosts/ubuntu_vma_tioaHOSToriginal.json
+9    [main] INFO  RunSUTExperiment  - Report specs configuration JSON file:	/home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/reportspecs/simplereportspec_original.json
+9    [main] INFO  RunSUTExperiment  - Report source specs configuration JSON file:	/home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/reportsources/ubuntu_vma_tioaRepSrcoriginal.json
+9    [main] INFO  RunSUTExperiment  - Execution specs configuration JSON file:	/media/sf_VM_Shared/microESoriginal.json
+9    [main] INFO  RunSUTExperiment  - Queryset configuration JSON file:	/home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/querysets/scalabilityFuncQSoriginal.json
+9    [main] INFO  RunSUTExperiment  - List of queries to include in the run:	all
+9    [main] INFO  RunRDF4JExperiment  - |==> System options
+9    [main] INFO  RunRDF4JExperiment  - BaseDir:	RDF4J_3.7.7_Repos/server
+500  [main] INFO  RunSUTExperiment  - {GeographicaDS: scalability_10K, Scalability/10K,
+	{GenericGeospatialSimpleDS: scalability_10K, N-TRIPLES}}
+1363 [main] INFO  RDF4JSUT  - Initializing..
+1895 [main] INFO  Experiment  - RDF4JBasedGeographicaSystem-dependent translation of the queryset scalabilityFunc
+1896 [main] INFO  Experiment  - RDF4JBasedGeographicaSystem-dependent namespace prefixes merged with the prefixes of queryset scalabilityFunc
+1901 [main] INFO  RDF4JSUT  - Closing..
+1901 [main] INFO  RDF4JBasedGeographicaSystem  - Closing connection...
+1909 [main] INFO  RDF4JBasedGeographicaSystem  - Repository closed.
+3993 [main] INFO  RDF4JSUT  - Closed (caches not cleared)
+Scalability
+scalabilityFunc
+
+PREFIX geo: <http://www.opengis.net/ont/geosparql#> 
+PREFIX geo-sf: <http://www.opengis.net/ont/sf#> 
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/> 
+PREFIX lgo: <http://data.linkedeodata.eu/ontology#> 
+PREFIX owl: <http://www.w3.org/2002/07/owl#> 
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
+
+
+Query 0 - SC1_Geometries_Intersects_GivenPolygon:
+SELECT ?s1 ?o1 WHERE { 
+ ?s1 geo:asWKT ?o1 . 
+  FILTER(geof:sfIntersects(?o1, "POLYGON((23.708496093749996 37.95719224376526,22.906494140625 40.659805938378526,11.524658203125002 48.16425348854739,-0.1181030273437499 51.49506473014367,-3.2189941406250004 55.92766341247031,-5.940856933593749 54.59116279530599,-3.1668090820312504 51.47967237816337,23.708496093749996 37.95719224376526))"^^<http://www.opengis.net/ont/geosparql#wktLiteral>)). 
+} 
+
+
+Query 1 - SC2_Intensive_Geometries_Intersect_Geometries:
+SELECT ?s1 ?s2 
+WHERE { 
+ ?s1 geo:hasGeometry [ geo:asWKT ?o1 ] ;
+    lgo:has_code "1001"^^xsd:integer . 
+ ?s2 geo:hasGeometry [ geo:asWKT ?o2 ] ;
+    lgo:has_code ?code2 .  
+ FILTER(?code2>5000 && ?code2<6000 && ?code2 != 5260) .
+ FILTER(geof:sfIntersects(?o1, ?o2)). 
+} 
+
+
+Query 2 - SC3_Relaxed_Geometries_Intersect_Geometries:
+SELECT ?s1 ?s2
+WHERE {
+ ?s1 geo:hasGeometry [ geo:asWKT ?o1 ] ;
+    lgo:has_code "1001"^^xsd:integer .
+ ?s2 geo:hasGeometry [ geo:asWKT ?o2 ] ;
+    lgo:has_code ?code2 .
+ FILTER(?code2 IN (5622, 5601, 5641, 5621, 5661)) .
+ FILTER(geof:sfIntersects(?o1, ?o2)).
+} 
+
+Start time = Τρι 14 Μαρ 2023 06:11:04 μμ EET
+End time = Τρι 14 Μαρ 2023 06:11:09 μμ EET

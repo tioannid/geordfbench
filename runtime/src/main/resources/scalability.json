@@ -1,0 +1,25 @@
+[ {
+    "label" : "SC1_Geometries_Intersects_GivenPolygon",
+    "query" : "SELECT ?s1 ?o1 WHERE { \n ?s1 geo:asWKT ?o1 . \n  FILTER(geof:FUNCTION(?o1, GIVEN_SPATIAL_LITERAL)). \n} \n",
+    "usePredicate" : false
+  }, {
+    "label" : "SC2_Intensive_Geometries_Intersect_Geometries",
+    "query" : "SELECT ?s1 ?s2 \nWHERE { \n ?s1 geo:hasGeometry [ geo:asWKT ?o1 ] ;\n    lgd:has_code \"1001\"^^xsd:integer . \n ?s2 geo:hasGeometry [ geo:asWKT ?o2 ] ;\n    lgd:has_code ?code2 .  \n FILTER(?code2>5000 && ?code2<6000 && ?code2 != 5260) .\n FILTER(geof:FUNCTION(?o1, ?o2)). \n} \n",
+    "usePredicate" : false
+  }, {
+    "label" : "SC3_Relaxed_Geometries_Intersect_Geometries",
+    "query" : "SELECT ?s1 ?s2\nWHERE {\n ?s1 geo:hasGeometry [ geo:asWKT ?o1 ] ;\n    lgd:has_code \"1001\"^^xsd:integer .\n ?s2 geo:hasGeometry [ geo:asWKT ?o2 ] ;\n    lgd:has_code ?code2 .\n FILTER(?code2 IN (5622, 5601, 5641, 5621, 5661)) .\n FILTER(geof:FUNCTION(?o1, ?o2)).\n} \n",
+    "usePredicate" : false
+  }, {
+    "label" : "SC1_Geometries_Intersects_GivenPolygon",
+    "query" : "SELECT ?s1 ?o1 WHERE { \n ?s1 geo:asWKT ?o1 . \n ?s1 geo:FUNCTION GIVEN_SPATIAL_LITERAL . \n} \n",
+    "usePredicate" : true
+  }, {
+    "label" : "SC2_Intensive_Geometries_Intersect_Geometries",
+    "query" : "SELECT ?s1 ?s2 \nWHERE { \n ?s1 geo:hasGeometry ?g1 ;\n    lgd:has_code \"1001\"^^xsd:integer . \n ?s2 geo:hasGeometry ?g2 ;\n    lgd:has_code ?code2 .  \n ?g1 geo:FUNCTION ?g2 . \n FILTER(?code2>5000 && ?code2<6000 && ?code2 != 5260) .\n} \n",
+    "usePredicate" : true
+  }, {
+    "label" : "SC3_Relaxed_Geometries_Intersect_Geometries",
+    "query" : "SELECT ?s1 ?s2\nWHERE {\n ?s1 geo:hasGeometry ?g1 ;\n    lgd:has_code \"1001\"^^xsd:integer .\n ?s2 geo:hasGeometry ?g2 ;\n    lgd:has_code ?code2 .\n ?g1 geo:FUNCTION ?g2 . \n FILTER(?code2 IN (5622, 5601, 5641, 5621, 5661)) .\n} \n",
+    "usePredicate" : true
+  } ]

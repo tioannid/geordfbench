@@ -1,0 +1,15 @@
+{
+  "classname" : "gr.uoa.di.rdf.Geographica3.runtime.hosts.impl.SimpleHost",
+  "name" : "NUC8i7BEH",
+  "ipAddr" : "192.168.1.44",
+  "ram" : 32,
+  "os" : {
+    "name" : "Ubuntu-jammy",
+    "shell_cmd" : "/bin/sh",
+    "sync_cmd" : "sync",
+    "clearcache_cmd" : "sudo /sbin/sysctl vm.drop_caches=3"
+  },
+  "sourceFileDir" : "/data/Geographica2_Datasets",
+  "reposBaseDir" : "/data",
+  "reportsBaseDir" : "/data/Results_Store"
+}

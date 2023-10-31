@@ -1,0 +1,274 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>gr.uoa.di.rdf</groupId>
+        <artifactId>GeoRDFBench</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>runtime</artifactId>
+    <name>GeoRDFBench runtime</name>
+    <description>Runtime</description>
+
+    <properties>
+        <aduna.appbase.version>3.5.0</aduna.appbase.version>
+        <spring.version>2.5.6</spring.version>
+        <ogc.tools.gml.version>3.1.1</ogc.tools.gml.version>
+        <xml.bind.version>2.1.7</xml.bind.version>
+        <skipTests>false</skipTests>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <!-- setup BOM (Bill Of Materials) to avoid version mismatch and
+                duplication of libraries in the classpath -->
+                <groupId>org.eclipse.rdf4j</groupId>
+                <artifactId>rdf4j-bom</artifactId>
+                <version>${rdf4j.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>    
+    </dependencyManagement>
+    
+    <dependencies>
+        <dependency>
+            <groupId>gr.uoa.di.rdf</groupId>
+            <artifactId>generators</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- 1. RDF4J Dependencies -->
+        <dependency>
+            <!--the RDF4J core framework--> 
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-runtime</artifactId>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <!-- ability to query RDF with the RDF4J framework -->
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-repository-sail</artifactId>
+        </dependency>
+        <dependency>
+            <!-- in-memory storage backend module of RDF4J -->
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-sail-memory</artifactId>
+        </dependency>
+        <dependency>
+            <!-- persistent/native storage backend module of RDF4J -->
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-sail-nativerdf</artifactId>
+        </dependency>
+        <dependency>
+            <!-- Lucene backend module of RDF4J - Apache Lucene 5 searchIndex implementation -->
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-sail-lucene</artifactId>
+        </dependency>
+        <dependency>
+            <!-- Turtle module of the RDF4J RIO parser -->
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-rio-turtle</artifactId>
+        </dependency>
+        <dependency>
+            <!-- N-Triples module of the RDF4J RIO parser -->
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-rio-ntriples</artifactId>
+        </dependency>
+        <dependency>
+            <!-- TRIG module of the RDF4J RIO parser -->
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-rio-trig</artifactId>
+        </dependency>
+        <dependency>
+            <!--  GeoSparql support for RDF4J RIO parser -->
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-queryalgebra-geosparql</artifactId>
+        </dependency>
+
+        <!-- JSON parser -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+
+        <!-- Apache Commons -->
+        <dependency>
+            <groupId>commons-cli</groupId>
+            <artifactId>commons-cli</artifactId>
+            <version>1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+            <version>1.3</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>1.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>1.3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>3.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+                <exclusion>
+                    <!-- httpclient includes older codec -->
+                    <groupId>commons-codec</groupId>
+                    <artifactId>commons-codec</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.4</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-validator</groupId>
+            <artifactId>commons-validator</artifactId>
+            <version>1.3.1</version>
+        </dependency>
+        <!-- Spring framework -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+            <version>${spring.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- Compliance tests -->
+        <dependency>
+            <groupId>edu.lehigh.swat.bench</groupId>
+            <artifactId>uba</artifactId>
+            <version>1.7</version>
+        </dependency>
+        <dependency>
+            <groupId>edu.lehigh.swat.bench</groupId>
+            <artifactId>ubt</artifactId>
+            <version>1.1</version>
+        </dependency>
+        <!-- Testing: JUnit -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.7</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- Various -->
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib</artifactId>
+            <version>2.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jvnet.ogc</groupId>
+            <artifactId>ogc-tools-gml-jts</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <version>2.1.1</version>
+        </dependency>
+        <!-- We have included rdf4j-runtime which has
+            rdf4j-query as a dependency
+        <dependency>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-query</artifactId>
+            <version>${rdf4j.version}</version>
+            <type>jar</type>
+        </dependency>
+        -->
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-web-api</artifactId>
+            <version>6.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Strabon stop -->
+        
+        <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.2.18</version>
+        </dependency>
+        <!-- Jena dependencies -->
+        <!-- https://mvnrepository.com/artifact/org.apache.jena/jena-arq -->
+        <!--        <dependency>
+            <groupId>org.apache.jena</groupId>
+            <artifactId>jena-arq</artifactId>
+            <version>${jena.version}</version>
+        </dependency>-->
+        <!-- https://mvnrepository.com/artifact/org.apache.jena/jena-tdb2 -->
+        <!--        <dependency>
+            <groupId>org.apache.jena</groupId>
+            <artifactId>jena-tdb2</artifactId>
+            <version>${jena.version}</version>
+        </dependency>-->
+        <dependency>
+            <groupId>org.apache.jena</groupId>
+            <artifactId>apache-jena-libs</artifactId>
+            <version>${jena.version}</version>
+            <type>pom</type>
+        </dependency>   
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <skipIfEmpty>true</skipIfEmpty>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+</project>

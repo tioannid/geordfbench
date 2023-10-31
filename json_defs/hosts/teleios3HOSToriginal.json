@@ -1,0 +1,15 @@
+{
+  "classname" : "gr.uoa.di.rdf.Geographica3.runtime.hosts.impl.SimpleHost",
+  "name" : "teleios3",
+  "ipAddr" : "10.0.10.12",
+  "ram" : 32,
+  "os" : {
+    "name" : "Ubuntu-precise",
+    "shell_cmd" : "/bin/sh",
+    "sync_cmd" : "sync",
+    "clearcache_cmd" : "sudo /sbin/sysctl vm.drop_caches=3"
+  },
+  "sourceFileDir" : "/home/journal/Geographica_Datasets",
+  "reposBaseDir" : "/home/journal",
+  "reportsBaseDir" : "/home/journal"
+}
