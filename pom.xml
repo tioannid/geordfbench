@@ -20,7 +20,7 @@
     </modules>
 	
     <properties>
-        <eu.earthobservatory.version>3.3.2-SNAPSHOT</eu.earthobservatory.version>
+        <eu.earthobservatory.version>3.2.9-SNAPSHOT</eu.earthobservatory.version>
         <gr.uoa.di.rdf.geordfbench.version>${project.version}</gr.uoa.di.rdf.geordfbench.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <slf4j.version>1.7.30</slf4j.version>
