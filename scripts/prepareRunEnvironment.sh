@@ -64,9 +64,7 @@ fi
 # check if mercurial is installed and define the changeset value
 Changeset="00"
 export res=`type -p "hg"`
-if [[ -z "$res" ]]; then 
-   # echo "hg does not exist";
-else 
+if [[ ! -z "$res" ]]; then 
    # echo "hg exists"; 
    Changeset=`hg parents | head -1 | cut -d ":" -f2 | xargs`  # should be a number nn or nnn, xargs trims whitespace
 fi
