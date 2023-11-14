@@ -33,6 +33,7 @@ ALTER USER geographica3 WITH PASSWORD 'geographica3';
 
 CREATE DATABASE geographica3
     WITH 
+    TEMPLATE template0
     OWNER = geographica3
     ENCODING = 'UTF8'
     LC_COLLATE = 'en_US.UTF-8'
