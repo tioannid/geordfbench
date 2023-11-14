@@ -61,7 +61,15 @@ if [[ ! " ${ValidEnvironments[*]} " =~ " ${Environment} " ]]; then
     export Environment=${DefaultEnvironment}
 fi
 
-Changeset=`hg parents | head -1 | cut -d ":" -f2 | xargs`  # should be a number nn or nnn, xargs trims whitespace
+# check if mercurial is installed and define the changeset value
+Changeset="00"
+export res=`type -p "hg"`
+if [[ -z "$res" ]]; then 
+   # echo "hg does not exist";
+else 
+   # echo "hg exists"; 
+   Changeset=`hg parents | head -1 | cut -d ":" -f2 | xargs`  # should be a number nn or nnn, xargs trims whitespace
+fi
 
 #       set the active SUT and description
 if (( $# == 3 )); then
