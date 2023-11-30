@@ -176,7 +176,7 @@ if [ "$Environment" == "VM" ]; then
     export STARDOG_SERVER_JAVA_ARGS="-Xms3g -Xmx3g -XX:MaxDirectMemorySize=4g"
     # JenaGeoSPARQL only
     export JenaBaseDir="${EnvironmentBaseDir}/apache-jena-${verJENA}"
-    export JenaGeoSPARQLRepoBaseDir="${EnvironmentBaseDir}/JenaGeoSPRAQL_${verJENA}_Repos"
+    export JenaGeoSPARQLRepoBaseDir="${EnvironmentBaseDir}/JenaGeoSPARQL_${verJENA}_Repos"
 elif [ "$Environment" == "PAVILIONDV7" ]; then
     # common for all SUTs
     export SystemMemorySizeInGB=16
@@ -202,7 +202,7 @@ elif [ "$Environment" == "PAVILIONDV7" ]; then
     export STARDOG_SERVER_JAVA_ARGS="-Xms4g -Xmx4g -XX:MaxDirectMemorySize=6g"
     # JenaGeoSPARQL only
     export JenaBaseDir="${EnvironmentBaseDir}/apache-jena-${verJENA}"
-    export JenaGeoSPARQLRepoBaseDir="${EnvironmentBaseDir}/JenaGeoSPRAQL_${verJENA}_Repos"
+    export JenaGeoSPARQLRepoBaseDir="${EnvironmentBaseDir}/JenaGeoSPARQL_${verJENA}_Repos"
 elif [ "$Environment" == "PYRAVLOS6" ]; then 
     # common for all SUTs
     export SystemMemorySizeInGB=128
@@ -228,7 +228,7 @@ elif [ "$Environment" == "PYRAVLOS6" ]; then
     export STARDOG_SERVER_JAVA_ARGS="-Xms30g -Xmx30g -XX:MaxDirectMemorySize=80g"
     # JenaGeoSPARQL only
     export JenaBaseDir="${EnvironmentBaseDir}/apache-jena-${verJENA}"
-    export JenaGeoSPARQLRepoBaseDir="${EnvironmentBaseDir}/JenaGeoSPRAQL_${verJENA}_Repos"
+    export JenaGeoSPARQLRepoBaseDir="${EnvironmentBaseDir}/JenaGeoSPARQL_${verJENA}_Repos"
 elif [ "$Environment" == "TELEIOS3" ]; then 
     # common for all SUTs
     export SystemMemorySizeInGB=32
@@ -254,7 +254,7 @@ elif [ "$Environment" == "TELEIOS3" ]; then
     export STARDOG_SERVER_JAVA_ARGS="-Xms8g -Xmx8g -XX:MaxDirectMemorySize=17g"
     # JenaGeoSPARQL only
     export JenaBaseDir="${EnvironmentBaseDir}/apache-jena-${verJENA}"
-    export JenaGeoSPARQLRepoBaseDir="${EnvironmentBaseDir}/JenaGeoSPRAQL_${verJENA}_Repos"
+    export JenaGeoSPARQLRepoBaseDir="${EnvironmentBaseDir}/JenaGeoSPARQL_${verJENA}_Repos"
 elif [ "$Environment" == "NUC8I7BEH" ]; then 
     # common for all SUTs
     export SystemMemorySizeInGB=32
@@ -280,7 +280,7 @@ elif [ "$Environment" == "NUC8I7BEH" ]; then
     export STARDOG_SERVER_JAVA_ARGS="-Xms8g -Xmx8g -XX:MaxDirectMemorySize=17g"
     # JenaGeoSPARQL only
     export JenaBaseDir="${EnvironmentBaseDir}/apache-jena-${verJENA}"
-    export JenaGeoSPARQLRepoBaseDir="${EnvironmentBaseDir}/JenaGeoSPRAQL_${verJENA}_Repos"
+    export JenaGeoSPARQLRepoBaseDir="${EnvironmentBaseDir}/JenaGeoSPARQL_${verJENA}_Repos"
 fi
 
 # GraphDB reads dynamically the data dir from the properties file

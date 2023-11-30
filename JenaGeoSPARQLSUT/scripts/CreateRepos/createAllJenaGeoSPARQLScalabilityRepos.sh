@@ -33,7 +33,7 @@ if [ ! -d ${JenaGeoSPARQLRepoBaseDir} ]; then
     mkdir -p ${JenaGeoSPARQLRepoBaseDir}
 fi
 
-levels=(  "10K" )
+levels=( "10K" )
 #levels=(  "10K" "100K" "1M" "10M" "100M" "500M" )
 ScalabilityRDFBaseDir="${DatasetBaseDir}/Scalability"
 RDFFormat="N-TRIPLES"

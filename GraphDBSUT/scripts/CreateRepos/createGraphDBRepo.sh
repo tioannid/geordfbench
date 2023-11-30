@@ -146,7 +146,8 @@ logEntry="GraphDB repo \"${RepoName}\" creation completed at "`date --iso-8601='
 # print repository size in MB
 echo -e "GraphDB repository (no GeoSPARQL plugin) \"${RepoDir}/\" has size: `du -hs -BM ${RepoDir} | cut -d 'M' -f 1`MB"
 
-sudo /sbin/sysctl vm.drop_caches=3
+# Disabled as it does not work with containers
+# sudo /sbin/sysctl vm.drop_caches=3
 
 if [ "${EnableGeoSPARQLPlugin}" = "TRUE" ]; then
     # enable the GeoSPARQL plugin on the repo
