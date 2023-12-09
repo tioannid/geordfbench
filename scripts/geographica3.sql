@@ -272,6 +272,78 @@ CREATE OR REPLACE VIEW public.vquery_ordered_aggrs2 AS
 ALTER TABLE public.vquery_ordered_aggrs2
   OWNER TO postgres;
 
+
+-- TOC entry 218 (class 1259 OID 16432)
+-- Name: vqueryexecution3; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public.vqueryexecution3 AS
+ SELECT q.id,
+    q.experiment_id,
+    e.description,
+    e.host,
+    e.sut,
+    e.queryset,
+    e.dataset,
+    e.type,
+    q.query_label,
+    q.query_no,
+    q.cache_type,
+    q.iteration,
+    q.eval_time,
+    q.scan_time,
+    q.no_results,
+    q.no_scan_errors,
+    q.eval_flag,
+    q.res_exception,
+    (q.eval_time + q.scan_time) AS total_time,
+    round((((q.eval_time + q.scan_time))::numeric / 1000000000.0), 3) AS total_time_s
+   FROM public."QUERYEXECUTION" q,
+    public."EXPERIMENT" e
+  WHERE (q.experiment_id = e.id);
+
+
+ALTER VIEW public.vqueryexecution3 OWNER TO postgres;
+
+--
+-- TOC entry 219 (class 1259 OID 16437)
+-- Name: vquery_ordered_aggrs_3; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public.vquery_ordered_aggrs_3 AS
+ SELECT v.experiment_id,
+    v.sut,
+    v.queryset,
+    v.dataset,
+    v.query_label,
+    v.query_no,
+    v.cache_type,
+    count(v.iteration) AS no_iterations,
+    round(avg(v.total_time_s), 3) AS mean,
+    percentile_disc((0.5)::double precision) WITHIN GROUP (ORDER BY v.total_time_s) AS median
+   FROM public.vqueryexecution3 v
+  GROUP BY v.experiment_id, v.sut, v.queryset, v.dataset, v.query_label, v.query_no, v.cache_type;
+
+
+ALTER VIEW public.vquery_ordered_aggrs_3 OWNER TO postgres;
+
+--
+-- TOC entry 220 (class 1259 OID 16442)
+-- Name: vreport; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public.vreport AS
+ SELECT vquery_ordered_aggrs_3.cache_type,
+    vquery_ordered_aggrs_3.query_no,
+    vquery_ordered_aggrs_3.query_label,
+    vquery_ordered_aggrs_3.sut,
+    vquery_ordered_aggrs_3.mean,
+    vquery_ordered_aggrs_3.median
+   FROM public.vquery_ordered_aggrs_3;
+
+
+ALTER VIEW public.vreport OWNER TO postgres;
+
 --
 -- TOC entry 2037 (class 2604 OID 449094)
 -- Name: EXPERIMENT id; Type: DEFAULT; Schema: public; Owner: geographica3
