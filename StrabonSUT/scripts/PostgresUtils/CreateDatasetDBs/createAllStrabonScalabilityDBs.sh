@@ -20,7 +20,7 @@ BASE="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 echo -e "`date`\n"
 
 # create the class path for Strabon StoreOp and QueryOp classes
-cd ${StrabonBaseDir}/runtime/target
+cd ../../../target
 export CLASS_PATH="$(for file in `ls -1 *.jar`; do myVar=$myVar./$file":"; done;echo $myVar;)"
 #echo $CLASS_PATH
 

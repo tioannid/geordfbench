@@ -11,6 +11,9 @@ if [ -z ${DatasetBaseDir+x} ] || [ -z ${StrabonBaseDir+x} ] || [ -z ${JVM_Xmx+x}
      exit 1    # return instead of exit because we need to source the script
 fi
 
+# Store current working directory
+CWD=`pwd`
+
 DBName=realworld
 # recreate database <arg1> and optimize
 sudo -u postgres `which dropdb` ${DBName}
@@ -18,7 +21,7 @@ sudo -u postgres `which createdb` ${DBName} -T template_postgis
 sudo -u postgres `which psql` -c 'VACUUM ANALYZE;' ${DBName}
 
 # create the class path for java
-cd ${StrabonBaseDir}/runtime/target
+cd ../../../target
 export CLASS_PATH="$(for file in `ls -1 *.jar`; do myVar=$myVar./$file":"; done;echo $myVar;)"
 
 FilesDir=${DatasetBaseDir}/RealWorldWorkload/NO_CRS/RealWorld
@@ -33,7 +36,7 @@ java ${JVM_Xmx} -cp $CLASS_PATH  eu.earthobservatory.runtime.postgis.StoreOp loc
 # verify that each graph has the expected number of triples
 #java ${JVM_Xmx} -cp $CLASS_PATH eu.earthobservatory.runtime.postgis.QueryOp localhost 5432 ${DBName} postgres postgres "SELECT ?g (count(*) as ?count) WHERE { GRAPH ?g {?s ?p ?o .} } GROUP BY ?g" TRUE
 
-# return to home directory
-cd ~
+# restore current working directory
+cd ${CWD}
 
 
