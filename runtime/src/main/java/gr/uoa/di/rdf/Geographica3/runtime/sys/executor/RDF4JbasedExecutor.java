@@ -520,6 +520,8 @@ public class RDF4JbasedExecutor extends AbstractExecutor<RDF4JBasedGeographicaSy
                 logger.error("QueryEvaluationException - I wasn't done! Query prepared and evaluated. Scanning phase-1st record in progress ..."
                         + qryRepResult.getNoResults()
                         + " results, so far. Not big enough patience window defined... :(");
+                // record scan time
+                qryRepResult.setScanTime(System.nanoTime() - t3);
                 tupleQueryResult.close();
                 return;
             } else {
@@ -527,6 +529,8 @@ public class RDF4JbasedExecutor extends AbstractExecutor<RDF4JBasedGeographicaSy
                 qryRepResult.setEvalFlag(QueryEvaluationFlag.EVALUATION_ERROR);  // it is set to EVALUATION_ERROR because it seems to fire in a lazy manner
                 qryRepResult.setResException(ResultException.UNSUPPORTED_OPERATOR);
                 errorMsg = e.getMessage();
+                // record scan time
+                qryRepResult.setScanTime(System.nanoTime() - t3);
                 logger.error("QueryEvaluationException - " + errorMsg);
                 tupleQueryResult.close();
                 throw new QueryEvaluationException("[Query scanning phase-1st record (lazy evaluation): " + errorMsg + " ]", e);
@@ -537,6 +541,8 @@ public class RDF4JbasedExecutor extends AbstractExecutor<RDF4JBasedGeographicaSy
                 logger.error("RuntimeException - I wasn't done! Query prepared and evaluated. Scanning phase-1st record in progress ..."
                         + qryRepResult.getNoResults()
                         + " results, so far. Not big enough patience window defined... :(");
+                // record scan time
+                qryRepResult.setScanTime(System.nanoTime() - t3);
                 tupleQueryResult.close();
                 return;
             } else {
@@ -544,6 +550,8 @@ public class RDF4JbasedExecutor extends AbstractExecutor<RDF4JBasedGeographicaSy
                 qryRepResult.setResException(ResultException.UNSUPPORTED_OPERATOR);
                 errorMsg = e.getMessage();
                 logger.error("RuntimeException - " + errorMsg);
+                // record scan time
+                qryRepResult.setScanTime(System.nanoTime() - t3);
                 tupleQueryResult.close();
                 throw new RuntimeException("[Query scanning phase: " + errorMsg + " ]", e);
             }
@@ -552,6 +560,8 @@ public class RDF4JbasedExecutor extends AbstractExecutor<RDF4JBasedGeographicaSy
             qryRepResult.setResException(ResultException.INVALID_GEOMETRY);
             errorMsg = e.getMessage();
             logger.error("Exception - " + errorMsg);
+            // record scan time
+            qryRepResult.setScanTime(System.nanoTime() - t3);
             tupleQueryResult.close();
             try {
                 throw new Exception("[Query scanning phase: " + errorMsg + " ]", e);
@@ -580,6 +590,7 @@ public class RDF4JbasedExecutor extends AbstractExecutor<RDF4JBasedGeographicaSy
 
                 if (Thread.currentThread().isInterrupted()) {
                     qryRepResult.setResException(ResultException.TIMEDOUT);
+                    qryRepResult.addToScanTime(System.nanoTime() - t4);
                     logger.error("Caught the interruption myself! I wasn't done! Query prepared and evaluated. Scanning in progress ..."
                             + qryRepResult.getNoResults()
                             + " results, so far. Not big enough patience window defined... :(");
@@ -606,6 +617,8 @@ public class RDF4JbasedExecutor extends AbstractExecutor<RDF4JBasedGeographicaSy
             }
         } catch (InterruptedException e) { // Timeout occurred during current thread's sleep
             qryRepResult.setResException(ResultException.TIMEDOUT);
+            // update scan time before pausing
+            qryRepResult.addToScanTime(System.nanoTime() - t4);
             logger.error("InterruptedException - I wasn't done, but sleeping a bit! Query prepared and evaluated. Scanning in progress ..."
                     + qryRepResult.getNoResults()
                     + " results, so far. Not big enough patience window defined... :(");
@@ -614,6 +627,8 @@ public class RDF4JbasedExecutor extends AbstractExecutor<RDF4JBasedGeographicaSy
         } catch (RuntimeException e) { // Timeout occurred during scanning but not during current thread's sleep
             if (Thread.currentThread().isInterrupted()) {
                 qryRepResult.setResException(ResultException.TIMEDOUT);
+                // update scan time before pausing
+                qryRepResult.addToScanTime(System.nanoTime() - t4);
                 logger.error("RuntimeException - I wasn't done! Query prepared and evaluated. Scanning in progress ..."
                         + qryRepResult.getNoResults()
                         + " results, so far. Not big enough patience window defined... :(");
