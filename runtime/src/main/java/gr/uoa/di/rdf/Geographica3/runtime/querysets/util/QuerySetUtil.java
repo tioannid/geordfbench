@@ -38,7 +38,7 @@ public class QuerySetUtil {
     // --- Static members -----------------------------
     static org.apache.log4j.Logger logger
             = org.apache.log4j.Logger.getLogger(QuerySetUtil.class.getSimpleName());
-    public static final String QUERYSETJSONDEFS_DIR = "../json_defs/querysets/";
+    public static final String QUERYSETJSONDEFS_DIR = "../json_defs2/querysets/";
     public static final String SCALABILITY_FUNC_JSONDEF_FILE = QUERYSETJSONDEFS_DIR + "scalabilityFuncQSoriginal.json";
     public static final String SCALABILITY_PRED_JSONDEF_FILE = QUERYSETJSONDEFS_DIR + "scalabilityPredQSoriginal.json";
     public static String SCALABILITY_EUROPE_POLYGON_FILE = "givenPolygonCrossesEurope.txt";
@@ -52,6 +52,7 @@ public class QuerySetUtil {
     public static final String RWMACRORAPIDMAPPING_JSONDEF_FILE = QUERYSETJSONDEFS_DIR + "rwmacrorapidmappingQSoriginal.json";
     public static final String RWMACROCOMPUTESTATISTICS_JSONDEF_FILE = QUERYSETJSONDEFS_DIR + "rwmacrocomputestatisticsQSoriginal.json";
     public static final String RWMACROGEOCODING_JSONDEF_FILE = QUERYSETJSONDEFS_DIR + "censusmacrogeocodingQSoriginal.json";
+    public static final String LUBM_1_0_JSONDEF_FILE = QUERYSETJSONDEFS_DIR + "LUBM_1_0_WLoriginal_GOLD_STANDARD.json";
 
     // --- Methods -----------------------------------
     // A) -- Methods that can re-create the JSON definition files
@@ -303,7 +304,7 @@ public class QuerySetUtil {
         mapQry.put(0, new SimpleQuery("Boundary_CLC", "NONTOP_GeoSPARQL", false, 44834));
         mapQry.put(1, new SimpleQuery("Envelope_CLC", "NONTOP_GeoSPARQL", false, 44834));
         mapQry.put(2, new SimpleQuery("ConvexHull_CLC", "NONTOP_GeoSPARQL", false, 44834));
-        mapQry.put(3, new SimpleQuery("Buffer_GeoNames", "NONTOP_BUFFER", false,21990));
+        mapQry.put(3, new SimpleQuery("Buffer_GeoNames", "NONTOP_BUFFER", false, 21990));
         mapQry.put(4, new SimpleQuery("Buffer_LGD", "NONTOP_BUFFER", false, 12097));
         mapQry.put(5, new SimpleQuery("Area_CLC", "NONTOP_STSPARQL", false, 44834));
         // --- Spatial Selection Queries
@@ -853,6 +854,83 @@ public class QuerySetUtil {
         }
     }
 
+    // A) -- Methods that can re-create the JSON definition files
+    //       for GeoRDFBench workloads
+    /**
+     * Creates the JSON definition file for the LUBM(1, 0) workload in
+     * ./json_defs/workloads/LUBM_1_0_WLoriginal_GOLD_STANDARD.json
+     *
+     */
+    public static void createLUBM_1_0_OriginalJSONDefFile(String outputDir) {
+        // 3. Create a queryset spec
+        Map<String, String> mapTemplateParams = new HashMap<>();
+        Map<String, String> mapUsefulNamespacePrefixes = new HashMap<>();
+        mapUsefulNamespacePrefixes.put("ub", "<https://swat.cse.lehigh.edu/onto/univ-bench.owl#>");
+        // populate Graph prefixes map
+        Map<String, String> mapLiteralValues = new HashMap<>();
+
+        Map<Integer, IQuery> mapQry = new HashMap<>();
+        // using SimpleQuery(String label, String query, boolean usePredicate, long expectedResults)
+        mapQry.put(0, new SimpleQuery("Q1_GradStudents_Taken_GradCource0_At_Univ0",
+                "SELECT ?x WHERE {\n"
+                + " ?x rdf:type ub:GraduateStudent .\n"
+                + " ?x ub:takesCourse <http://www.Department0.University0.edu/GraduateCourse0> .\n"
+                + "} \n",
+                false,
+                4));
+        mapQry.put(1, new SimpleQuery("Q2_GradStudents_From_Any_Univ_Depart",
+                "SELECT ?x ?y ?z WHERE { \n ?x rdf:type ub:GraduateStudent .\n"
+                + " ?y rdf:type ub:University .\n"
+                + " ?z rdf:type ub:Department .\n"
+                + " ?x ub:memberOf ?z .\n"
+                + " ?z ub:subOrganizationOf ?y .\n"
+                + " ?x ub:undergraduateDegreeFrom ?y .\n"
+                + "} \n",
+                false,
+                0));
+        mapQry.put(2, new SimpleQuery("Q3_Publications_Of_AssistProfessor0_In_Univ0_Depart0",
+                "SELECT ?x WHERE { \n ?x rdf:type ub:Publication .\n"
+                + " ?x ub:publicationAuthor <http://www.Department0.University0.edu/AssistantProfessor0> .\n} \n",
+                false,
+                6));
+        mapQry.put(3, new SimpleQuery("Q4_Properties_Of_Professors_In_Univ0_Depart0",
+                "SELECT ?x ?y1 ?y2 ?y3 WHERE { \n ?x rdf:type ub:Professor .\n"
+                + "  ?x ub:worksFor <http://www.Department0.University0.edu> .\n"
+                + "  ?x ub:name ?y1 .\n"
+                + "  ?x ub:emailAddress ?y2 .\n"
+                + "  ?x ub:telephone ?y3 .\n} \n",
+                false,
+                -1));
+        mapQry.put(4, new SimpleQuery("Q5_Persons_MembersOf_In_Univ0_Depart0",
+                "SELECT ?x WHERE { \n ?x rdf:type ub:Person .\n"
+                + "  ?x ub:memberOf <http://www.Department0.University0.edu> .\n} \n",
+                false,
+                -1));
+        mapQry.put(5, new SimpleQuery("Q6_All_Students",
+                "SELECT ?x WHERE { \n ?x rdf:type ub:Student .\n} \n",
+                false,
+                -1));
+        // ... add as many queries as desired
+        mapQry.put(13, new SimpleQuery("Q14_UndergradStudents_From_Any_Univ_Depart",
+                "SELECT ?x WHERE { \n ?x rdf:type ub:UndergraduateStudent .\n} \n",
+                false,
+                5916));
+
+        StaticTempParamQS lubm_qs = new StaticTempParamQS("lubm-1_0", "", false, mapQry,
+                mapTemplateParams, mapUsefulNamespacePrefixes,
+                mapLiteralValues);
+        try {
+            ObjectMapper om = new ObjectMapper();
+            om.enable(SerializationFeature.INDENT_OUTPUT);
+            om.writeValue(new File(LUBM_1_0_JSONDEF_FILE), lubm_qs);
+        } catch (JsonMappingException ex) {
+            logger.error(ex.getMessage());
+        } catch (IOException ex) {
+            logger.error(ex.getMessage());
+        }
+    }
+
+    // B) -- Methods that can re-create querysets from the JSON definition files
     /**
      * Deserialize from JSON file
      *
@@ -912,5 +990,10 @@ public class QuerySetUtil {
         QuerySetUtil.createScalabilityPredQS_OriginalJSONDefFile();
         qs = QuerySetUtil.deserializeFromJSON(QuerySetUtil.SCALABILITY_PRED_JSONDEF_FILE);
         logger.info(qs.serializeToJSON());
+        // LUBM Workload
+        QuerySetUtil.createLUBM_1_0_OriginalJSONDefFile(QuerySetUtil.LUBM_1_0_JSONDEF_FILE);
+        qs = QuerySetUtil.deserializeFromJSON(QuerySetUtil.LUBM_1_0_JSONDEF_FILE);
+        logger.info(qs.serializeToJSON());
+        
     }
 }

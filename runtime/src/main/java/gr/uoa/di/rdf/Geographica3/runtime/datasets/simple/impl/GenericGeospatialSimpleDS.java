@@ -22,7 +22,7 @@ public class GenericGeospatialSimpleDS implements IGeospatialSimpleDataSet {
     // --- Static members -----------------------------
     static Logger logger = Logger.getLogger(GenericGeospatialSimpleDS.class.getSimpleName());
     public static final Map<String, String> USEFULL_PREFIXES_MAP = new HashMap<>();
-    static final String NTRIPLES_STR = RDFFormat.NTRIPLES.getName().toUpperCase();
+    static public final String NTRIPLES_STR = RDFFormat.NTRIPLES.getName().toUpperCase();
 
     // --- Static block/clause -----------------------
     static {
