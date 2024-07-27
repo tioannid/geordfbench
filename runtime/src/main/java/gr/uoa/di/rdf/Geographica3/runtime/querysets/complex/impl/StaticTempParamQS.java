@@ -38,7 +38,7 @@ public class StaticTempParamQS extends SimpleQS {
                 mapQueries, mapUsefulNamespacePrefixes);
         this.mapTemplateParams = mapTemplateParams;
         this.mapGraphPrefixes = mapGraphPrefixes;
-        this.instantiateStaticTemplateParameters();
+//        this.instantiateStaticTemplateParameters();
     }
 
     public StaticTempParamQS() {
@@ -74,11 +74,22 @@ public class StaticTempParamQS extends SimpleQS {
     protected void instantiateStaticTemplateParameters() {
         IQuery qs = null;
         // replace all template parameters with values for all queries
-        for (Map.Entry<Integer, IQuery> e : this.mapQueries.entrySet()) {
-            qs = e.getValue();
-            for (Map.Entry<String, String> f : this.mapTemplateParams.entrySet()) {
-                qs.setText(qs.getText().replace(f.getKey(), f.getValue()));
+        if (this.mapQueries != null && this.mapTemplateParams != null) {
+            for (Map.Entry<Integer, IQuery> e : this.mapQueries.entrySet()) {
+                qs = e.getValue();
+                for (Map.Entry<String, String> f : this.mapTemplateParams.entrySet()) {
+                    qs.setText(qs.getText().replace(f.getKey(), f.getValue()));
+                }
             }
         }
+    }
+
+    /**
+     * Initialization of transient data members after deserialization
+     */
+    @Override
+    public void initializeAfterDeserialization() {
+        super.initializeAfterDeserialization();
+        instantiateStaticTemplateParameters();
     }
 }

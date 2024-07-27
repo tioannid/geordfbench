@@ -38,7 +38,7 @@ public class QuerySetUtil {
     // --- Static members -----------------------------
     static org.apache.log4j.Logger logger
             = org.apache.log4j.Logger.getLogger(QuerySetUtil.class.getSimpleName());
-    public static final String QUERYSETJSONDEFS_DIR = "../json_defs2/querysets/";
+    public static final String QUERYSETJSONDEFS_DIR = "../json_defs/querysets/";
     public static final String SCALABILITY_FUNC_JSONDEF_FILE = QUERYSETJSONDEFS_DIR + "scalabilityFuncQSoriginal.json";
     public static final String SCALABILITY_PRED_JSONDEF_FILE = QUERYSETJSONDEFS_DIR + "scalabilityPredQSoriginal.json";
     public static String SCALABILITY_EUROPE_POLYGON_FILE = "givenPolygonCrossesEurope.txt";
@@ -994,6 +994,6 @@ public class QuerySetUtil {
         QuerySetUtil.createLUBM_1_0_OriginalJSONDefFile(QuerySetUtil.LUBM_1_0_JSONDEF_FILE);
         qs = QuerySetUtil.deserializeFromJSON(QuerySetUtil.LUBM_1_0_JSONDEF_FILE);
         logger.info(qs.serializeToJSON());
-        
+
     }
 }

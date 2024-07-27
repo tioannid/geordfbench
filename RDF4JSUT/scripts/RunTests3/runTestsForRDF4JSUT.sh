@@ -32,7 +32,7 @@ EXAMPLE=
 
 if (( $# < 2 )); then
         # script cannot proceed, because arguments are missing
-        echo -e "Illegal number of parameters! $SYNTAX"
+        echo -e "Illegal number of parameters!\n$SYNTAX"
 	exit 1   
 fi
 
