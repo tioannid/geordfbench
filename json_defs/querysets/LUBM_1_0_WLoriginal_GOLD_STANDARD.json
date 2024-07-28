@@ -1,0 +1,55 @@
+{
+  "classname" : "gr.uoa.di.rdf.Geographica3.runtime.querysets.complex.impl.StaticTempParamQS",
+  "name" : "lubm-1_0",
+  "relativeBaseDir" : "",
+  "hasPredicateQueriesAlso" : false,
+  "mapQueries" : {
+    "0" : {
+      "label" : "Q1_GradStudents_Taken_GradCource0_At_Univ0",
+      "text" : "SELECT ?x WHERE {\n ?x rdf:type ub:GraduateStudent .\n ?x ub:takesCourse <http://www.Department0.University0.edu/GraduateCourse0> .\n} \n",
+      "usePredicate" : false,
+      "expectedResults" : 4
+    },
+    "1" : {
+      "label" : "Q2_GradStudents_From_Any_Univ_Depart",
+      "text" : "SELECT ?x ?y ?z WHERE { \n ?x rdf:type ub:GraduateStudent .\n ?y rdf:type ub:University .\n ?z rdf:type ub:Department .\n ?x ub:memberOf ?z .\n ?z ub:subOrganizationOf ?y .\n ?x ub:undergraduateDegreeFrom ?y .\n} \n",
+      "usePredicate" : false,
+      "expectedResults" : 0
+    },
+    "2" : {
+      "label" : "Q3_Publications_Of_AssistProfessor0_In_Univ0_Depart0",
+      "text" : "SELECT ?x WHERE { \n ?x rdf:type ub:Publication .\n ?x ub:publicationAuthor <http://www.Department0.University0.edu/AssistantProfessor0> .\n} \n",
+      "usePredicate" : false,
+      "expectedResults" : 6
+    },
+    "3" : {
+      "label" : "Q4_Properties_Of_Professors_In_Univ0_Depart0",
+      "text" : "SELECT ?x ?y1 ?y2 ?y3 WHERE { \n ?x rdf:type ub:Professor .\n  ?x ub:worksFor <http://www.Department0.University0.edu> .\n  ?x ub:name ?y1 .\n  ?x ub:emailAddress ?y2 .\n  ?x ub:telephone ?y3 .\n} \n",
+      "usePredicate" : false,
+      "expectedResults" : -1
+    },
+    "4" : {
+      "label" : "Q5_Persons_MembersOf_In_Univ0_Depart0",
+      "text" : "SELECT ?x WHERE { \n ?x rdf:type ub:Person .\n  ?x ub:memberOf <http://www.Department0.University0.edu> .\n} \n",
+      "usePredicate" : false,
+      "expectedResults" : -1
+    },
+    "5" : {
+      "label" : "Q6_All_Students",
+      "text" : "SELECT ?x WHERE { \n ?x rdf:type ub:Student .\n} \n",
+      "usePredicate" : false,
+      "expectedResults" : -1
+    },
+    "13" : {
+      "label" : "Q14_UndergradStudents_From_Any_Univ_Depart",
+      "text" : "SELECT ?x WHERE { \n ?x rdf:type ub:UndergraduateStudent .\n} \n",
+      "usePredicate" : false,
+      "expectedResults" : 5916
+    }
+  },
+  "mapUsefulNamespacePrefixes" : {
+    "ub" : "<https://swat.cse.lehigh.edu/onto/univ-bench.owl#>"
+  },
+  "mapTemplateParams" : { },
+  "mapGraphPrefixes" : { }
+}
