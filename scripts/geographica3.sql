@@ -90,7 +90,7 @@ CREATE TABLE public."EXPERIMENT" (
     id integer NOT NULL,
     instime timestamp(3) with time zone DEFAULT ('now'::text)::timestamp(3) with time zone,
     exectime timestamp(3) with time zone,
-    description character varying(50),
+    description character varying(80),
     host character varying(200),
     os character varying(100),
     sut character varying(200),
