@@ -1,0 +1,137 @@
+{
+  "classname" : "gr.uoa.di.rdf.Geographica3.runtime.workloadspecs.impl.SimpleGeospatialWL",
+  "name" : "LUBM-1_0",
+  "relativeBaseDir" : "",
+  "geospatialDataset" : {
+    "name" : "lubm-1_0",
+    "relativeBaseDir" : "LUBM",
+    "simpleGeospatialDataSetList" : [ {
+      "name" : "lubm-1_0",
+      "relativeBaseDir" : "1_0",
+      "dataFile" : "lubm-1_0.nt",
+      "rdfFormat" : "N-TRIPLES",
+      "mapUsefulNamespacePrefixes" : {
+        "geo" : "<http://www.opengis.net/ont/geosparql#>",
+        "rdf" : "<http://www.w3.org/1999/02/22-rdf-syntax-ns#>",
+        "owl" : "<http://www.w3.org/2002/07/owl#>",
+        "geof" : "<http://www.opengis.net/def/function/geosparql/>",
+        "xsd" : "<http://www.w3.org/2001/XMLSchema#>",
+        "rdfs" : "<http://www.w3.org/2000/01/rdf-schema#>",
+        "geo-sf" : "<http://www.opengis.net/ont/sf#>"
+      }
+    } ],
+    "mapDataSetContexts" : {
+      "lubm-1_0" : ""
+    },
+    "n" : 1
+  },
+  "geospatialQueryset" : {
+    "classname" : "gr.uoa.di.rdf.Geographica3.runtime.querysets.partofworkload.impl.StaticTempParamQS",
+    "name" : "lubm-1_0",
+    "relativeBaseDir" : "",
+    "hasPredicateQueriesAlso" : false,
+    "mapQueries" : {
+      "0" : {
+        "label" : "Q1_GradStudents_Taken_GradCource0_At_Univ0",
+        "text" : "SELECT ?x WHERE {\n ?x rdf:type ub:GraduateStudent .\n ?x ub:takesCourse <http://www.Department0.University0.edu/GraduateCourse0> .\n} \n",
+        "usePredicate" : false,
+        "expectedResults" : 4
+      },
+      "1" : {
+        "label" : "Q2_GradStudents_From_Any_Univ_Depart",
+        "text" : "SELECT ?x ?y ?z WHERE {\n ?x rdf:type ub:GraduateStudent .\n ?y rdf:type ub:University .\n ?z rdf:type ub:Department .\n ?x ub:memberOf ?z .\n ?z ub:subOrganizationOf ?y .\n ?x ub:undergraduateDegreeFrom ?y .\n} \n",
+        "usePredicate" : false,
+        "expectedResults" : 0
+      },
+      "2" : {
+        "label" : "Q3_Publications_Of_AssistProfessor0_In_Univ0_Depart0",
+        "text" : "SELECT ?x WHERE { \n ?x rdf:type ub:Publication .\n ?x ub:publicationAuthor <http://www.Department0.University0.edu/AssistantProfessor0> .\n} \n",
+        "usePredicate" : false,
+        "expectedResults" : 6
+      },
+      "3" : {
+        "label" : "Q4_Properties_Of_Professors_In_Univ0_Depart0",
+        "text" : "SELECT ?x ?y1 ?y2 ?y3 WHERE {\n  ?x rdf:type ub:Professor .\n  ?x ub:worksFor <http://www.Department0.University0.edu> .\n  ?x ub:name ?y1 .\n  ?x ub:emailAddress ?y2 .\n  ?x ub:telephone ?y3 .\n} \n",
+        "usePredicate" : false,
+        "expectedResults" : 41
+      },
+      "4" : {
+        "label" : "Q5_Persons_MembersOf_In_Univ0_Depart0",
+        "text" : "SELECT ?x WHERE {\n  ?x rdf:type ub:Person .\n  ?x ub:memberOf <http://www.Department0.University0.edu> .\n} \n",
+        "usePredicate" : false,
+        "expectedResults" : 719
+      },
+      "5" : {
+        "label" : "Q6_All_Students",
+        "text" : "SELECT ?x WHERE {\n  ?x rdf:type ub:Student .\n} \n",
+        "usePredicate" : false,
+        "expectedResults" : 8330
+      },
+      "6" : {
+        "label" : "Q7_All_Students_Courses_AssProfessor0",
+        "text" : "SELECT ?x ?y WHERE {\n  ?x rdf:type ub:Student .\n  ?y rdf:type ub:Course .\n  ?x ub:takesCourse ?y .\n  <http://www.Department0.University0.edu/AssociateProfessor0> ub:teacherOf ?y .\n} \n",
+        "usePredicate" : false,
+        "expectedResults" : 67
+      },
+      "7" : {
+        "label" : "Q8_All_Students_Emails_Univ0",
+        "text" : "SELECT ?x ?y ?z WHERE {\n  ?x rdf:type ub:Student .\n  ?y rdf:type ub:Department .\n  ?x ub:memberOf ?y .\n  ?y ub:subOrganizationOf <http://www.University0.edu> .\n  ?x ub:emailAddress ?z .\n} \n",
+        "usePredicate" : false,
+        "expectedResults" : 8330
+      },
+      "8" : {
+        "label" : "Q9_All_Students_Teachers_Courses",
+        "text" : "SELECT ?x ?y ?z WHERE {\n  ?x rdf:type ub:Student .\n  ?y rdf:type ub:Faculty .\n  ?z rdf:type ub:Course .\n  ?x ub:advisor ?y .\n  ?y ub:teacherOf ?z .\n  ?x ub:takesCourse ?z .\n} \n",
+        "usePredicate" : false,
+        "expectedResults" : 208
+      },
+      "9" : {
+        "label" : "Q10_All_Students_GradCourse0_Dept0_Univ0",
+        "text" : "SELECT ?x WHERE {\n  ?x rdf:type ub:Student .\n  ?x ub:takesCourse <http://www.Department0.University0.edu/GraduateCourse0> .\n} \n",
+        "usePredicate" : false,
+        "expectedResults" : 4
+      },
+      "10" : {
+        "label" : "Q11_All_Researchgroups_Univ0",
+        "text" : "SELECT ?x WHERE {\n  ?x rdf:type ub:ResearchGroup .\n  ?x ub:subOrganizationOf <http://www.University0.edu> .\n} \n",
+        "usePredicate" : false,
+        "expectedResults" : 224
+      },
+      "11" : {
+        "label" : "Q12_All_Chairs_Dept_Univ0",
+        "text" : "SELECT ?x ?y WHERE {\n  ?x rdf:type ub:Chair .\n  ?y rdf:type ub:Department .\n  ?x ub:worksFor ?y .\n  ?y ub:subOrganizationOf <http://www.University0.edu> .\n} \n",
+        "usePredicate" : false,
+        "expectedResults" : 540
+      },
+      "12" : {
+        "label" : "Q13_All_Students",
+        "text" : "SELECT ?x WHERE {\n  ?x rdf:type ub:Person .\n  <http://www.University0.edu> ub:hasAlumnus ?x .\n} \n",
+        "usePredicate" : false,
+        "expectedResults" : 1
+      },
+      "13" : {
+        "label" : "Q14_UndergradStudents_From_Any_Univ_Depart",
+        "text" : "SELECT ?x WHERE {\n  ?x rdf:type ub:UndergraduateStudent .\n} \n",
+        "usePredicate" : false,
+        "expectedResults" : 5916
+      }
+    },
+    "mapUsefulNamespacePrefixes" : {
+      "ub" : "<https://swat.cse.lehigh.edu/onto/univ-bench.owl#>"
+    },
+    "executionSpec" : {
+      "execTypeReps" : {
+        "WARM" : 3,
+        "COLD" : 3
+      },
+      "maxDurationSecsPerQueryRep" : 1800,
+      "maxDurationSecs" : 3600,
+      "action" : "RUN",
+      "avgFunc" : "QUERY_MEDIAN",
+      "onColdFailure" : "SKIP_REMAINING_ALL_QUERY_EXECUTIONS",
+      "clearCacheDelaymSecs" : 5000
+    },
+    "mapTemplateParams" : { },
+    "mapGraphPrefixes" : { }
+  }
+}

@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>gr.uoa.di.rdf</groupId>
     <artifactId>GeoRDFBench</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <packaging>pom</packaging>
     <name>GeoRDFBench</name>
 
@@ -82,12 +82,23 @@
                     <name>Strabon - maven repository - snapshots</name>
                     <url>http://localhost:9081/repository/UoASnapshots/</url>
                 </repository>
+                <repository>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                    <id>strabon.release</id>
+                    <name>Strabon - maven repository - releases</name>
+                    <url>http://localhost:9081/repository/UoAReleases/</url>
+                </repository>
             </repositories>
             <distributionManagement>
                 <repository>
-                    <id>strabon</id>
+                    <id>strabon.release</id>
                     <name>Strabon maven repo</name>
-                    <url>http://maven.strabon.di.uoa.gr/content/repositories/releases</url>
+                    <url>http://localhost:9081/repository/UoAReleases/</url>
                 </repository>
                 <snapshotRepository>
                     <id>strabon.snapshot</id>
@@ -107,6 +118,17 @@
                     <snapshots>
                         <enabled>true</enabled>
                     </snapshots>
+                    <id>strabon.release</id>
+                    <name>Strabon - maven repository - releases</name>
+                    <url>http://192.168.1.66:9081/repository/UoAReleases/</url>
+                </repository>
+                <repository>
+                    <releases>
+                        <enabled>false</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
                     <id>strabon.snapshot</id>
                     <name>Strabon - maven repository - snapshots</name>
                     <url>http://192.168.1.66:9081/repository/UoASnapshots/</url>
@@ -116,7 +138,7 @@
                 <repository>
                     <id>strabon</id>
                     <name>Strabon maven repo</name>
-                    <url>http://maven.strabon.di.uoa.gr/content/repositories/releases</url>
+                    <url>http://192.168.1.66:9081/repository/UoAReleases/</url>
                 </repository>
                 <snapshotRepository>
                     <id>strabon.snapshot</id>
@@ -153,7 +175,7 @@
             <name>Jena - maven repository</name>
             <url>https://repository.apache.org/content/repositories/releases/</url>
         </repository>
-        <repository>
+<!--        <repository>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -163,8 +185,8 @@
             <id>strabon</id>
             <name>Strabon - maven repository</name>
             <url>http://maven.strabon.di.uoa.gr/content/repositories/releases</url>
-        </repository>
-        <repository>
+        </repository>-->
+<!--        <repository>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -174,8 +196,8 @@
             <id>strabon.sesame</id>
             <name>Strabon - maven repository - sesame artifacts (temporary)</name>
             <url>http://maven.strabon.di.uoa.gr/content/repositories/strabon.sesame/</url>
-        </repository>
-        <repository>
+        </repository>-->
+<!--        <repository>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -185,7 +207,7 @@
             <id>strabon.testing</id>
             <name>Strabon - maven repository</name>
             <url>http://maven.strabon.di.uoa.gr/content/repositories/testing/</url>
-        </repository>
+        </repository>-->
         <repository>
             <id>maven2-repository.dev.java.net</id>
             <name>Java.net repository</name>

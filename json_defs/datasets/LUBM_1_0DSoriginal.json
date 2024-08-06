@@ -1,0 +1,24 @@
+{
+  "classname" : "gr.uoa.di.rdf.Geographica3.runtime.datasets.complex.impl.GeographicaDS",
+  "name" : "lubm-1_0",
+  "relativeBaseDir" : "LUBM",
+  "simpleGeospatialDataSetList" : [ {
+    "name" : "lubm-1_0",
+    "relativeBaseDir" : "1_0",
+    "dataFile" : "lubm-1_0.nt",
+    "rdfFormat" : "N-TRIPLES",
+    "mapUsefulNamespacePrefixes" : {
+      "geo" : "<http://www.opengis.net/ont/geosparql#>",
+      "rdf" : "<http://www.w3.org/1999/02/22-rdf-syntax-ns#>",
+      "owl" : "<http://www.w3.org/2002/07/owl#>",
+      "geof" : "<http://www.opengis.net/def/function/geosparql/>",
+      "xsd" : "<http://www.w3.org/2001/XMLSchema#>",
+      "rdfs" : "<http://www.w3.org/2000/01/rdf-schema#>",
+      "geo-sf" : "<http://www.opengis.net/ont/sf#>"
+    }
+  } ],
+  "mapDataSetContexts" : {
+    "lubm-1_0" : ""
+  },
+  "n" : 1
+}

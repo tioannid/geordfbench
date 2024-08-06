@@ -137,7 +137,7 @@ CREATE TABLE public."QUERYEXECUTION" (
     id integer NOT NULL,
     experiment_id integer NOT NULL,
     query_no integer NOT NULL,
-    query_label character varying(50),
+    query_label character varying(100),
     cache_type character varying(15),
     iteration smallint,
     eval_time bigint,
