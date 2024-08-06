@@ -1,7 +1,7 @@
 # GeoRDFBench Framework
 > Geospatial Semantic Benchmarking Simplified
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.13243858.svg)](https://doi.org/10.5281/zenodo.13243858)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.13244137.svg)](https://doi.org/10.5281/zenodo.13244137)
 
 **GeoRDFBench** can be used by researchers and practitioners interested in Semantic Benchmarking with SPARQL language. The framework however provides unique features for the geospatial aspects of RDF stores that support the GeoSPARQL standard. Documentation for the project is maintained at our [GeoRDFBench web site](https://geordfbench.di.uoa.gr/). 
 
