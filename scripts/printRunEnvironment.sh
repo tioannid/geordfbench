@@ -4,6 +4,7 @@
 echo "All SUTs"
 echo "--------"
 echo "Environment = $Environment"
+echo "EnvironmentBaseDir = $EnvironmentBaseDir"
 echo "GeographicaScriptsDir = $GeographicaScriptsDir"
 echo "DatasetBaseDir = $DatasetBaseDir"
 echo "QuerysetBaseDir = $QuerysetBaseDir"

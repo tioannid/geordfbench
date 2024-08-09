@@ -40,7 +40,7 @@ SYNTAX="
 $SYNTAX1
 $SYNTAX2
 $SYNTAX3
-\t<environment>\t:\tEnvironment the Geographica will run. One of ${ValidEnvironmentsMsgLine}
+\t<environment>\t:\tEnvironment the experiment will run on. One of ${ValidEnvironmentsMsgLine}
 \t<activesut>\t:\tActive SUT. One of ${ValidSUTsMsgLine}
 \t<shortdesc>\t:\tExperiment short description"
 
