@@ -36,6 +36,7 @@ public abstract class RunSUTExperiment {
     protected IExecutionSpec execSpec;
     protected IQuerySet querySet = null;
     protected int[] qif = null;
+    protected int[] qef = null;
     protected String relReportPath;
     protected String expdescription;
 
@@ -70,7 +71,7 @@ public abstract class RunSUTExperiment {
         // -- queryset related options
         options.addOption("qs", "querysetspec", true, "Queryset configuration JSON file");
         options.addOption("qif", "queryincludefilter", true, "List of queries to include in the run");
-
+        options.addOption("qef", "queryexcludefilter", true, "List of queries to exclude from the run");
     }
 
     // print all flat arguments
@@ -97,8 +98,12 @@ public abstract class RunSUTExperiment {
         logger.info("Execution specs configuration JSON file:\t" + cmd.getOptionValue("executionspec"));
         // -- queryset related options
         logger.info("Queryset configuration JSON file:\t" + cmd.getOptionValue("querysetspec"));
-        logger.info("List of queries to include in the run:\t"
-                + (cmd.hasOption("queryincludefilter") ? cmd.getOptionValue("queryincludefilter") : "all"));
+        logger.info("List of queries "
+                + (cmd.hasOption("queryincludefilter")
+                ? "to include in the run:\t" + cmd.getOptionValue("queryincludefilter") // inclusion filter overrules exclusion filter
+                : cmd.hasOption("queryexcludefilter")
+                ? "to exclude from the run:\t" + cmd.getOptionValue("queryexcludefilter") // exclusion filter works only by itself
+                : "to include in the run:\t" + "all"));
     }
 
     protected void initSystemUnderTest() {
@@ -125,6 +130,35 @@ public abstract class RunSUTExperiment {
                 qif[i] = Integer.parseInt(qryPositionsStr[i]);
             }
             querySet.filter(qif, IQuerySet.FilterAction.INCLUDE);
+            // inform user about exclusion filter being ignored
+            if (cmd.hasOption("queryexcludefilter")) {
+                logger.warn("Exclusion filter is ignored!");
+            }
+        } else if (cmd.hasOption("queryexcludefilter")) {
+            String[] qryPositionsStr = cmd.getOptionValue("queryexcludefilter").split(",");
+            qef = new int[qryPositionsStr.length];
+            for (int i = 0; i < qryPositionsStr.length; i++) {
+                qef[i] = Integer.parseInt(qryPositionsStr[i]);
+            }
+            // convert qef to qif
+            qif = new int[querySet.getQueriesNum() - qef.length];
+            boolean found = false;
+            int qifPos = 0;
+            for (int i = 0; i < querySet.getQueriesNum(); i++) {
+                found = false;
+                for (int j = 0; j < qef.length; j++) {
+                    if (qef[j] == i) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    qif[qifPos++] = i;
+                } else {
+                    continue;
+                }
+            }
+            querySet.filter(qef, IQuerySet.FilterAction.EXCLUDE);
         } else {
             qif = new int[querySet.getQueriesNum()];
             for (int i = 0; i < querySet.getQueriesNum(); i++) {

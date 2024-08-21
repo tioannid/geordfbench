@@ -32,6 +32,7 @@ public abstract class RunSUTExperimentWorkload {
     protected IReportSpec rptSpec;
     protected IReportSource rptSrcSpec;
     protected int[] qif = null;
+    protected int[] qef = null;
     protected String relReportPath;
     protected String expdescription;
     protected IGeospatialWorkLoadSpec workLoadSpec;
@@ -39,7 +40,7 @@ public abstract class RunSUTExperimentWorkload {
     protected void printHelp() {
         logger.info("Usage: " + this.getClass().getSimpleName() + " [options]+");
         HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp(this.getClass().getSimpleName(), options);        
+        formatter.printHelp(this.getClass().getSimpleName(), options);
     }
 
     // add execution and dataset related options
@@ -51,6 +52,7 @@ public abstract class RunSUTExperimentWorkload {
         // -- workload related options
         options.addOption("wl", "workloadspec", true, "Workload specs configuration JSON file");
         options.addOption("qif", "queryincludefilter", true, "List of queries to include in the run");
+        options.addOption("qef", "queryexcludefilter", true, "List of queries to exclude from the run");
 
         // -- host related options
         //    TODO: check if <logpath> option is necessary or if it means only the relative part of the logpath
@@ -78,8 +80,13 @@ public abstract class RunSUTExperimentWorkload {
 
         logger.info("|==> Workload, Host, Report related options");
         logger.info("Workload specs configuration JSON file:\t" + cmd.getOptionValue("workloadspec"));
-        logger.info("List of queries to include in the run:\t"
-                + (cmd.hasOption("queryincludefilter") ? cmd.getOptionValue("queryincludefilter") : "all"));
+        logger.info("List of queries "
+                + (cmd.hasOption("queryincludefilter")
+                ? "to include in the run:\t" + cmd.getOptionValue("queryincludefilter") // inclusion filter overrules exclusion filter
+                : cmd.hasOption("queryexcludefilter")
+                ? "to exclude from the run:\t" + cmd.getOptionValue("queryexcludefilter") // exclusion filter works only by itself
+                : "to include in the run:\t" + "all"));
+
         // -- host related options
         logger.info("Host configuration JSON file:\t" + cmd.getOptionValue("hostconffile"));
         // -- report related options
@@ -103,6 +110,35 @@ public abstract class RunSUTExperimentWorkload {
                 qif[i] = Integer.parseInt(qryPositionsStr[i]);
             }
             querySet.filter(qif, IQuerySet.FilterAction.INCLUDE);
+            // inform user about exclusion filter being ignored
+            if (cmd.hasOption("queryexcludefilter")) {
+                logger.warn("Exclusion filter is ignored!");
+            }
+        } else if (cmd.hasOption("queryexcludefilter")) {
+            String[] qryPositionsStr = cmd.getOptionValue("queryexcludefilter").split(",");
+            qef = new int[qryPositionsStr.length];
+            for (int i = 0; i < qryPositionsStr.length; i++) {
+                qef[i] = Integer.parseInt(qryPositionsStr[i]);
+            }
+            // convert qef to qif
+            qif = new int[querySet.getQueriesNum() - qef.length];
+            boolean found = false;
+            int qifPos = 0;
+            for (int i = 0; i < querySet.getQueriesNum(); i++) {
+                found = false;
+                for (int j = 0; j < qef.length; j++) {
+                    if (qef[j] == i) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    qif[qifPos++] = i;
+                } else {
+                    continue;
+                }
+            }
+            querySet.filter(qef, IQuerySet.FilterAction.EXCLUDE);
         } else {
             qif = new int[querySet.getQueriesNum()];
             for (int i = 0; i < querySet.getQueriesNum(); i++) {

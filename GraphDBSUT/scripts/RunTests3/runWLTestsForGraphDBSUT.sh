@@ -27,6 +27,8 @@ EXAMPLE=
 \t...workload JSON specification file
 -qif \t\t'0,1,2'
 \t...query inclusion filter (list of query indexes to use)
+-qef \t\t'0,2'
+\t...query exclusion filter (list of query indexes to exclude)
 -h \t\t'~/json_defs/hosts/ubuntu_vma_tioaHOSToriginal.json'
 \t...host JSON specification file
 -rs \t\t'~/json_defs/reportspecs/simplereportspec_original.json'

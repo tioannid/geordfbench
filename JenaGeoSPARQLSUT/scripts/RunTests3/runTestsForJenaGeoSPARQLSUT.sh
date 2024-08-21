@@ -36,7 +36,9 @@ EXAMPLE=
 -qs \t\t'~/json_defs/querysets/syntheticQSoriginal.json'
 \t...queryset JSON specification file
 -qif \t\t'0,1,2'
-\t...query inclusion filter (list of query indexes to use)"
+\t...query inclusion filter (list of query indexes to use)
+-qef \t\t'0,2'
+\t...query exclusion filter (list of query indexes to exclude)"
 
 if (( $# < 2 )); then
         # script cannot proceed, because arguments are missing
