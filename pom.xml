@@ -149,6 +149,18 @@
         </profile>  
     </profiles>
     
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>5.11.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
         <dependency> 
             <!-- use log4j as the underlying logging framework -->
@@ -175,7 +187,7 @@
             <name>Jena - maven repository</name>
             <url>https://repository.apache.org/content/repositories/releases/</url>
         </repository>
-<!--        <repository>
+        <!--        <repository>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -186,7 +198,7 @@
             <name>Strabon - maven repository</name>
             <url>http://maven.strabon.di.uoa.gr/content/repositories/releases</url>
         </repository>-->
-<!--        <repository>
+        <!--        <repository>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -197,7 +209,7 @@
             <name>Strabon - maven repository - sesame artifacts (temporary)</name>
             <url>http://maven.strabon.di.uoa.gr/content/repositories/strabon.sesame/</url>
         </repository>-->
-<!--        <repository>
+        <!--        <repository>
             <releases>
                 <enabled>true</enabled>
             </releases>

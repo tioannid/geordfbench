@@ -175,13 +175,6 @@
             <artifactId>ubt</artifactId>
             <version>1.1</version>
         </dependency>
-        <!-- Testing: JUnit -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.7</version>
-            <scope>test</scope>
-        </dependency>
         <!-- Various -->
         <dependency>
             <groupId>cglib</groupId>
@@ -239,7 +232,13 @@
             <artifactId>apache-jena-libs</artifactId>
             <version>${jena.version}</version>
             <type>pom</type>
-        </dependency>   
+        </dependency>
+        <!-- JUnit 5 Jupiter dependency -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

@@ -255,7 +255,12 @@ public abstract class RunSUTExperiment {
 
         runExperiment(args);
 
+        /* Removed the following because it is probable not needed and
+        it interferes with JUnit tests.
+        
         System.exit(0);
+        
+        */
     }
 
     /**
