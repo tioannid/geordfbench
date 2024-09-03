@@ -8,29 +8,34 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import gr.uoa.di.rdf.Geographica3.runtime.experiments.Experiment;
 import gr.uoa.di.rdf.Geographica3.runtime.reportsource.IReportSource;
-import gr.uoa.di.rdf.Geographica3.runtime.resultscollector.impl.QueryRepResults.QueryRepResult;
+import gr.uoa.di.rdf.Geographica3.runtime.resultscollector.impl.QueryRepResults;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
-import org.apache.log4j.Logger;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
+import org.apache.log4j.Logger;
 
 /**
- * A base abstract class for all non-embedded JDBC report sources implementing
+ * A base abstract class for all embedded JDBC report sources implementing
  * interface {@link IReportSource}.
- *
  * @author Theofilos Ioannidis <tioannid@di.uoa.gr>
- * @creationdate 26/11/2020
- * @updatedate 01/09/2024
+ * @creationdate 01/09/2024
+ * @updatedate 03/09/2024
  */
-public abstract class JDBCRepSrc implements IReportSource {
+public abstract class EmbeddedJDBCRepSrc implements IReportSource {
 
     // --- Static members -----------------------------
-    static Logger logger = Logger.getLogger(JDBCRepSrc.class.getSimpleName());
+    static Logger logger = Logger.getLogger(EmbeddedJDBCRepSrc.class.getSimpleName());
     /**
      * The SQL script commands that create the report source database schema.
      */
@@ -38,9 +43,7 @@ public abstract class JDBCRepSrc implements IReportSource {
 
     // --- Data members ------------------------------
     String driver;
-    String hostname;
-    String althostname;
-    int port;
+    String relativeBaseDir;
     String database;
     String user;
     String password;
@@ -52,7 +55,7 @@ public abstract class JDBCRepSrc implements IReportSource {
      * will disable the direct insertions to the ReportSource.
      */
     @JsonIgnore
-    transient boolean deferInsQryExec;
+    transient boolean deferInsQryExec = false;
     @JsonIgnore
     transient Map<Integer, String> deferredInsQryExecs;
     @JsonIgnore
@@ -61,16 +64,14 @@ public abstract class JDBCRepSrc implements IReportSource {
     transient boolean schemaInitialized = false; // gets updated by getConn()
 
     // --- Constructor -----------------------------------
-    public JDBCRepSrc() {
+    public EmbeddedJDBCRepSrc() {
     }
 
-    public JDBCRepSrc(String driver, String hostname, String althostname, int port,
-            String database, String user, String password) throws SQLException {
+    public EmbeddedJDBCRepSrc(String driver, String relativeBaseDir,
+            String database, String user, String password) {
         // initialize ground data members that are automatically ser/deser
         this.driver = driver;
-        this.hostname = hostname;
-        this.althostname = althostname;
-        this.port = port;
+        this.relativeBaseDir = relativeBaseDir;
         this.database = database;
         this.user = user;
         this.password = password;
@@ -95,28 +96,12 @@ public abstract class JDBCRepSrc implements IReportSource {
         this.driver = driver;
     }
 
-    public String getHostname() {
-        return hostname;
+    public String getRelativeBaseDir() {
+        return relativeBaseDir;
     }
 
-    public void setHostname(String hostname) {
-        this.hostname = hostname;
-    }
-
-    public String getAlthostname() {
-        return althostname;
-    }
-
-    public void setAlthostname(String althostname) {
-        this.althostname = althostname;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public void setPort(int port) {
-        this.port = port;
+    public void setRelativeBaseDir(String relativeBaseDir) {
+        this.relativeBaseDir = relativeBaseDir;
     }
 
     public String getDatabase() {
@@ -144,34 +129,22 @@ public abstract class JDBCRepSrc implements IReportSource {
     }
 
     // --- Methods -----------------------------------
-    @JsonIgnore
+        @JsonIgnore
     /**
-     * URL used to connect to a system database, usually in order to verify and
-     * create a user database.
+     * This extended URL disables automatic database creation for embedded mode.
      */
-    protected abstract String getJdbcURL_NoDatabase();
-
+    public String getJdbcURL_NoCreateDB() {
+        return getJdbcURL() + ";IFEXISTS=TRUE";
+    }
+    
     @JsonIgnore
     public String getJdbcURL() {
         StringBuilder sb = new StringBuilder("jdbc:");
-        sb.append(this.driver).append("://");
-        sb.append(this.hostname).append(":");
-        sb.append(this.port).append("/");
-        sb.append(this.database).append("?");
-        sb.append("user=").append(this.user).append("&");
-        sb.append("password=").append(this.password);
-        return sb.toString();
-    }
-
-    @JsonIgnore
-    public String getAltJdbcURL() {
-        StringBuilder sb = new StringBuilder("jdbc:");
-        sb.append(this.driver).append("://");
-        sb.append(this.althostname).append(":");
-        sb.append(this.port).append("/");
-        sb.append(this.database).append("?");
-        sb.append("user=").append(this.user).append("&");
-        sb.append("password=").append(this.password);
+        // use file protocol be default (could be mem|tcp)
+        // http://h2database.com/html/features.html?highlight=url&search=URL#database_url
+        sb.append(this.driver).append(":file:");
+        sb.append(this.relativeBaseDir).append("/");
+        sb.append(this.database);
         return sb.toString();
     }
 
@@ -191,16 +164,12 @@ public abstract class JDBCRepSrc implements IReportSource {
         }
         // make a connection if you have to
         if (makeNewConnection) {
-            try { // try to connect to the main hostname
-                conn = DriverManager.getConnection(getJdbcURL());
+            try {
+                // get a connection to an existing database
+                conn = DriverManager.getConnection(getJdbcURL_NoCreateDB(), user, password);
             } catch (SQLException ex) {
-                try { // try to connect to the alternative hostname
-                    conn = DriverManager.getConnection(getAltJdbcURL());
-                } catch (SQLException ex1) {
-                    logger.error("Could not connect to neither hostnames of the source\n"
-                            + ex.getMessage() + "\n"
-                            + ex1.getMessage());
-                }
+                logger.error("Could not connect to the source:\n"
+                        + ex.getMessage());
             }
         }
         return conn;
@@ -257,7 +226,7 @@ public abstract class JDBCRepSrc implements IReportSource {
     @Override
     public void insQueryExecution(long expID, String cache_type,
             String qryLabel, int qryNo, int qryRepNo,
-            QueryRepResult queryRepResult) {
+            QueryRepResults.QueryRepResult queryRepResult) {
 
         if (!this.deferInsQryExec) { // real time insertion to database
             PreparedStatement st = null;
@@ -360,37 +329,7 @@ public abstract class JDBCRepSrc implements IReportSource {
 
     @Override
     public void flush() {
-        if (deferInsQryExec) {
-            // refresh connection, because it was probably broken by
-            // SUT experiment restarts
-            conn = this.getConn();
-            String insSql = "";
-            int noInserted = 0;
-            for (Integer insSqlNo : deferredInsQryExecs.keySet()) {
-                insSql = deferredInsQryExecs.get(insSqlNo);
-                if (insQueryExecution(insSql)) {
-                    ++noInserted;
-                }
-            }
-            logger.info("Deferred mode for " + this.getClass().getSimpleName() + " was enabled. " + noInserted + " records were flushed");
-        } else {
-            logger.info("Deferred mode for " + this.getClass().getSimpleName() + " was disabled. No records to flush!");
-        }
-
-    }
-
-    private boolean insQueryExecution(String insSql) {
-        PreparedStatement st = null;
-        boolean inserted = false;
-        try {
-            st = conn.prepareStatement(insSql);
-            int rowsInserted = st.executeUpdate();
-            inserted = (rowsInserted == 1);
-            st.close();
-        } catch (SQLException ex) {
-            logger.error(ex.getMessage());
-        }
-        return inserted;
+        logger.info("Deferred mode for " + this.getClass().getSimpleName() + " is disabled because it is an embedded DBMS. No records to flush!");
     }
 
     @Override

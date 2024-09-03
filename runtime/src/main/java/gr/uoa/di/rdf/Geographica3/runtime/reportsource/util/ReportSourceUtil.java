@@ -4,11 +4,12 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import gr.uoa.di.rdf.Geographica3.runtime.reportsource.IReportSource;
-import gr.uoa.di.rdf.Geographica3.runtime.reportsource.impl.JDBCRepSrc;
+import gr.uoa.di.rdf.Geographica3.runtime.reportsource.impl.H2EmbeddedRepSrc;
 import gr.uoa.di.rdf.Geographica3.runtime.reportsource.impl.PostgreSQLRepSrc;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -17,10 +18,11 @@ import java.sql.SQLException;
 public class ReportSourceUtil {
 
     // --- Static members -----------------------------
-    static org.apache.log4j.Logger logger
-            = org.apache.log4j.Logger.getLogger(ReportSourceUtil.class.getSimpleName());
+    static Logger logger
+            = Logger.getLogger(ReportSourceUtil.class.getSimpleName());
     static final String REPORTSOURCEJSONDEFS_DIR = "../json_defs/reportsources/";
     static final String UBUNTU_VMA_TIOA_REP_SRCJSONDEF_FILE = REPORTSOURCEJSONDEFS_DIR + "ubuntu_vma_tioaRepSrcoriginal.json";
+    static final String H2_EMBEDDED_REP_SRCJSONDEF_FILE = REPORTSOURCEJSONDEFS_DIR + "h2EmbeddedRepSrcoriginal.json";
 
     // --- Methods -----------------------------------
     // A) -- Methods that can re-create the JSON definition files
@@ -34,11 +36,29 @@ public class ReportSourceUtil {
         try {
             PostgreSQLRepSrc pgsrc
                     = new PostgreSQLRepSrc(
-                            "192.168.1.66", "localhost", 5432,
+                            "10.0.2.15", "localhost", 5432,
                             "geographica3",
                             "geographica3", "geographica3");
             pgsrc.serializeToJSON(new File(UBUNTU_VMA_TIOA_REP_SRCJSONDEF_FILE));
         } catch (SQLException | IOException ex) {
+            logger.error(ex.getMessage());
+        }
+    }
+
+    /**
+     * Creates the JSON definition file for the H2 eembedded report source in
+     * Geographica/runtime/src/main/resources/json_defs/reportsources/h2EmbeddedRepSrcoriginal.json
+     *
+     */
+    public static void createH2_Embedded_REP_SRC_OriginalJSONDefFile() {
+        try {
+            H2EmbeddedRepSrc h2src
+                    = new H2EmbeddedRepSrc(
+                            "../scripts/h2embeddedreportsource",
+                            "geordfbench",
+                            "sa", "");
+            h2src.serializeToJSON(new File(H2_EMBEDDED_REP_SRCJSONDEF_FILE));
+        } catch (IOException ex) {
             logger.error(ex.getMessage());
         }
     }
@@ -55,21 +75,31 @@ public class ReportSourceUtil {
         // create the mapper
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
-        JDBCRepSrc rs = null;
+        IReportSource rs = null;
         try {
-            rs = mapper.readValue(serObjFile, new TypeReference<JDBCRepSrc>() {
+            rs = mapper.readValue(serObjFile, new TypeReference<PostgreSQLRepSrc>() {
             });
         } catch (IOException ex) {
-            logger.info(ex.getMessage());
+            try {
+                rs = mapper.readValue(serObjFile, new TypeReference<H2EmbeddedRepSrc>() {
+                });
+            } catch (IOException e) {
+                logger.info(ex.getMessage() + "\n" + e.getMessage());
+            }
         }
         rs.initializeAfterDeserialization();
         return rs;
     }
 
     public static void main(String[] args) {
+        IReportSource rptSrc;
         // UBUNTU_VMA_TIOA PostgreSQL report source
         ReportSourceUtil.createUBUNTU_VMA_TIOA_REP_SRC_OriginalJSONDefFile();
-        IReportSource rptSrc = ReportSourceUtil.deserializeFromJSON(UBUNTU_VMA_TIOA_REP_SRCJSONDEF_FILE);
+        rptSrc = ReportSourceUtil.deserializeFromJSON(UBUNTU_VMA_TIOA_REP_SRCJSONDEF_FILE);
+        logger.info(rptSrc.serializeToJSON());
+        // H2 Embedded report source
+        ReportSourceUtil.createH2_Embedded_REP_SRC_OriginalJSONDefFile();
+        rptSrc = ReportSourceUtil.deserializeFromJSON(H2_EMBEDDED_REP_SRCJSONDEF_FILE);
         logger.info(rptSrc.serializeToJSON());
     }
 }
