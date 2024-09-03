@@ -1,4 +1,5 @@
 {
+  "classname" : "gr.uoa.di.rdf.Geographica3.runtime.reportsource.impl.PostgreSQLRepSrc",
   "driver" : "postgresql",
   "hostname" : "192.168.1.44",
   "althostname" : "localhost",
