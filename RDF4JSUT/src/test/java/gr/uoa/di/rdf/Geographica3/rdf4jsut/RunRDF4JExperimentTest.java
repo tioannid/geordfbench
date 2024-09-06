@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gr.uoa.di.rdf.Geographica3.rdf4jsut;
 
 import java.io.ByteArrayOutputStream;
@@ -18,8 +13,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
 /**
- *
- * @author tioannid
+ * A class that checks various Query Filtering options during
+ * experiment execution with the detailed benchmark specifications.
+ * @author Theofilos Ioannidis <tioannid@di.uoa.gr>
+ * @creationdate 26/08/2024
+ * @updatedate 03/09/2024
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DisplayName("Test Experiment Query Filtering with Detailed Benchmark Specification")
@@ -39,7 +37,7 @@ public class RunRDF4JExperimentTest {
         String argLineNoQueryFilter
                 = // No Query Filter is specified - 3 queries (0,1,2) expected in output
                 "-rbd RDF4J_3.7.7_Repos/server "
-                + "-expdesc 21Aug2024_RDF4JSUT_Run_Scal10K "
+                + "-expdesc RDF4JSUT_RunRDF4JExperimentTest "
                 + "-ds /media/sf_VM_Shared/PHD/NetBeansProjects/PhD_2/geordfbench/json_defs/datasets/scalability_10Koriginal.json "
                 + "-qs /media/sf_VM_Shared/PHD/NetBeansProjects/PhD_2/geordfbench/json_defs/querysets/scalabilityFuncQSoriginal.json "
                 + "-es /media/sf_VM_Shared/scalabilityESoriginal_PRINT.json "

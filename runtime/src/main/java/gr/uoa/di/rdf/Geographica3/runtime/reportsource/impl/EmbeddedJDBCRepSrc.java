@@ -28,6 +28,7 @@ import org.apache.log4j.Logger;
 /**
  * A base abstract class for all embedded JDBC report sources implementing
  * interface {@link IReportSource}.
+ *
  * @author Theofilos Ioannidis <tioannid@di.uoa.gr>
  * @creationdate 01/09/2024
  * @updatedate 03/09/2024
@@ -129,14 +130,14 @@ public abstract class EmbeddedJDBCRepSrc implements IReportSource {
     }
 
     // --- Methods -----------------------------------
-        @JsonIgnore
+    @JsonIgnore
     /**
      * This extended URL disables automatic database creation for embedded mode.
      */
     public String getJdbcURL_NoCreateDB() {
         return getJdbcURL() + ";IFEXISTS=TRUE";
     }
-    
+
     @JsonIgnore
     public String getJdbcURL() {
         StringBuilder sb = new StringBuilder("jdbc:");
@@ -211,7 +212,7 @@ public abstract class EmbeddedJDBCRepSrc implements IReportSource {
         long ret = 0;
         try {
             st1 = conn.createStatement();
-            rs = st1.executeQuery("select lastval();");
+            rs = st1.executeQuery("SELECT Max(id) FROM public.\"EXPERIMENT\";");
             rs.next();
             ret = rs.getLong(1);
             rs.close();
@@ -321,7 +322,7 @@ public abstract class EmbeddedJDBCRepSrc implements IReportSource {
         }
         if (schemaInitialized) {
             conn = this.getConn();
-            deferInsQryExec = true;
+            deferInsQryExec = false;
             deferredInsQryExecs = new HashMap<>();
             noDeferredInsQryExecs = 0;
         }

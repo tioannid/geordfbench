@@ -3,7 +3,6 @@ package gr.uoa.di.rdf.Geographica3.runtime.reportsource.impl;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.apache.log4j.Logger;
 import java.sql.*;
-import java.util.Map.Entry;
 
 /**
  * A base abstract class for all non-embedded JDBC report sources implementing
@@ -23,7 +22,7 @@ public class PostgreSQLRepSrc extends JDBCRepSrc {
         // load all DDL commands to the schema initialization script
         schemaInitScript.put(1, "SET statement_timeout = 0;\n"
                 + "SET lock_timeout = 0;\n"
-                + "SET idle_in_transaction_session_timeout = 0;\n"
+                //                + "SET idle_in_transaction_session_timeout = 0;\n"
                 + "SET client_encoding = 'UTF8';\n"
                 + "SET standard_conforming_strings = on;\n"
                 + "SELECT pg_catalog.set_config('search_path', '', false);\n"
@@ -32,7 +31,8 @@ public class PostgreSQLRepSrc extends JDBCRepSrc {
                 + "SET client_min_messages = warning;\n"
                 + "SET row_security = off;\n"
                 + "\n"
-                + "DROP DATABASE IF EXISTS geographica3;");
+                + "DROP DATABASE IF EXISTS geographica3;\n"
+                + "DROP ROLE IF EXISTS geographica3;");
         schemaInitScript.put(2, "CREATE ROLE geographica3 LOGIN\n"
                 + "  ENCRYPTED PASSWORD 'md5026b364a2c8491da2cca1b5772723d43'\n"
                 + "  NOSUPERUSER INHERIT NOCREATEDB NOCREATEROLE NOREPLICATION;\n"
@@ -48,12 +48,13 @@ public class PostgreSQLRepSrc extends JDBCRepSrc {
                 + "    TABLESPACE = pg_default\n"
                 + "    CONNECTION LIMIT = -1;\n"
                 + "\n"
-                + "ALTER DATABASE geographica3 OWNER TO geographica3;");
-        schemaInitScript.put(4, "\\connect geographica3\n"
-                + "\n"
-                + "SET statement_timeout = 0;\n"
+                + "ALTER DATABASE geographica3 OWNER TO geographica3;\n");
+        // For the following commands to work properly a new
+        // jdbc connection needs to be made to the newly
+        // created <geographica3> database
+        schemaInitScript.put(4, "SET statement_timeout = 0;\n"
                 + "SET lock_timeout = 0;\n"
-                + "SET idle_in_transaction_session_timeout = 0;\n"
+//                + "SET idle_in_transaction_session_timeout = 0;\n"
                 + "SET client_encoding = 'UTF8';\n"
                 + "SET standard_conforming_strings = on;\n"
                 + "SELECT pg_catalog.set_config('search_path', '', false);\n"
@@ -61,12 +62,7 @@ public class PostgreSQLRepSrc extends JDBCRepSrc {
                 + "SET xmloption = content;\n"
                 + "SET client_min_messages = warning;\n"
                 + "SET row_security = off;");
-        schemaInitScript.put(5, "CREATE SCHEMA public;\n"
-                + "ALTER SCHEMA public OWNER TO postgres;\n"
-                + "COMMENT ON SCHEMA public IS 'standard public schema';\n"
-                + "SET default_tablespace = '';\n"
-                + "SET default_table_access_method = heap;");
-        schemaInitScript.put(6, "CREATE TABLE public.\"EXPERIMENT\" (\n"
+        schemaInitScript.put(5, "CREATE TABLE public.\"EXPERIMENT\" (\n"
                 + "    id integer NOT NULL,\n"
                 + "    instime timestamp(3) with time zone DEFAULT ('now'::text)::timestamp(3) with time zone,\n"
                 + "    exectime timestamp(3) with time zone,\n"
@@ -93,7 +89,7 @@ public class PostgreSQLRepSrc extends JDBCRepSrc {
                 + "ALTER TABLE public.\"EXPERIMENT_id_seq\" OWNER TO geographica3;\n"
                 + "\n"
                 + "ALTER SEQUENCE public.\"EXPERIMENT_id_seq\" OWNED BY public.\"EXPERIMENT\".id;");
-        schemaInitScript.put(7, "CREATE TABLE public.\"QUERYEXECUTION\" (\n"
+        schemaInitScript.put(6, "CREATE TABLE public.\"QUERYEXECUTION\" (\n"
                 + "    id integer NOT NULL,\n"
                 + "    experiment_id integer NOT NULL,\n"
                 + "    query_no integer NOT NULL,\n"
@@ -133,7 +129,7 @@ public class PostgreSQLRepSrc extends JDBCRepSrc {
                 + "ALTER SEQUENCE public.\"QUERYEXECUTION_id_seq\" OWNED BY public.\"QUERYEXECUTION\".id;\n"
                 + "\n"
                 + "");
-        schemaInitScript.put(8, "CREATE VIEW public.vqueryexecution AS\n"
+        schemaInitScript.put(7, "CREATE VIEW public.vqueryexecution AS\n"
                 + " SELECT \"QUERYEXECUTION\".id,\n"
                 + "    \"QUERYEXECUTION\".experiment_id,\n"
                 + "    \"EXPERIMENT\".type,\n"
@@ -153,7 +149,7 @@ public class PostgreSQLRepSrc extends JDBCRepSrc {
                 + "    public.\"EXPERIMENT\"\n"
                 + "  WHERE (\"QUERYEXECUTION\".experiment_id = \"EXPERIMENT\".id);\n"
                 + "\n"
-                + "ALTER TABLE public.vqueryexecution OWNER TO postgres;\n"
+                + "ALTER TABLE public.vqueryexecution OWNER TO geographica3;\n"
                 + "\n"
                 + "CREATE VIEW public.vquery_ordered_aggrs AS\n"
                 + " SELECT vqueryexecution.experiment_id,\n"
@@ -165,8 +161,8 @@ public class PostgreSQLRepSrc extends JDBCRepSrc {
                 + "   FROM public.vqueryexecution\n"
                 + "  GROUP BY vqueryexecution.experiment_id, vqueryexecution.query_no, vqueryexecution.cache_type;\n"
                 + "\n"
-                + "ALTER TABLE public.vquery_ordered_aggrs OWNER TO postgres;");
-        schemaInitScript.put(9, "CREATE VIEW public.vqueryexecution2 AS\n"
+                + "ALTER TABLE public.vquery_ordered_aggrs OWNER TO geographica3;");
+        schemaInitScript.put(8, "CREATE VIEW public.vqueryexecution2 AS\n"
                 + " SELECT \"QUERYEXECUTION\".id,\n"
                 + "    \"QUERYEXECUTION\".experiment_id,\n"
                 + "    \"EXPERIMENT\".type,\n"
@@ -190,7 +186,7 @@ public class PostgreSQLRepSrc extends JDBCRepSrc {
                 + "    public.\"EXPERIMENT\"\n"
                 + "  WHERE (\"QUERYEXECUTION\".experiment_id = \"EXPERIMENT\".id);\n"
                 + "\n"
-                + "ALTER TABLE public.vqueryexecution2 OWNER TO postgres;\n"
+                + "ALTER TABLE public.vqueryexecution2 OWNER TO geographica3;\n"
                 + "\n"
                 + "CREATE VIEW public.vquery_ordered_aggrs2 AS\n"
                 + " SELECT vqueryexecution2.experiment_id,\n"
@@ -203,8 +199,8 @@ public class PostgreSQLRepSrc extends JDBCRepSrc {
                 + "  GROUP BY vqueryexecution2.validflag, vqueryexecution2.experiment_id, vqueryexecution2.query_no, vqueryexecution2.cache_type\n"
                 + " HAVING (vqueryexecution2.validflag = 'Success'::text);\n"
                 + "\n"
-                + "ALTER TABLE public.vquery_ordered_aggrs2 OWNER TO postgres;");
-        schemaInitScript.put(10, "CREATE VIEW public.vqueryexecution3 AS\n"
+                + "ALTER TABLE public.vquery_ordered_aggrs2 OWNER TO geographica3;");
+        schemaInitScript.put(9, "CREATE VIEW public.vqueryexecution3 AS\n"
                 + " SELECT q.id,\n"
                 + "    q.experiment_id,\n"
                 + "    e.description,\n"
@@ -233,7 +229,7 @@ public class PostgreSQLRepSrc extends JDBCRepSrc {
                 + "    public.\"EXPERIMENT\" e\n"
                 + "  WHERE (q.experiment_id = e.id);\n"
                 + "\n"
-                + "ALTER TABLE public.vqueryexecution3 OWNER TO postgres;\n"
+                + "ALTER TABLE public.vqueryexecution3 OWNER TO geographica3;\n"
                 + "\n"
                 + "CREATE VIEW public.vquery_ordered_aggrs_3 AS\n"
                 + " SELECT v.experiment_id,\n"
@@ -250,8 +246,8 @@ public class PostgreSQLRepSrc extends JDBCRepSrc {
                 + "   FROM public.vqueryexecution3 v\n"
                 + "  GROUP BY v.experiment_id, v.sut, v.queryset, v.dataset, v.query_label, v.query_no, v.validflag, v.cache_type;\n"
                 + "\n"
-                + "ALTER TABLE public.vquery_ordered_aggrs_3 OWNER TO postgres;");
-        schemaInitScript.put(11, "CREATE VIEW public.vreport AS\n"
+                + "ALTER TABLE public.vquery_ordered_aggrs_3 OWNER TO geographica3;");
+        schemaInitScript.put(10, "CREATE VIEW public.vreport AS\n"
                 + " SELECT v.cache_type,\n"
                 + "    v.query_no,\n"
                 + "    v.query_label,\n"
@@ -261,13 +257,13 @@ public class PostgreSQLRepSrc extends JDBCRepSrc {
                 + "    v.median\n"
                 + "   FROM public.vquery_ordered_aggrs_3 v;\n"
                 + "\n"
-                + "ALTER TABLE public.vreport OWNER TO postgres;");
-        schemaInitScript.put(12, "ALTER TABLE ONLY public.\"EXPERIMENT\" ALTER COLUMN id SET DEFAULT nextval('public.\"EXPERIMENT_id_seq\"'::regclass);\n"
+                + "ALTER TABLE public.vreport OWNER TO geographica3;");
+        schemaInitScript.put(11, "ALTER TABLE ONLY public.\"EXPERIMENT\" ALTER COLUMN id SET DEFAULT nextval('public.\"EXPERIMENT_id_seq\"'::regclass);\n"
                 + "ALTER TABLE ONLY public.\"QUERYEXECUTION\" ALTER COLUMN id SET DEFAULT nextval('public.\"QUERYEXECUTION_id_seq\"'::regclass);\n"
-                + "ALTER TABLE ONLY public.\"QUERYEXECUTION\" ALTER COLUMN experiment_id SET DEFAULT nextval('public.\"QUERYEXECUTION_experiment_id_seq\"'::regclass);\n"
+                //                + "ALTER TABLE ONLY public.\"QUERYEXECUTION\" ALTER COLUMN experiment_id SET DEFAULT nextval('public.\"QUERYEXECUTION_experiment_id_seq\"'::regclass);\n"
                 + "ALTER TABLE ONLY public.\"EXPERIMENT\"\n"
                 + "    ADD CONSTRAINT \"EXPERIMENT_pkey\" PRIMARY KEY (id);\n"
-                + "CREATE INDEX \"FKI_EXPERIMENT_ID\" ON public.\"QUERYEXECUTION\" USING btree (experiment_id);\n"
+                //                + "CREATE INDEX \"FKI_EXPERIMENT_ID\" ON public.\"QUERYEXECUTION\" USING btree (experiment_id);\n"
                 + "ALTER TABLE ONLY public.\"QUERYEXECUTION\"\n"
                 + "    ADD CONSTRAINT \"FK_EXPERIMENT_ID\" FOREIGN KEY (experiment_id) REFERENCES public.\"EXPERIMENT\"(id) ON DELETE CASCADE;");
     }
@@ -300,40 +296,46 @@ public class PostgreSQLRepSrc extends JDBCRepSrc {
     public boolean isSchemaInitialized() {
         // check if database exists and if it has at least one
         // required table
-        boolean initialized = false;
-        String sqlCreateDatabase = "CREATE DATABASE geographica3";
+        boolean dbExists = false, initialized = false;
+        String sqlDatabaseExists = "SELECT Count(*) AS cntrows\n"
+                + "FROM pg_catalog.pg_database\n"
+                + "WHERE lower(datname) = lower('geographica3');";
         String sqlExistsTableExperiment = "SELECT EXISTS (\n"
                 + "   SELECT FROM information_schema.tables \n"
                 + "   WHERE  table_schema = 'public'\n"
                 + "   AND    table_name   = 'EXPERIMENT'\n"
-                + "   );";
+                + "   ) AS \"exists\";";
         Statement stmt;
         ResultSet rs;
         Connection tmpConn = null;
         try {
+            // connect to <postgres> database
             tmpConn = DriverManager.getConnection(getJdbcURL_NoDatabase());
+            // check if <geographica3> database already exists
             stmt = tmpConn.createStatement();
-            stmt.executeQuery(sqlCreateDatabase);
-        } catch (SQLException ex1) {
-            if (ex1.getSQLState().equalsIgnoreCase("42P04")) { // 42P04 => duplicate_database
-                try {
-                    tmpConn = DriverManager.getConnection(getJdbcURL());
-                    // check if PUBLIC.EXPERIMENT table exists
-                    stmt = tmpConn.createStatement();
-                    rs = stmt.executeQuery(sqlExistsTableExperiment);
-                    rs.next();
-                    initialized = rs.getBoolean("exists");
-                } catch (SQLException ex2) {
-                    logger.error(ex2.getMessage());
-                }
-            } else {
-                logger.error(ex1.getMessage());
+            rs = stmt.executeQuery(sqlDatabaseExists);
+            rs.next();
+            dbExists = (rs.getLong("cntrows") == 1);
+            rs.close();
+            stmt.close();
+            tmpConn.close();
+            // if <geographica3> database exists check if it's initialized
+            if (dbExists) {
+                // connect to <geographica3> database
+                tmpConn = DriverManager.getConnection(getJdbcURL());
+                // check if PUBLIC.EXPERIMENT table exists
+                stmt = tmpConn.createStatement();
+                rs = stmt.executeQuery(sqlExistsTableExperiment);
+                rs.next();
+                initialized = rs.getBoolean("exists");
             }
+        } catch (SQLException ex) {
+            logger.error(ex.getMessage());
         } finally {
             try {
                 tmpConn.close();
-            } catch (SQLException ex3) {
-                logger.error(ex3.getMessage());
+            } catch (SQLException ex2) {
+                logger.error(ex2.getMessage());
             }
         }
         return initialized;
@@ -346,16 +348,31 @@ public class PostgreSQLRepSrc extends JDBCRepSrc {
         Statement stmt;
         Connection tmpConn;
         try {
+            // create the database and role
             tmpConn = DriverManager.getConnection(getJdbcURL_NoDatabase(), user, password);
-            logger.info("Initializing schema for " + this.driver + " database: "
-                    + this.database + "\nExecuting SQL DDL commands:\n");
-            // create all database schema objects (tables, views, etc)
-            for (Entry<Integer, String> e : schemaInitScript.entrySet()) {
-                sqlCmd = e.getValue();
-                logger.info("\t-- No " + e.getKey() + "\n\t" + sqlCmd);
+            logger.info("Creating " + this.driver + " database: "
+                    + this.database + "\nExecuting SQL DDL commands (Phase 1):\n");
+            for (int i = 1; i <= 3; i++) {
+                sqlCmd = schemaInitScript.get(i);
+                logger.info("\t-- No " + i + "\n\t" + sqlCmd);
                 try {
                     stmt = tmpConn.createStatement();
-                    stmt.executeQuery(sqlCmd);
+                    stmt.execute(sqlCmd);
+                } catch (SQLException ex) {
+                    logger.error(ex.getMessage());
+                }
+            }
+            tmpConn.close();
+            // create all database schema objects (tables, views, etc)
+            tmpConn = DriverManager.getConnection(getJdbcURL());
+            logger.info("Initializing schema for " + this.driver + " database: "
+                    + this.database + "\nExecuting SQL DDL commands  (Phase 2):\n");
+            for (int i = 4; i <= schemaInitScript.size(); i++) {
+                sqlCmd = schemaInitScript.get(i);
+                logger.info("\t-- No " + i + "\n\t" + sqlCmd);
+                try {
+                    stmt = tmpConn.createStatement();
+                    stmt.execute(sqlCmd);
                 } catch (SQLException ex) {
                     logger.error(ex.getMessage());
                 }

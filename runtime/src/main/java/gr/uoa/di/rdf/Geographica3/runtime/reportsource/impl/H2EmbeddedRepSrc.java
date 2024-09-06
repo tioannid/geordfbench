@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 
 /**
  * A concrete implementation class for {@link EmbeddedJDBCRepSrc}.
+ *
  * @author Theofilos Ioannidis <tioannid@di.uoa.gr>
  * @creationdate 01/09/2024
  * @updatedate 03/09/2024
@@ -173,6 +174,9 @@ public class H2EmbeddedRepSrc extends EmbeddedJDBCRepSrc {
                 + "    v.mean,\n"
                 + "    v.median\n"
                 + "   FROM public.vquery_ordered_aggrs_3 v;\n");
+        schemaInitScript.put(7, "ALTER TABLE public.\"QUERYEXECUTION\"\n"
+                + "    ADD FOREIGN KEY (experiment_id) \n"
+                + "    REFERENCES public.\"EXPERIMENT\"(id) ON DELETE CASCADE;");
     }
 
     // --- Data members ------------------------------
