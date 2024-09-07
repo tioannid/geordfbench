@@ -1,6 +1,7 @@
 package gr.uoa.di.rdf.Geographica3.rdf4jsut;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.PrintStream;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -13,8 +14,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
 /**
- * A class that checks various Query Filtering options during
- * experiment execution with the detailed benchmark specifications.
+ * A class that checks various Query Filtering options during experiment
+ * execution with the detailed benchmark specifications.
+ *
  * @author Theofilos Ioannidis <tioannid@di.uoa.gr>
  * @creationdate 26/08/2024
  * @updatedate 03/09/2024
@@ -27,6 +29,7 @@ public class RunRDF4JExperimentTest {
     String[] argsNoQueryFilter,
             argsWithQueryInclusionFilter,
             argsWithQueryExclusionFilter;
+    String JSON_DEFS_DIR;
 
     private final PrintStream standardOut = System.out;
     private ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
@@ -34,16 +37,19 @@ public class RunRDF4JExperimentTest {
     @BeforeAll
     public void setupAll() {
         System.out.println(RunRDF4JExperimentTest.class.getSimpleName() + " - Before All");
+        // find the absolute path of the JSON Library in the test resources folder
+        File p = new File("src/test/resources/json_defs");
+        JSON_DEFS_DIR = p.getAbsolutePath();
         String argLineNoQueryFilter
                 = // No Query Filter is specified - 3 queries (0,1,2) expected in output
                 "-rbd RDF4J_3.7.7_Repos/server "
                 + "-expdesc RDF4JSUT_RunRDF4JExperimentTest "
-                + "-ds /media/sf_VM_Shared/PHD/NetBeansProjects/PhD_2/geordfbench/json_defs/datasets/scalability_10Koriginal.json "
-                + "-qs /media/sf_VM_Shared/PHD/NetBeansProjects/PhD_2/geordfbench/json_defs/querysets/scalabilityFuncQSoriginal.json "
-                + "-es /media/sf_VM_Shared/scalabilityESoriginal_PRINT.json "
-                + "-h /media/sf_VM_Shared/PHD/NetBeansProjects/PhD_2/geordfbench/json_defs/hosts/ubuntu_vma_tioaHOSToriginal.json "
-                + "-rs /media/sf_VM_Shared/PHD/NetBeansProjects/PhD_2/geordfbench/json_defs/reportspecs/simplereportspec_original.json "
-                + "-rpsr /media/sf_VM_Shared/PHD/NetBeansProjects/PhD_2/geordfbench/json_defs/reportsources/ubuntu_vma_tioaRepSrcoriginal.json ";
+                + "-ds " + JSON_DEFS_DIR + "/datasets/scalability_10Koriginal.json "
+                + "-qs " + JSON_DEFS_DIR + "/querysets/scalabilityFuncQSoriginal.json "
+                + "-es " + JSON_DEFS_DIR + "/executionspecs/scalabilityESoriginal_PRINT.json "
+                + "-h " + JSON_DEFS_DIR + "/hosts/ubuntu_vma_tioaHOSToriginal.json "
+                + "-rs " + JSON_DEFS_DIR + "/reportspecs/simplereportspec_original.json "
+                + "-rpsr " + JSON_DEFS_DIR + "/reportsources/ubuntu_vma_tioaRepSrcoriginal.json ";
         argsNoQueryFilter = argLineNoQueryFilter.split(" ");
         String argLineWithQueryInclusionFilter = argLineNoQueryFilter // Query InclusionFilter specified - 2 queries (0,_,2) expected in output
                 + "-qif \"0,2\"";
