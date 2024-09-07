@@ -4,7 +4,7 @@
     <parent>
         <groupId>gr.uoa.di.rdf</groupId>
         <artifactId>GeoRDFBench</artifactId>
-        <version>1.0.0</version>
+        <version>1.2.0</version>
     </parent>
     <!-- <groupId>gr.uoa.di.rdf</groupId> -->
     <artifactId>RDF4JSUT</artifactId>
@@ -93,7 +93,7 @@
         <dependency>
             <groupId>gr.uoa.di.rdf</groupId>
             <artifactId>runtime</artifactId>
-            <version>${project.version}</version>
+            <version>${gr.uoa.di.rdf.geordfbench.version}</version>
             <type>jar</type>
         </dependency>
         <!-- JUnit 5 Jupiter dependency -->
