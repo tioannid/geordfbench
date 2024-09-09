@@ -178,6 +178,7 @@ public abstract class EmbeddedJDBCRepSrc implements IReportSource {
 
     @Override
     public long insExperiment(Experiment exp) {
+        String insMsg = "";
         Calendar calendar = Calendar.getInstance();
         java.util.Date now = calendar.getTime();
         Timestamp currentTimestamp = new Timestamp(now.getTime());
@@ -201,7 +202,7 @@ public abstract class EmbeddedJDBCRepSrc implements IReportSource {
             st.setString(++col, exp.getRptSpec().getClass().getSimpleName());
 
             int rowsInserted = st.executeUpdate();
-            logger.debug(rowsInserted + " rows inserted in EXPERIMENT table");
+            insMsg = rowsInserted + " row inserted in EXPERIMENT table";
             st.close();
         } catch (SQLException ex) {
             logger.error(ex.getMessage());
@@ -215,6 +216,8 @@ public abstract class EmbeddedJDBCRepSrc implements IReportSource {
             rs = st1.executeQuery("SELECT Max(id) FROM public.\"EXPERIMENT\";");
             rs.next();
             ret = rs.getLong(1);
+            insMsg = insMsg + ", with id = " + ret;
+            logger.info(insMsg);
             rs.close();
             st1.close();
         } catch (SQLException ex) {
@@ -251,7 +254,7 @@ public abstract class EmbeddedJDBCRepSrc implements IReportSource {
                 st.setString(++col, queryRepResult.getResException().getName());
 
                 int rowsInserted = st.executeUpdate();
-                logger.debug(rowsInserted + " rows inserted in QUERYEXECUTION table");
+                logger.info(rowsInserted + " rows inserted in QUERYEXECUTION table");
                 st.close();
             } catch (SQLException ex) {
                 logger.error(ex.getMessage());
