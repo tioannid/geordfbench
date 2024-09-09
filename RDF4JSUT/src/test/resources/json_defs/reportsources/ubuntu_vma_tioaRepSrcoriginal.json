@@ -4,7 +4,7 @@
   "hostname" : "10.0.2.15",
   "althostname" : "localhost",
   "port" : 5432,
-  "database" : "geographica3",
-  "user" : "geographica3",
-  "password" : "geographica3"
+  "database" : "geordfbench",
+  "user" : "geordfbench",
+  "password" : "geordfbench"
 }

@@ -31,27 +31,27 @@ public class PostgreSQLRepSrc extends JDBCRepSrc {
                 + "SET client_min_messages = warning;\n"
                 + "SET row_security = off;\n"
                 + "\n"
-                + "DROP DATABASE IF EXISTS geographica3;\n"
-                + "DROP ROLE IF EXISTS geographica3;");
-        schemaInitScript.put(2, "CREATE ROLE geographica3 LOGIN\n"
+                + "DROP DATABASE IF EXISTS geordfbench;\n"
+                + "DROP ROLE IF EXISTS geordfbench;");
+        schemaInitScript.put(2, "CREATE ROLE geordfbench LOGIN\n"
                 + "  ENCRYPTED PASSWORD 'md5026b364a2c8491da2cca1b5772723d43'\n"
                 + "  NOSUPERUSER INHERIT NOCREATEDB NOCREATEROLE NOREPLICATION;\n"
                 + "\n"
-                + "ALTER USER geographica3 WITH PASSWORD 'geographica3';");
-        schemaInitScript.put(3, "CREATE DATABASE geographica3\n"
+                + "ALTER USER geordfbench WITH PASSWORD 'geordfbench';");
+        schemaInitScript.put(3, "CREATE DATABASE geordfbench\n"
                 + "    WITH \n"
                 + "    TEMPLATE template0\n"
-                + "    OWNER = geographica3\n"
+                + "    OWNER = geordfbench\n"
                 + "    ENCODING = 'UTF8'\n"
                 + "    LC_COLLATE = 'en_US.UTF-8'\n"
                 + "    LC_CTYPE = 'en_US.UTF-8'\n"
                 + "    TABLESPACE = pg_default\n"
                 + "    CONNECTION LIMIT = -1;\n"
                 + "\n"
-                + "ALTER DATABASE geographica3 OWNER TO geographica3;\n");
+                + "ALTER DATABASE geordfbench OWNER TO geordfbench;\n");
         // For the following commands to work properly a new
         // jdbc connection needs to be made to the newly
-        // created <geographica3> database
+        // created <geordfbench> database
         schemaInitScript.put(4, "SET statement_timeout = 0;\n"
                 + "SET lock_timeout = 0;\n"
 //                + "SET idle_in_transaction_session_timeout = 0;\n"
@@ -77,7 +77,7 @@ public class PostgreSQLRepSrc extends JDBCRepSrc {
                 + "    type character varying(50)\n"
                 + ");\n"
                 + "\n"
-                + "ALTER TABLE public.\"EXPERIMENT\" OWNER TO geographica3;\n"
+                + "ALTER TABLE public.\"EXPERIMENT\" OWNER TO geordfbench;\n"
                 + "\n"
                 + "CREATE SEQUENCE public.\"EXPERIMENT_id_seq\"\n"
                 + "    START WITH 1\n"
@@ -86,7 +86,7 @@ public class PostgreSQLRepSrc extends JDBCRepSrc {
                 + "    NO MAXVALUE\n"
                 + "    CACHE 1;\n"
                 + "\n"
-                + "ALTER TABLE public.\"EXPERIMENT_id_seq\" OWNER TO geographica3;\n"
+                + "ALTER TABLE public.\"EXPERIMENT_id_seq\" OWNER TO geordfbench;\n"
                 + "\n"
                 + "ALTER SEQUENCE public.\"EXPERIMENT_id_seq\" OWNED BY public.\"EXPERIMENT\".id;");
         schemaInitScript.put(6, "CREATE TABLE public.\"QUERYEXECUTION\" (\n"
@@ -104,7 +104,7 @@ public class PostgreSQLRepSrc extends JDBCRepSrc {
                 + "    res_exception character varying(35)\n"
                 + ");\n"
                 + "\n"
-                + "ALTER TABLE public.\"QUERYEXECUTION\" OWNER TO geographica3;\n"
+                + "ALTER TABLE public.\"QUERYEXECUTION\" OWNER TO geordfbench;\n"
                 + "\n"
                 + "CREATE SEQUENCE public.\"QUERYEXECUTION_experiment_id_seq\"\n"
                 + "    START WITH 1\n"
@@ -113,7 +113,7 @@ public class PostgreSQLRepSrc extends JDBCRepSrc {
                 + "    NO MAXVALUE\n"
                 + "    CACHE 1;\n"
                 + "\n"
-                + "ALTER TABLE public.\"QUERYEXECUTION_experiment_id_seq\" OWNER TO geographica3;\n"
+                + "ALTER TABLE public.\"QUERYEXECUTION_experiment_id_seq\" OWNER TO geordfbench;\n"
                 + "\n"
                 + "ALTER SEQUENCE public.\"QUERYEXECUTION_experiment_id_seq\" OWNED BY public.\"QUERYEXECUTION\".experiment_id;\n"
                 + "\n"
@@ -124,7 +124,7 @@ public class PostgreSQLRepSrc extends JDBCRepSrc {
                 + "    NO MAXVALUE\n"
                 + "    CACHE 1;\n"
                 + "\n"
-                + "ALTER TABLE public.\"QUERYEXECUTION_id_seq\" OWNER TO geographica3;\n"
+                + "ALTER TABLE public.\"QUERYEXECUTION_id_seq\" OWNER TO geordfbench;\n"
                 + "\n"
                 + "ALTER SEQUENCE public.\"QUERYEXECUTION_id_seq\" OWNED BY public.\"QUERYEXECUTION\".id;\n"
                 + "\n"
@@ -149,7 +149,7 @@ public class PostgreSQLRepSrc extends JDBCRepSrc {
                 + "    public.\"EXPERIMENT\"\n"
                 + "  WHERE (\"QUERYEXECUTION\".experiment_id = \"EXPERIMENT\".id);\n"
                 + "\n"
-                + "ALTER TABLE public.vqueryexecution OWNER TO geographica3;\n"
+                + "ALTER TABLE public.vqueryexecution OWNER TO geordfbench;\n"
                 + "\n"
                 + "CREATE VIEW public.vquery_ordered_aggrs AS\n"
                 + " SELECT vqueryexecution.experiment_id,\n"
@@ -161,7 +161,7 @@ public class PostgreSQLRepSrc extends JDBCRepSrc {
                 + "   FROM public.vqueryexecution\n"
                 + "  GROUP BY vqueryexecution.experiment_id, vqueryexecution.query_no, vqueryexecution.cache_type;\n"
                 + "\n"
-                + "ALTER TABLE public.vquery_ordered_aggrs OWNER TO geographica3;");
+                + "ALTER TABLE public.vquery_ordered_aggrs OWNER TO geordfbench;");
         schemaInitScript.put(8, "CREATE VIEW public.vqueryexecution2 AS\n"
                 + " SELECT \"QUERYEXECUTION\".id,\n"
                 + "    \"QUERYEXECUTION\".experiment_id,\n"
@@ -186,7 +186,7 @@ public class PostgreSQLRepSrc extends JDBCRepSrc {
                 + "    public.\"EXPERIMENT\"\n"
                 + "  WHERE (\"QUERYEXECUTION\".experiment_id = \"EXPERIMENT\".id);\n"
                 + "\n"
-                + "ALTER TABLE public.vqueryexecution2 OWNER TO geographica3;\n"
+                + "ALTER TABLE public.vqueryexecution2 OWNER TO geordfbench;\n"
                 + "\n"
                 + "CREATE VIEW public.vquery_ordered_aggrs2 AS\n"
                 + " SELECT vqueryexecution2.experiment_id,\n"
@@ -199,7 +199,7 @@ public class PostgreSQLRepSrc extends JDBCRepSrc {
                 + "  GROUP BY vqueryexecution2.validflag, vqueryexecution2.experiment_id, vqueryexecution2.query_no, vqueryexecution2.cache_type\n"
                 + " HAVING (vqueryexecution2.validflag = 'Success'::text);\n"
                 + "\n"
-                + "ALTER TABLE public.vquery_ordered_aggrs2 OWNER TO geographica3;");
+                + "ALTER TABLE public.vquery_ordered_aggrs2 OWNER TO geordfbench;");
         schemaInitScript.put(9, "CREATE VIEW public.vqueryexecution3 AS\n"
                 + " SELECT q.id,\n"
                 + "    q.experiment_id,\n"
@@ -229,7 +229,7 @@ public class PostgreSQLRepSrc extends JDBCRepSrc {
                 + "    public.\"EXPERIMENT\" e\n"
                 + "  WHERE (q.experiment_id = e.id);\n"
                 + "\n"
-                + "ALTER TABLE public.vqueryexecution3 OWNER TO geographica3;\n"
+                + "ALTER TABLE public.vqueryexecution3 OWNER TO geordfbench;\n"
                 + "\n"
                 + "CREATE VIEW public.vquery_ordered_aggrs_3 AS\n"
                 + " SELECT v.experiment_id,\n"
@@ -246,7 +246,7 @@ public class PostgreSQLRepSrc extends JDBCRepSrc {
                 + "   FROM public.vqueryexecution3 v\n"
                 + "  GROUP BY v.experiment_id, v.sut, v.queryset, v.dataset, v.query_label, v.query_no, v.validflag, v.cache_type;\n"
                 + "\n"
-                + "ALTER TABLE public.vquery_ordered_aggrs_3 OWNER TO geographica3;");
+                + "ALTER TABLE public.vquery_ordered_aggrs_3 OWNER TO geordfbench;");
         schemaInitScript.put(10, "CREATE VIEW public.vreport AS\n"
                 + " SELECT v.cache_type,\n"
                 + "    v.query_no,\n"
@@ -257,7 +257,7 @@ public class PostgreSQLRepSrc extends JDBCRepSrc {
                 + "    v.median\n"
                 + "   FROM public.vquery_ordered_aggrs_3 v;\n"
                 + "\n"
-                + "ALTER TABLE public.vreport OWNER TO geographica3;");
+                + "ALTER TABLE public.vreport OWNER TO geordfbench;");
         schemaInitScript.put(11, "ALTER TABLE ONLY public.\"EXPERIMENT\" ALTER COLUMN id SET DEFAULT nextval('public.\"EXPERIMENT_id_seq\"'::regclass);\n"
                 + "ALTER TABLE ONLY public.\"QUERYEXECUTION\" ALTER COLUMN id SET DEFAULT nextval('public.\"QUERYEXECUTION_id_seq\"'::regclass);\n"
                 //                + "ALTER TABLE ONLY public.\"QUERYEXECUTION\" ALTER COLUMN experiment_id SET DEFAULT nextval('public.\"QUERYEXECUTION_experiment_id_seq\"'::regclass);\n"
@@ -299,7 +299,7 @@ public class PostgreSQLRepSrc extends JDBCRepSrc {
         boolean dbExists = false, initialized = false;
         String sqlDatabaseExists = "SELECT Count(*) AS cntrows\n"
                 + "FROM pg_catalog.pg_database\n"
-                + "WHERE lower(datname) = lower('geographica3');";
+                + "WHERE lower(datname) = lower('geordfbench');";
         String sqlExistsTableExperiment = "SELECT EXISTS (\n"
                 + "   SELECT FROM information_schema.tables \n"
                 + "   WHERE  table_schema = 'public'\n"
@@ -311,7 +311,7 @@ public class PostgreSQLRepSrc extends JDBCRepSrc {
         try {
             // connect to <postgres> database
             tmpConn = DriverManager.getConnection(getJdbcURL_NoDatabase());
-            // check if <geographica3> database already exists
+            // check if <geordfbench> database already exists
             stmt = tmpConn.createStatement();
             rs = stmt.executeQuery(sqlDatabaseExists);
             rs.next();
@@ -319,9 +319,9 @@ public class PostgreSQLRepSrc extends JDBCRepSrc {
             rs.close();
             stmt.close();
             tmpConn.close();
-            // if <geographica3> database exists check if it's initialized
+            // if <geordfbench> database exists check if it's initialized
             if (dbExists) {
-                // connect to <geographica3> database
+                // connect to <geordfbench> database
                 tmpConn = DriverManager.getConnection(getJdbcURL());
                 // check if PUBLIC.EXPERIMENT table exists
                 stmt = tmpConn.createStatement();

@@ -18,24 +18,24 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
-DROP DATABASE IF EXISTS geographica3;
+DROP DATABASE IF EXISTS geordfbench;
 --
 -- TOC entry 3362 (class 1262 OID 16385)
--- Name: geographica3; Type: DATABASE; Schema: -; Owner: geographica3
+-- Name: geordfbench; Type: DATABASE; Schema: -; Owner: geordfbench
 --
 
--- Create geographica3 login
+-- Create geordfbench login
 --
-CREATE ROLE geographica3 LOGIN
+CREATE ROLE geordfbench LOGIN
   ENCRYPTED PASSWORD 'md5026b364a2c8491da2cca1b5772723d43'
   NOSUPERUSER INHERIT NOCREATEDB NOCREATEROLE NOREPLICATION;
 
-ALTER USER geographica3 WITH PASSWORD 'geographica3';
+ALTER USER geordfbench WITH PASSWORD 'geordfbench';
 
-CREATE DATABASE geographica3
+CREATE DATABASE geordfbench
     WITH 
     TEMPLATE template0
-    OWNER = geographica3
+    OWNER = geordfbench
     ENCODING = 'UTF8'
     LC_COLLATE = 'en_US.UTF-8'
     LC_CTYPE = 'en_US.UTF-8'
@@ -43,9 +43,9 @@ CREATE DATABASE geographica3
     CONNECTION LIMIT = -1;
 
 
-ALTER DATABASE geographica3 OWNER TO geographica3;
+ALTER DATABASE geordfbench OWNER TO geordfbench;
 
-\connect geographica3
+\connect geordfbench
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -83,7 +83,7 @@ SET default_table_access_method = heap;
 
 --
 -- TOC entry 209 (class 1259 OID 16386)
--- Name: EXPERIMENT; Type: TABLE; Schema: public; Owner: geographica3
+-- Name: EXPERIMENT; Type: TABLE; Schema: public; Owner: geordfbench
 --
 
 CREATE TABLE public."EXPERIMENT" (
@@ -102,11 +102,11 @@ CREATE TABLE public."EXPERIMENT" (
 );
 
 
-ALTER TABLE public."EXPERIMENT" OWNER TO geographica3;
+ALTER TABLE public."EXPERIMENT" OWNER TO geordfbench;
 
 --
 -- TOC entry 210 (class 1259 OID 16392)
--- Name: EXPERIMENT_id_seq; Type: SEQUENCE; Schema: public; Owner: geographica3
+-- Name: EXPERIMENT_id_seq; Type: SEQUENCE; Schema: public; Owner: geordfbench
 --
 
 CREATE SEQUENCE public."EXPERIMENT_id_seq"
@@ -117,12 +117,12 @@ CREATE SEQUENCE public."EXPERIMENT_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."EXPERIMENT_id_seq" OWNER TO geographica3;
+ALTER TABLE public."EXPERIMENT_id_seq" OWNER TO geordfbench;
 
 --
 -- TOC entry 3364 (class 0 OID 0)
 -- Dependencies: 210
--- Name: EXPERIMENT_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: geographica3
+-- Name: EXPERIMENT_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: geordfbench
 --
 
 ALTER SEQUENCE public."EXPERIMENT_id_seq" OWNED BY public."EXPERIMENT".id;
@@ -130,7 +130,7 @@ ALTER SEQUENCE public."EXPERIMENT_id_seq" OWNED BY public."EXPERIMENT".id;
 
 --
 -- TOC entry 211 (class 1259 OID 16393)
--- Name: QUERYEXECUTION; Type: TABLE; Schema: public; Owner: geographica3
+-- Name: QUERYEXECUTION; Type: TABLE; Schema: public; Owner: geordfbench
 --
 
 CREATE TABLE public."QUERYEXECUTION" (
@@ -149,11 +149,11 @@ CREATE TABLE public."QUERYEXECUTION" (
 );
 
 
-ALTER TABLE public."QUERYEXECUTION" OWNER TO geographica3;
+ALTER TABLE public."QUERYEXECUTION" OWNER TO geordfbench;
 
 --
 -- TOC entry 212 (class 1259 OID 16396)
--- Name: QUERYEXECUTION_experiment_id_seq; Type: SEQUENCE; Schema: public; Owner: geographica3
+-- Name: QUERYEXECUTION_experiment_id_seq; Type: SEQUENCE; Schema: public; Owner: geordfbench
 --
 
 CREATE SEQUENCE public."QUERYEXECUTION_experiment_id_seq"
@@ -164,12 +164,12 @@ CREATE SEQUENCE public."QUERYEXECUTION_experiment_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."QUERYEXECUTION_experiment_id_seq" OWNER TO geographica3;
+ALTER TABLE public."QUERYEXECUTION_experiment_id_seq" OWNER TO geordfbench;
 
 --
 -- TOC entry 3365 (class 0 OID 0)
 -- Dependencies: 212
--- Name: QUERYEXECUTION_experiment_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: geographica3
+-- Name: QUERYEXECUTION_experiment_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: geordfbench
 --
 
 ALTER SEQUENCE public."QUERYEXECUTION_experiment_id_seq" OWNED BY public."QUERYEXECUTION".experiment_id;
@@ -177,7 +177,7 @@ ALTER SEQUENCE public."QUERYEXECUTION_experiment_id_seq" OWNED BY public."QUERYE
 
 --
 -- TOC entry 213 (class 1259 OID 16397)
--- Name: QUERYEXECUTION_id_seq; Type: SEQUENCE; Schema: public; Owner: geographica3
+-- Name: QUERYEXECUTION_id_seq; Type: SEQUENCE; Schema: public; Owner: geordfbench
 --
 
 CREATE SEQUENCE public."QUERYEXECUTION_id_seq"
@@ -188,12 +188,12 @@ CREATE SEQUENCE public."QUERYEXECUTION_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."QUERYEXECUTION_id_seq" OWNER TO geographica3;
+ALTER TABLE public."QUERYEXECUTION_id_seq" OWNER TO geordfbench;
 
 --
 -- TOC entry 3366 (class 0 OID 0)
 -- Dependencies: 213
--- Name: QUERYEXECUTION_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: geographica3
+-- Name: QUERYEXECUTION_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: geordfbench
 --
 
 ALTER SEQUENCE public."QUERYEXECUTION_id_seq" OWNED BY public."QUERYEXECUTION".id;
@@ -376,7 +376,7 @@ ALTER TABLE public.vreport OWNER TO postgres;
 
 --
 -- TOC entry 3204 (class 2604 OID 16431)
--- Name: EXPERIMENT id; Type: DEFAULT; Schema: public; Owner: geographica3
+-- Name: EXPERIMENT id; Type: DEFAULT; Schema: public; Owner: geordfbench
 --
 
 ALTER TABLE ONLY public."EXPERIMENT" ALTER COLUMN id SET DEFAULT nextval('public."EXPERIMENT_id_seq"'::regclass);
@@ -384,7 +384,7 @@ ALTER TABLE ONLY public."EXPERIMENT" ALTER COLUMN id SET DEFAULT nextval('public
 
 --
 -- TOC entry 3206 (class 2604 OID 16433)
--- Name: QUERYEXECUTION id; Type: DEFAULT; Schema: public; Owner: geographica3
+-- Name: QUERYEXECUTION id; Type: DEFAULT; Schema: public; Owner: geordfbench
 --
 
 ALTER TABLE ONLY public."QUERYEXECUTION" ALTER COLUMN id SET DEFAULT nextval('public."QUERYEXECUTION_id_seq"'::regclass);
@@ -392,7 +392,7 @@ ALTER TABLE ONLY public."QUERYEXECUTION" ALTER COLUMN id SET DEFAULT nextval('pu
 
 --
 -- TOC entry 3205 (class 2604 OID 16432)
--- Name: QUERYEXECUTION experiment_id; Type: DEFAULT; Schema: public; Owner: geographica3
+-- Name: QUERYEXECUTION experiment_id; Type: DEFAULT; Schema: public; Owner: geordfbench
 --
 
 ALTER TABLE ONLY public."QUERYEXECUTION" ALTER COLUMN experiment_id SET DEFAULT nextval('public."QUERYEXECUTION_experiment_id_seq"'::regclass);
@@ -400,7 +400,7 @@ ALTER TABLE ONLY public."QUERYEXECUTION" ALTER COLUMN experiment_id SET DEFAULT 
 
 --
 -- TOC entry 3208 (class 2606 OID 16435)
--- Name: EXPERIMENT EXPERIMENT_pkey; Type: CONSTRAINT; Schema: public; Owner: geographica3
+-- Name: EXPERIMENT EXPERIMENT_pkey; Type: CONSTRAINT; Schema: public; Owner: geordfbench
 --
 
 ALTER TABLE ONLY public."EXPERIMENT"
@@ -409,7 +409,7 @@ ALTER TABLE ONLY public."EXPERIMENT"
 
 --
 -- TOC entry 3209 (class 1259 OID 16436)
--- Name: FKI_EXPERIMENT_ID; Type: INDEX; Schema: public; Owner: geographica3
+-- Name: FKI_EXPERIMENT_ID; Type: INDEX; Schema: public; Owner: geordfbench
 --
 
 CREATE INDEX "FKI_EXPERIMENT_ID" ON public."QUERYEXECUTION" USING btree (experiment_id);
@@ -417,7 +417,7 @@ CREATE INDEX "FKI_EXPERIMENT_ID" ON public."QUERYEXECUTION" USING btree (experim
 
 --
 -- TOC entry 3210 (class 2606 OID 16437)
--- Name: QUERYEXECUTION FK_EXPERIMENT_ID; Type: FK CONSTRAINT; Schema: public; Owner: geographica3
+-- Name: QUERYEXECUTION FK_EXPERIMENT_ID; Type: FK CONSTRAINT; Schema: public; Owner: geordfbench
 --
 
 ALTER TABLE ONLY public."QUERYEXECUTION"

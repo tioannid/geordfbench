@@ -121,8 +121,8 @@ public class RunPostgreSQLReportSourceTest {
             PostgreSQLRepSrc pgsrc
                     = new PostgreSQLRepSrc(
                             "10.0.2.15", "localhost", 5432,
-                            "geographica3",
-                            "geographica3", "geographica3");
+                            "geordfbench",
+                            "geordfbench", "geordfbench");
             pgsrc.serializeToJSON(newFile);
         } catch (SQLException | IOException ex) {
             System.err.println(ex.getMessage());

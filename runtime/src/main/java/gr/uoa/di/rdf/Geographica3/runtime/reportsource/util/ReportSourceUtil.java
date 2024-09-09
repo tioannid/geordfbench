@@ -37,8 +37,8 @@ public class ReportSourceUtil {
             PostgreSQLRepSrc pgsrc
                     = new PostgreSQLRepSrc(
                             "10.0.2.15", "localhost", 5432,
-                            "geographica3",
-                            "geographica3", "geographica3");
+                            "geordfbench",
+                            "geordfbench", "geordfbench");
             pgsrc.serializeToJSON(new File(UBUNTU_VMA_TIOA_REP_SRCJSONDEF_FILE));
         } catch (SQLException | IOException ex) {
             logger.error(ex.getMessage());
