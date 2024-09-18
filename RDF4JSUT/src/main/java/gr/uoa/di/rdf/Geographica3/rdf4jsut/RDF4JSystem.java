@@ -181,7 +181,10 @@ public class RDF4JSystem extends RDF4JBasedGeographicaSystem {
                 if (!repositoryManager.removeRepository(repositoryId)) {
                     throw new RuntimeException("Failed to remove repository " + repositoryId + "!");
                 }
+                logger.info("Successfully deleted repository " + repositoryId);
                 lastMeasuredOperation = createNativeLuceneRepoWithManager(baseDir, repositoryId, hasLucene, indexes, wktIdxList);
+            } else {
+                logger.info("Repository " + repositoryId + " already exists, no need to create it!");
             }
         }
 

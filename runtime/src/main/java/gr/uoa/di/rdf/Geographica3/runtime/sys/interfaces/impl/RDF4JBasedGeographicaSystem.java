@@ -454,14 +454,18 @@ public class RDF4JBasedGeographicaSystem extends AbstractGeographicaSystem<Repos
         if ("".equals(indexes)) {
             indexes = "spoc,posc";
         }
-        logger.info("Creating NativeStore base sail with " + indexes + " indexes");
-        SailImplConfig backendConfig = new NativeStoreConfig(indexes);
+        SailImplConfig backendConfig = null;
         if (hasLucene) { // if requested, add lucene support
+            logger.info("Creating NativeStore base sail with " + indexes + " indexes and forceSync = true");
+            backendConfig = new NativeStoreConfig(indexes, true);
             logger.info("Adding Lucene sail on top of NativeStore");
             LuceneSailConfig lcfg = new LuceneSailConfig("./luceneidx", backendConfig);
             logger.info("Lucene sail will spatially index properties: " + wktIdxList);
             lcfg.setParameter(WKT_FIELDS, wktIdxList);
             backendConfig = lcfg;
+        } else {
+            logger.info("Creating NativeStore base sail with " + indexes + " indexes");
+            backendConfig = new NativeStoreConfig(indexes);
         }
         // stack an inferencer config on top of our backend-config
         //backendConfig = new ForwardChainingRDFSInferencerConfig(backendConfig);

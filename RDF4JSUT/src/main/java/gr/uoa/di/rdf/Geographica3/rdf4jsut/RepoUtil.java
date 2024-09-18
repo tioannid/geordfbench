@@ -13,15 +13,14 @@ import org.apache.log4j.Logger;
  * @author GeoRDFBench Creator <GeoRDFBench@Creator>
  * @since 08/05/2018
  * @description Perform all actions for the RDF4J repositories
- * @syntax 1: RepoUtil <create> <repodir> {indexes} 
- *         2: RepoUtil <createman>
- *         2: RepoUtil <load> <repodir> <RDFFormatString> <file>
- *         3: RepoUtil <dirload> <repodir> <trigfiledir> <printflag>
+ * @syntax 1: RepoUtil <create> <repodir> {indexes} 2: RepoUtil <createman>
+ * 2: RepoUtil <load> <repodir> <RDFFormatString> <file>
+ * 3: RepoUtil <dirload> <repodir> <trigfiledir> <printflag>
  */
 public class RepoUtil {
-    
+
     static Logger logger = Logger.getLogger(RepoUtil.class.getSimpleName());
-    
+
     static String repoDir;
     static String indexes;
     static String wktIdxList;
@@ -33,16 +32,17 @@ public class RepoUtil {
     static String rdfFormat;
     static String fileDir;
     static boolean displayProgress;
+    static RDF4JSystem rdf4j = null;
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
 //        if (args[0].equalsIgnoreCase("create")) { // create a standalone repo with indexes
 //            repoDir = args[1];
 //            indexes = (args.length == 2) ? "" : args[2];
 //            System.out.println("RDF4J created repo \"" + repoDir + "\" in "
 //                    + Rdf4jSUT.RDF4J.createNativeRepo(repoDir, indexes) + " msecs");
 //        } else
-            
-            if (args[0].equalsIgnoreCase("createman")) { // create a repo with Id using repo manager with indexes and lucene index and overwriting existing repo
+
+        if (args[0].equalsIgnoreCase("createman")) { // create a repo with Id using repo manager with indexes and lucene index and overwriting existing repo
             baseDir = args[1];
             repositoryId = args[2];
             reCreateRepo = Boolean.parseBoolean(args[3]);
@@ -50,9 +50,17 @@ public class RepoUtil {
             indexes = args[5];
             wktIdxList = args[6];
             Map<String, String> sysMap = RDF4JSystem.constructSysPropsMap(baseDir, repositoryId, indexes, reCreateRepo, hasLucene, wktIdxList);
-            RDF4JSystem rdf4j = new RDF4JSystem(sysMap);
-            logger.info("RDF4J created with manager " + ((hasLucene)? "lucene ": "") + "repo \"" + baseDir + "/repositories/" + repositoryId + "\" in "
-                    + RDF4JSystem.lastMeasuredOperation + " msecs");
+            try {
+                rdf4j = new RDF4JSystem(sysMap);
+                logger.info("RDF4J created with manager " + ((hasLucene) ? "lucene " : "") + "repo \"" + baseDir + "/repositories/" + repositoryId + "\" in "
+                        + RDF4JSystem.lastMeasuredOperation + " msecs");
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+            } finally {
+                if (rdf4j != null) {
+                    rdf4j.close();
+                }
+            }
 //        } else if (args[0].equalsIgnoreCase("query")) { // query from templates against standalone repo
 //            baseDir = args[1];
 //            queryNo = Integer.parseInt(args[2]);
@@ -79,24 +87,40 @@ public class RepoUtil {
             rdfFormat = args[3];
             fileDir = args[4];
             displayProgress = Boolean.parseBoolean(args[5]);
-            
+
             // create an RDF4JSystem from an existing repo that has just been
             // created by "createman" option above!
-            RDF4JSystem rdf4j = new RDF4JSystem(baseDir, repositoryId);
-            // load 
-            RDF4JSystem.lastMeasuredOperation = rdf4j.loadDirInNativeRepoWithManager(fileDir, rdfFormat, displayProgress);
-            logger.info("RDF4J loaded with manager all files from \"" + fileDir + "\" to repo \"" + baseDir + "/repositories/" + repositoryId + "\" in "
-                    + RDF4JSystem.lastMeasuredOperation + " msecs");
+            try {
+                rdf4j = new RDF4JSystem(baseDir, repositoryId);
+                // load 
+                RDF4JSystem.lastMeasuredOperation = rdf4j.loadDirInNativeRepoWithManager(fileDir, rdfFormat, displayProgress);
+                logger.info("RDF4J loaded with manager all files from \"" + fileDir + "\" to repo \"" + baseDir + "/repositories/" + repositoryId + "\" in "
+                        + RDF4JSystem.lastMeasuredOperation + " msecs");
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+            } finally {
+                if (rdf4j != null) {
+                    rdf4j.close();
+                }
+            }
         } else if (args[0].equalsIgnoreCase("queryman")) { // query from templates against repo through repo manager
             baseDir = args[1];
             repositoryId = args[2];
             queryNo = Integer.parseInt(args[3]);
-            
+
             // create an RDF4JSystem from an existing repo that has just been
             // created by "createman" option above!
-            RDF4JSystem rdf4j = new RDF4JSystem(baseDir, repositoryId);
-            System.out.println("RDF4J template-query " + queryNo + " through manager in \"" + baseDir + "\" against repo \"" + repositoryId + "\" in " + 
-                    rdf4j.templateQueryNativeRepoWithManager(baseDir, repositoryId, queryNo) + " msecs");
+            try {
+                rdf4j = new RDF4JSystem(baseDir, repositoryId);
+                System.out.println("RDF4J template-query " + queryNo + " through manager in \"" + baseDir + "\" against repo \"" + repositoryId + "\" in "
+                        + rdf4j.templateQueryNativeRepoWithManager(baseDir, repositoryId, queryNo) + " msecs");
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+            } finally {
+                if (rdf4j != null) {
+                    rdf4j.close();
+                }
+            }
         }
     }
 }

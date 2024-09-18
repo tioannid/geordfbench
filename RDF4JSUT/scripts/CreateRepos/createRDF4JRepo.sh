@@ -93,7 +93,7 @@ CLASS_PATH="$(for file in `ls -1 *.jar`; do myVar=$myVar./$file":"; done;echo $m
 MAIN_CLASS="gr.uoa.di.rdf.Geographica3.rdf4jsut.RepoUtil"
 
 # define the run command arguments to CREATE REPO
-CREATE_REPO_ARGS="createman \"$RepoDir\" \"$RepoID\" \"$RmRepo\" \"$EnableLuceneSail\" \"$RepoIndexes\" \"$WKTIdxList\" true"
+CREATE_REPO_ARGS="createman \"$RepoDir\" \"$RepoID\" \"$RmRepo\" \"$EnableLuceneSail\" \"$RepoIndexes\" \"$WKTIdxList\""
 echo "CREATE_REPO_ARGS = ${CREATE_REPO_ARGS}"
 EXEC_CREATE_REPO="java $JAVA_OPTS -cp $CLASS_PATH $MAIN_CLASS ${CREATE_REPO_ARGS}" 
 #echo $EXEC_CREATE_REPO
