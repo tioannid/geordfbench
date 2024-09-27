@@ -18,6 +18,11 @@ import org.eclipse.rdf4j.sail.config.SailImplConfig;
 import org.eclipse.rdf4j.sail.lucene.config.LuceneSailConfig;
 import org.eclipse.rdf4j.sail.nativerdf.config.NativeStoreConfig;
 
+/**
+ * @author Theofilos Ioannidis <tioannid@di.uoa.gr>
+ * @creationdate -
+ * @updatedate 27/09/2024
+ */
 public class RDF4JSystem extends RDF4JBasedGeographicaSystem {
 
     // --- Static members -----------------------------

@@ -25,7 +25,7 @@ import org.apache.log4j.Logger;
  *
  * @author Theofilos Ioannidis <tioannid@di.uoa.gr>
  * @creationdate 09/09/2024
- * @updatedate 18/09/2024
+ * @updatedate 27/09/2024
  */
 public class CreateRDF4JRepositoryTest1 {
 

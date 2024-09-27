@@ -9,13 +9,14 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 /**
- *
- * @author GeoRDFBench Creator <GeoRDFBench@Creator>
- * @since 08/05/2018
  * @description Perform all actions for the RDF4J repositories
  * @syntax 1: RepoUtil <create> <repodir> {indexes} 2: RepoUtil <createman>
  * 2: RepoUtil <load> <repodir> <RDFFormatString> <file>
  * 3: RepoUtil <dirload> <repodir> <trigfiledir> <printflag>
+ * 
+ * @author Theofilos Ioannidis <tioannid@di.uoa.gr>
+ * @creationdate 08/05/2018
+ * @updatedate 27/09/2024
  */
 public class RepoUtil {
 

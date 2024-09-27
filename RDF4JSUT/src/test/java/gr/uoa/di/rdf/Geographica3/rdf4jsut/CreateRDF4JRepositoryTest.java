@@ -34,7 +34,7 @@ import org.junit.jupiter.api.TestInstance;
  *
  * @author Theofilos Ioannidis <tioannid@di.uoa.gr>
  * @creationdate 09/09/2024
- * @updatedate 18/09/2024
+ * @updatedate 27/09/2024
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DisplayName("Create RDF4J Repository Test")
