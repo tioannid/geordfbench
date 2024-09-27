@@ -165,9 +165,24 @@ public class RDF4JSystem extends RDF4JBasedGeographicaSystem {
         if (!dir.exists()) {
             throw new RuntimeException("Directory " + baseDir + " does not exist.");
         }
-        //  - create a LocalRepositoryManager and initialize it
-        repositoryManager = new LocalRepositoryManager(dir);
-        repositoryManager.init();
+        // create a LocalRepositoryManager and initialize it if you must
+        String createLocalRepoMgrMsg = "";
+        boolean createLocalRepoMgr = true;
+        if (repositoryManager == null) { // no local repo manager instance
+            createLocalRepoMgrMsg = "No LocalRepositoryManager instance present, creating a new one.";
+        } else if (!repositoryManager.getBaseDir().equals(dir)) { // change of baseDir of local repo manager
+            createLocalRepoMgrMsg = "LocalRepositoryManager instance present with different baseDir than the one requested, creating a new one.";
+            repositoryManager.shutDown();
+            repositoryManager = null;
+        } else { // LocalRepositoryManager instance present with same baseDir as the one requested, no need to create a new one
+            createLocalRepoMgr = false;
+            createLocalRepoMgrMsg = "LocalRepositoryManager instance present with same baseDir as the one requested, no need to create a new one.";
+        }
+        logger.info(createLocalRepoMgrMsg);
+        if (createLocalRepoMgr) {
+            repositoryManager = new LocalRepositoryManager(dir);
+            repositoryManager.init();
+        }
 
         // STEP 2: Does the repository exist?
         //  - if not create it
@@ -176,23 +191,70 @@ public class RDF4JSystem extends RDF4JBasedGeographicaSystem {
         if (repconfig == null) { // repository does not exist
             // create a new repository
             lastMeasuredOperation = createNativeLuceneRepoWithManager(baseDir, repositoryId, hasLucene, indexes, wktIdxList);
+            repconfig = getRepositoryConfig(repositoryId);
         } else { // repository exists
             if (createOverwriteRepository) { // re-create repository
-                if (!repositoryManager.removeRepository(repositoryId)) {
-                    throw new RuntimeException("Failed to remove repository " + repositoryId + "!");
+                boolean repoRemoved = false;
+                try {
+                    if (repositoryManager.isSafeToRemove(repositoryId)) {
+                        logger.info("LocalRepositoryManager reported that it is safe to attempt to remove repository " + repositoryId);
+                        Thread.sleep(1000);
+                        try {
+                            repoRemoved = repositoryManager.removeRepository(repositoryId);
+                        } catch (Exception ioex) {
+                            logger.error("GOT YOU ONCE - It is an error, but I will try again after 2000 msecs!");
+                            ioex.printStackTrace(System.out);
+                            Thread.sleep(2000);
+                            try {
+                                repoRemoved = repositoryManager.removeRepository(repositoryId);
+                            } catch (Exception xx) {
+                                logger.error("GOT YOU TWICE - It is an error, I will not try again!");
+                                xx.printStackTrace(System.out);
+                            }
+                        }
+                        if (!repoRemoved) {
+                            throw new RuntimeException("Failed to remove repository " + repositoryId + "!");
+                        } else {
+                            repository = null;
+                            logger.info("Successfully deleted repository " + repositoryId);
+                            lastMeasuredOperation = createNativeLuceneRepoWithManager(baseDir, repositoryId, hasLucene, indexes, wktIdxList);
+                        }
+                    } else {
+                        throw new RuntimeException("LocalRepositoryManager reports that it is not safe to remove repository " + repositoryId + "!");
+                    }
+                } catch (RepositoryException re) {
+                    logger.error(re.getMessage());
+                    throw re;
+                } catch (RepositoryConfigException rce) {
+                    logger.error(rce.getMessage());
+                    throw rce;
+                } catch (InterruptedException iex) {
+                    logger.error(iex.getMessage());
+                } catch (Throwable t) {
+                    logger.error(t.getMessage());
+                    throw new RuntimeException("Throwable while trying to remove repository " + repositoryId + "!\n" + t.getMessage());
                 }
-                logger.info("Successfully deleted repository " + repositoryId);
-                lastMeasuredOperation = createNativeLuceneRepoWithManager(baseDir, repositoryId, hasLucene, indexes, wktIdxList);
             } else {
-                logger.info("Repository " + repositoryId + " already exists, no need to create it!");
+                logger.info("No need to create repository " + repositoryId + " since it already exists and overwrite has not been requested.");
             }
         }
 
         // STEP 3: Get the repository and connection data members        
         //  - retrieve again the repository from the repository manager
-        repconfig = getRepositoryConfig(repositoryId);
+//        repconfig = getRepositoryConfig(repositoryId);
         try {
-            repository = repositoryManager.getRepository(repositoryId);
+            if (repository == null || repositoryManager.getInitializedRepositories().contains(repository)) {
+                if (repository != null) { // shutdown previous repository instance
+                    logger.info("Shuting down the existing repository object for repo id = " + repositoryId);
+                    repository.shutDown();
+                }
+                logger.info("Creating new repository object for repo id = " + repositoryId);
+                repository = repositoryManager.getRepository(repositoryId);
+                logger.info("Initialing new repository object for repo id = " + repositoryId);
+                repository.init();
+            } else {
+                logger.info("Keeping the existing repository object for repo id = " + repositoryId);
+            }
         } catch (RepositoryConfigException e) {
             logger.error("Repository configuration exception " + e.toString());
             throw new RuntimeException("Error retrieving repository " + repositoryId);

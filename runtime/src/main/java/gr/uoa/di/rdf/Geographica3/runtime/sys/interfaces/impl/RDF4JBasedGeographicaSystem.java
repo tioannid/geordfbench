@@ -351,6 +351,7 @@ public class RDF4JBasedGeographicaSystem extends AbstractGeographicaSystem<Repos
                     throw new RuntimeException("Repository " + repositoryId + " does not exist. Cannot proceed unless a new repository is created!");
                 } else { // create a new repository
                     lastMeasuredOperation = createNativeLuceneRepoWithManager(baseDir, repositoryId, false, indexes, "");
+                    repconfig = getRepositoryConfig(repositoryId);
                 }
             } else { // repository exists
                 if (createOverwriteRepository) { // re-create repository
@@ -363,7 +364,7 @@ public class RDF4JBasedGeographicaSystem extends AbstractGeographicaSystem<Repos
 
             // STEP 3: Get the repository and connection data members        
             //  - retrieve again the repository from the repository manager
-            repconfig = getRepositoryConfig(repositoryId);
+//            repconfig = getRepositoryConfig(repositoryId);
             try {
                 repository = repositoryManager.getRepository(repositoryId);
             } catch (RepositoryConfigException e) {
@@ -378,12 +379,13 @@ public class RDF4JBasedGeographicaSystem extends AbstractGeographicaSystem<Repos
                 connection = repository.getConnection();
             } catch (RepositoryException e) {
                 logger.error("During RDF4JBasedGeographicaSystem init() and while trying to get a connection from an existing repository - RepositoryException - " + e.getMessage());
-            } catch (Throwable t) {
-                logger.error(t.getMessage());
-                repository.shutDown();
-                repository.init();
-                connection = repository.getConnection();
             }
+//            catch (Throwable t) {
+//                logger.error(t.getMessage());
+//                repository.shutDown();
+//                repository.init();
+//                connection = repository.getConnection();
+//            }
             if (connection == null) {
                 throw new RuntimeException("Could not establish connection to repository " + repositoryId);
             }
@@ -411,7 +413,10 @@ public class RDF4JBasedGeographicaSystem extends AbstractGeographicaSystem<Repos
             logger.error("Upon connection commit - RepositoryException - " + errorMsg);
         } finally {
             try {
-                connection.close();
+                if (connection.isOpen()) {
+                    connection.close();
+                    connection = null;
+                }
             } catch (RepositoryException e) { // If the connection could not be closed.
                 errorMsg = e.getMessage();
                 logger.error("Upon connection close - RepositoryException - " + errorMsg);
@@ -420,7 +425,8 @@ public class RDF4JBasedGeographicaSystem extends AbstractGeographicaSystem<Repos
                 logger.error("Upon connection close - RuntimeException - " + errorMsg);
             }
             try {
-                this.repository.shutDown(); // Shuts the repository down, releasing any resources that it keeps hold of. Once shut down, the repository can no longer be used until it is re-initialized.
+                repository.shutDown(); // Shuts the repository down, releasing any resources that it keeps hold of. Once shut down, the repository can no longer be used until it is re-initialized.
+                repository = null;
             } catch (RepositoryException e) { // An exception thrown by classes from the Repository API to indicate an error. Most of the time, this exception will wrap another exception that indicates the actual source of the error.
                 errorMsg = e.getMessage();
                 logger.error("Upon repository shut down - RepositoryException - " + errorMsg);
@@ -456,8 +462,8 @@ public class RDF4JBasedGeographicaSystem extends AbstractGeographicaSystem<Repos
         }
         SailImplConfig backendConfig = null;
         if (hasLucene) { // if requested, add lucene support
-            logger.info("Creating NativeStore base sail with " + indexes + " indexes and forceSync = true");
-            backendConfig = new NativeStoreConfig(indexes, true);
+            logger.info("Creating NativeStore base sail with " + indexes + " indexes and forceSync = false");
+            backendConfig = new NativeStoreConfig(indexes, false);
             logger.info("Adding Lucene sail on top of NativeStore");
             LuceneSailConfig lcfg = new LuceneSailConfig("./luceneidx", backendConfig);
             logger.info("Lucene sail will spatially index properties: " + wktIdxList);
@@ -500,7 +506,11 @@ public class RDF4JBasedGeographicaSystem extends AbstractGeographicaSystem<Repos
         RDFFormat rdffmt = stringToRDFFormat(rdfFormatString);
         long startLoad = System.currentTimeMillis(), endLoad;
         long startFile = 0;
-        try {
+        // Open a connection to the database
+        // Using try-with-resources statement with a RepositoryConnection which
+        // implements AutoCloseable means that the conn object will be closed in
+        // all scenarios
+        try (RepositoryConnection conn = repository.getConnection()) {
             File dir = new File(rdfFileDir);
             File[] files = dir.listFiles(new FilenameFilter() {
                 @Override
@@ -515,7 +525,7 @@ public class RDF4JBasedGeographicaSystem extends AbstractGeographicaSystem<Repos
                         logger.info("Loading file " + file.getName() + " ...");
                         startFile = System.currentTimeMillis();
                     }
-                    this.connection.add(input, "", rdffmt);
+                    conn.add(input, "", rdffmt);
                     if (printFlag) {
                         logger.info("Finished loading file " + file.getName() + " in " + (System.currentTimeMillis() - startFile) + " msecs");
                     }
@@ -527,11 +537,7 @@ public class RDF4JBasedGeographicaSystem extends AbstractGeographicaSystem<Repos
                     logger.error(ex);
                 }
             }
-            this.connection.close();
             endLoad = System.currentTimeMillis();
-        } finally {
-            // before our program exits, make sure the database is properly shut down.
-            repository.shutDown();
         }
         return (endLoad - startLoad);
     }
@@ -540,17 +546,21 @@ public class RDF4JBasedGeographicaSystem extends AbstractGeographicaSystem<Repos
     public long templateQueryNativeRepoWithManager(String baseDirString, String repoId, int queryNo) {
         String queryString = validationQueries[(queryNo <= validationQueries.length) ? queryNo - 1 : 0];
         long start = System.currentTimeMillis();
-        // create a new LocalRepositoryManager in <baseDirString>
-        File baseDir = new File(baseDirString);
-
         if (repositoryManager == null) {
+            // create a new LocalRepositoryManager in <baseDirString>
+            File baseDir = new File(baseDirString);
             repositoryManager = new LocalRepositoryManager(baseDir);
             repositoryManager.init();
         }
         // request the repository <repoId> back from the LocalRepositoryManager
-        Repository repository = repositoryManager.getRepository(repoId);
-        repository.initialize();
+        if (repository == null) {
+            repository = repositoryManager.getRepository(repoId);
+            repository.init();
+        }
         // Open a connection to the database
+        // Using try-with-resources statement with a RepositoryConnection which
+        // implements AutoCloseable means that the conn object will be closed in
+        // all scenarios
         try (RepositoryConnection conn = repository.getConnection()) {
             TupleQuery tupleQuery = conn.prepareTupleQuery(QueryLanguage.SPARQL, queryString);
             System.out.println(queryString + "\n");
@@ -575,9 +585,6 @@ public class RDF4JBasedGeographicaSystem extends AbstractGeographicaSystem<Repos
                 }
                 System.out.println("<------------------------------------");
             }
-        } finally {
-            // before our program exits, make sure the database is properly shut down.
-            repository.shutDown();
         }
         return (System.currentTimeMillis() - start);
     }

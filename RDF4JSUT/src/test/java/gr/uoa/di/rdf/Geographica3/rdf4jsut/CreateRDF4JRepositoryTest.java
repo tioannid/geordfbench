@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.time.Instant;
+import org.apache.commons.io.file.PathUtils;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -25,13 +26,12 @@ import org.junit.jupiter.api.TestInstance;
  *
  * IMPORTANT: 1) This class is equivalent to the similarly named class in the
  * source packages. Since Lucene v7.x has a problem running with JUnit, the
- * Lucene related tests in this class fail, however, the other class in the
- * the source packages proves that the tested code actually runs properly 
- * during regular execution.
- * 2) It is expected that when the RDF4J dependencies of the Runtime module
- * are updated the problem described in point 1 will be removed and the class 
- * in the the source packages will not longer be required.
- * 
+ * Lucene related tests in this class fail, however, the other class in the the
+ * source packages proves that the tested code actually runs properly during
+ * regular execution. 2) It is expected that when the RDF4J dependencies of the
+ * Runtime module are updated the problem described in point 1 will be removed
+ * and the class in the the source packages will not longer be required.
+ *
  * @author Theofilos Ioannidis <tioannid@di.uoa.gr>
  * @creationdate 09/09/2024
  * @updatedate 18/09/2024
@@ -39,17 +39,6 @@ import org.junit.jupiter.api.TestInstance;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DisplayName("Create RDF4J Repository Test")
 public class CreateRDF4JRepositoryTest {
-
-    // Recursively delete a directory
-    static boolean recursivelyDeleteDir(File dir) {
-        File[] contents = dir.listFiles();
-        if (contents != null) {
-            for (File file : contents) {
-                recursivelyDeleteDir(file);
-            }
-        }
-        return dir.delete();
-    }
 
     // Data Members
     String[] createNativeRepoArgs,
@@ -368,15 +357,32 @@ public class CreateRDF4JRepositoryTest {
     @AfterAll
     public void tearDownAll() {
         System.out.println("AFTER ALL EXPERIMENTS");
+        // wait for fsync in repository operations
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            System.out.println(ex.getMessage());
+        }
         // delete the Native Repo base directory if it exists
         File nativeRepoBaseDir = new File(NATIVE_REPO_BASE_REL_DIR);
-        if (nativeRepoBaseDir.exists()) {
-            recursivelyDeleteDir(nativeRepoBaseDir);
+        try {
+            PathUtils.deleteDirectory(nativeRepoBaseDir.toPath());
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+        // wait for fsync in repository operations
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            System.out.println(ex.getMessage());
         }
         // delete the Lucene Repo base directory if it exists
         File luceneRepoBaseDir = new File(LUCENE_REPO_BASE_REL_DIR);
-        if (luceneRepoBaseDir.exists()) {
-            recursivelyDeleteDir(luceneRepoBaseDir);
+        try {
+            PathUtils.deleteDirectory(luceneRepoBaseDir.toPath());
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+            ex.printStackTrace(System.out);
         }
     }
 }

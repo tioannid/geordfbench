@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.time.Instant;
+import org.apache.commons.io.file.PathUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -16,33 +17,20 @@ import org.apache.log4j.Logger;
  * Overwrite existing repository
  *
  * IMPORTANT: 1) This class is equivalent to the similarly named class in the
- * test packages. Since Lucene v7.x has a problem running with JUnit, the
- * Lucene related tests fail, however, this class proves that the tested code
- * actually runs properly during regular execution.
- * 2) It is expected that when the RDF4J dependencies of the Runtime module
- * are updated the problem described in point 1 will be removed and this class
- * will not longer be required.
- * 
+ * test packages. Since Lucene v7.x has a problem running with JUnit, the Lucene
+ * related tests fail, however, this class proves that the tested code actually
+ * runs properly during regular execution. 2) It is expected that when the RDF4J
+ * dependencies of the Runtime module are updated the problem described in point
+ * 1 will be removed and this class will not longer be required.
+ *
  * @author Theofilos Ioannidis <tioannid@di.uoa.gr>
  * @creationdate 09/09/2024
  * @updatedate 18/09/2024
  */
-public class CreateRDF4JRepositoryTest {
+public class CreateRDF4JRepositoryTest1 {
 
     // --- Static Members -----------------------
-    public static Logger logger = Logger.getLogger(CreateRDF4JRepositoryTest.class.getSimpleName());
-
-    // --- Static Methods -----------------------
-    // Recursively delete a directory
-    static boolean recursivelyDeleteDir(File dir) {
-        File[] contents = dir.listFiles();
-        if (contents != null) {
-            for (File file : contents) {
-                recursivelyDeleteDir(file);
-            }
-        }
-        return dir.delete();
-    }
+    public static Logger logger = Logger.getLogger(CreateRDF4JRepositoryTest1.class.getSimpleName());
 
     // --- Data Members -------------------------
     String[] createNativeRepoArgs,
@@ -333,20 +321,37 @@ public class CreateRDF4JRepositoryTest {
 
     public void tearDownAll() {
         logger.info("AFTER ALL EXPERIMENTS");
+        // wait for fsync in repository operations
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            logger.error(ex.getMessage());
+        }
         // delete the Native Repo base directory if it exists
         File nativeRepoBaseDir = new File(NATIVE_REPO_BASE_REL_DIR);
-        if (nativeRepoBaseDir.exists()) {
-            recursivelyDeleteDir(nativeRepoBaseDir);
+        try {
+            PathUtils.deleteDirectory(nativeRepoBaseDir.toPath());
+        } catch (IOException ex) {
+            logger.error(ex.getMessage());
+        }
+        // wait for fsync in repository operations
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            logger.error(ex.getMessage());
         }
         // delete the Lucene Repo base directory if it exists
         File luceneRepoBaseDir = new File(LUCENE_REPO_BASE_REL_DIR);
-        if (luceneRepoBaseDir.exists()) {
-            recursivelyDeleteDir(luceneRepoBaseDir);
+        try {
+            PathUtils.deleteDirectory(luceneRepoBaseDir.toPath());
+        } catch (IOException ex) {
+            logger.error(ex.getMessage());
+            ex.printStackTrace(System.out);
         }
     }
 
     public static void main(String[] args) throws Exception {
-        CreateRDF4JRepositoryTest test1 = new CreateRDF4JRepositoryTest();
+        CreateRDF4JRepositoryTest1 test1 = new CreateRDF4JRepositoryTest1();
         test1.setupAll();
         test1.shouldOverwriteAnExistingNativeRepo();
         test1.shouldNotCreateANativeRepoWhenRepoExists();

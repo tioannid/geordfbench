@@ -112,7 +112,7 @@ public class RepoUtil {
             // created by "createman" option above!
             try {
                 rdf4j = new RDF4JSystem(baseDir, repositoryId);
-                System.out.println("RDF4J template-query " + queryNo + " through manager in \"" + baseDir + "\" against repo \"" + repositoryId + "\" in "
+                System.out.println("RDF4J run template-query " + queryNo + " through manager in \"" + baseDir + "\" against repo \"" + repositoryId + "\" in "
                         + rdf4j.templateQueryNativeRepoWithManager(baseDir, repositoryId, queryNo) + " msecs");
             } catch (Exception e) {
                 logger.error(e.getMessage());
