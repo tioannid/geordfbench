@@ -4,6 +4,7 @@
  */
 package gr.uoa.di.rdf.Geographica3.rdf4jsut;
 
+import static gr.uoa.di.rdf.Geographica3.runtime.hosts.IHost.SEP;
 import gr.uoa.di.rdf.Geographica3.runtime.sys.interfaces.impl.RDF4JBasedGeographicaSystem;
 import gr.uoa.di.rdf.Geographica3.runtime.runsut.RunSUTExperiment;
 import java.util.HashMap;
@@ -47,10 +48,10 @@ public class RunRDF4JExperiment extends RunSUTExperiment {
     protected void initSystemUnderTest() {
         super.initSystemUnderTest();
         // read system option values to variables
-        this.relbasedir = cmd.getOptionValue("relbasedir");
+        this.relbasedir = cmd.getOptionValue("relbasedir").replace("/", SEP);
         // calculate the repository base directory by augmenting it
         // with the host repos base directory
-        String basedir = this.host.getReposBaseDir() + "/" + (relbasedir != null ? relbasedir : "");
+        String basedir = this.host.getReposBaseDir().replace("/", SEP) + SEP + (relbasedir != null ? relbasedir : "");
         // get the repository name/id from the dataset
         String repository = this.geoDS.getName();
         // map variables to property map
@@ -66,10 +67,10 @@ public class RunRDF4JExperiment extends RunSUTExperiment {
 
     @Override
     protected String getReportDir() {
-        return this.host.getReportsBaseDir() + "/"
-                + this.sut.getClass().getSimpleName() + "/"
-                + cmd.getOptionValue("expdescription") + "/"
-                + this.geoDS.getRelativeBaseDir();
+        return this.host.getReportsBaseDir().replace("/", SEP) + SEP
+                + this.sut.getClass().getSimpleName() + SEP
+                + cmd.getOptionValue("expdescription") + SEP
+                + this.geoDS.getRelativeBaseDir().replace("/", SEP);
     }
 
     public static void main(String[] args) throws Exception {

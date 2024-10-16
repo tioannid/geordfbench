@@ -11,6 +11,8 @@ import java.io.File;
 import java.io.IOException;
 import gr.uoa.di.rdf.Geographica3.runtime.hosts.IHost;
 import gr.uoa.di.rdf.Geographica3.runtime.os.impl.UbuntuJammyOS;
+import gr.uoa.di.rdf.Geographica3.runtime.os.impl.Windows10OS;
+import static gr.uoa.di.rdf.Geographica3.runtime.hosts.IHost.*;
 
 /**
  *
@@ -21,11 +23,12 @@ public class HostUtil {
     // --- Static members -----------------------------
     static org.apache.log4j.Logger logger
             = org.apache.log4j.Logger.getLogger(HostUtil.class.getSimpleName());
-    static final String HOSTJSONDEFS_DIR = "../json_defs/hosts/";
+    static final String HOSTJSONDEFS_DIR = "../json_defs/hosts/".replace("/", SEP);
     static final String UBUNTU_VMA_TIOAJSONDEF_FILE = HOSTJSONDEFS_DIR + "ubuntu_vma_tioaHOSToriginal.json";
     static final String TELEIOS3JSONDEF_FILE = HOSTJSONDEFS_DIR + "teleios3HOSToriginal.json";
     static final String TIOA_PAVILIONDV7JSONDEF_FILE = HOSTJSONDEFS_DIR + "tioa-paviliondv7HOSToriginal.json";
     static final String NUC8i7BEHJSONDEF_FILE = HOSTJSONDEFS_DIR + "nuc8i7behHOSToriginal.json";
+    static final String WIN10_WORKJSONDEF_FILE = HOSTJSONDEFS_DIR + "win10_workHOSToriginal.json";
 
     // --- Methods -----------------------------------
     // A) -- Methods that can re-create the JSON definition files
@@ -123,6 +126,29 @@ public class HostUtil {
         }
     }
 
+    /**
+     * Creates the JSON definition file for the win10_work host in
+     * Geographica/runtime/src/main/resources/json_defs/hosts/win10_workHOSToriginal.json
+     *
+     */
+    public static void createWIN10_WORK_Host_OriginalJSONDefFile() {
+        SimpleHost win10_work
+                = new SimpleHost("win10_work",
+                        "localhost",
+                        11, // GB
+                        new Windows10OS(),
+                        "F:\\VM_Shared\\PHD\\Geographica2_Datasets",
+                        "F:\\VM_Shared\\PHD",
+                        "F:\\VM_Shared\\PHD\\Results_Store\\VM_Results");
+        try {
+            win10_work.serializeToJSON(new File(WIN10_WORKJSONDEF_FILE));
+        } catch (JsonMappingException ex) {
+            logger.error(ex.getMessage());
+        } catch (IOException ex) {
+            logger.error(ex.getMessage());
+        }
+    }
+
     // B) -- Methods that can the create Geographica3 IHost from
     /**
      * Creates a geographica host from a customized JSON definition file which
@@ -149,21 +175,25 @@ public class HostUtil {
     }
 
     public static void main(String[] args) {
-//        // ubuntu-vma-tioa host
-//        HostUtil.createUBUNTU_VMA_TIOA_Host_OriginalJSONDefFile();
-//        IHost vm = HostUtil.deserializeFromJSON(HostUtil.UBUNTU_VMA_TIOAJSONDEF_FILE);
-//        logger.info(vm.serializeToJSON());
-//        // teleios3.di.uoa.gr
-//        HostUtil.createTELEIOS3_Host_OriginalJSONDefFile();
-//        IHost teleios3 = HostUtil.deserializeFromJSON(HostUtil.TELEIOS3JSONDEF_FILE);
-//        logger.info(teleios3.serializeToJSON());
-//        // tioa-paviliondv7 host
-//        HostUtil.createTIOA_PAVILIONDV7_Host_OriginalJSONDefFile();
-//        IHost paviliondv7 = HostUtil.deserializeFromJSON(HostUtil.TIOA_PAVILIONDV7JSONDEF_FILE);
-//        logger.info(paviliondv7.serializeToJSON());
-//        // nuc8i7beh host
+        // ubuntu-vma-tioa host
+        HostUtil.createUBUNTU_VMA_TIOA_Host_OriginalJSONDefFile();
+        IHost vm = HostUtil.deserializeFromJSON(HostUtil.UBUNTU_VMA_TIOAJSONDEF_FILE);
+        logger.info(vm.serializeToJSON());
+        // teleios3.di.uoa.gr
+        HostUtil.createTELEIOS3_Host_OriginalJSONDefFile();
+        IHost teleios3 = HostUtil.deserializeFromJSON(HostUtil.TELEIOS3JSONDEF_FILE);
+        logger.info(teleios3.serializeToJSON());
+        // tioa-paviliondv7 host
+        HostUtil.createTIOA_PAVILIONDV7_Host_OriginalJSONDefFile();
+        IHost paviliondv7 = HostUtil.deserializeFromJSON(HostUtil.TIOA_PAVILIONDV7JSONDEF_FILE);
+        logger.info(paviliondv7.serializeToJSON());
+        // nuc8i7beh host
         HostUtil.createNUC8i7BEH_Host_OriginalJSONDefFile();
         IHost nuc8i7beh = HostUtil.deserializeFromJSON(HostUtil.NUC8i7BEHJSONDEF_FILE);
         logger.info(nuc8i7beh.serializeToJSON());
+        // win10 host
+        HostUtil.createWIN10_WORK_Host_OriginalJSONDefFile();
+        IHost win10_work = HostUtil.deserializeFromJSON(HostUtil.WIN10_WORKJSONDEF_FILE);
+        logger.info(win10_work.serializeToJSON());
     }
 }

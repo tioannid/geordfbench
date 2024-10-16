@@ -1,6 +1,7 @@
 package gr.uoa.di.rdf.Geographica3.rdf4jsut;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
+import static gr.uoa.di.rdf.Geographica3.runtime.hosts.IHost.SEP;
 import gr.uoa.di.rdf.Geographica3.runtime.reportsource.IReportSource;
 import gr.uoa.di.rdf.Geographica3.runtime.reportsource.impl.PostgreSQLRepSrc;
 import gr.uoa.di.rdf.Geographica3.runtime.reportsource.util.ReportSourceUtil;
@@ -23,6 +24,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import static gr.uoa.di.rdf.Geographica3.runtime.hosts.IHost.*;
 
 /**
  * A class that checks whether PostgreSQL report source work properly in several
@@ -48,8 +50,7 @@ public class RunPostgreSQLReportSourceTest {
 
     // Static Methods
     public static long filesCompareByLine(Path path1, Path path2) throws IOException {
-        try (BufferedReader bf1 = Files.newBufferedReader(path1);
-                BufferedReader bf2 = Files.newBufferedReader(path2)) {
+        try (BufferedReader bf1 = Files.newBufferedReader(path1); BufferedReader bf2 = Files.newBufferedReader(path2)) {
 
             long lineNumber = 1;
             String line1 = "", line2 = "";
@@ -72,34 +73,39 @@ public class RunPostgreSQLReportSourceTest {
     public void setupAll() {
         System.out.println(RunPostgreSQLReportSourceTest.class.getSimpleName() + " - Before All");
         // find the absolute path of the test resources folder
-        File p = new File("src/test/resources");
+        File p = new File("src/test/resources".replace("/", SEP));
         TEST_RESOURCES_DIR = p.getAbsolutePath();
-        NEW_POSTGRESQL_SPEC_FILE = TEST_RESOURCES_DIR + "/"
+        NEW_POSTGRESQL_SPEC_FILE = TEST_RESOURCES_DIR + SEP
                 + "ubuntu_vma_tioaRepSrcoriginal.json";
         // find the absolute path of the JSON Library in the test resources folder
-        p = new File("src/test/resources/json_defs");
+        p = new File("src/test/resources/json_defs".replace("/", SEP));
         JSON_DEFS_DIR = p.getAbsolutePath();
         POSTGRESQL_SPEC_FILE
-                = JSON_DEFS_DIR + "/reportsources/ubuntu_vma_tioaRepSrcoriginal.json";
+                = JSON_DEFS_DIR + "/reportsources/ubuntu_vma_tioaRepSrcoriginal.json".replace("/", SEP);
         // create a base argument list for running experiments with RDF4J and
         // the detailed benchmark specifications
         argLineBase
                 = // Report Source: PostgreSQL in ubuntu-vma-tioa
-                "-rbd RDF4J_3.7.7_Repos/server "
+                "-rbd " + "RDF4J_3.7.7_Repos/server".replace("/", SEP) + " "
                 + "-expdesc RDF4JSUT_RunPostgreSQLReportSourceTest "
-                + "-ds " + JSON_DEFS_DIR + "/datasets/scalability_10Koriginal.json "
-                + "-qs " + JSON_DEFS_DIR + "/querysets/scalabilityFuncQSoriginal.json "
-                + "-h " + JSON_DEFS_DIR + "/hosts/ubuntu_vma_tioaHOSToriginal.json "
-                + "-rs " + JSON_DEFS_DIR + "/reportspecs/simplereportspec_original.json ";
+                + "-ds " + JSON_DEFS_DIR + "/datasets/scalability_10Koriginal.json".replace("/", SEP) + " "
+                + "-qs " + JSON_DEFS_DIR + "/querysets/scalabilityFuncQSoriginal.json".replace("/", SEP) + " "
+                + "-rs " + JSON_DEFS_DIR + "/reportspecs/simplereportspec_original.json".replace("/", SEP) + " ";
+        // based on OS choose an appropriate host spec
+        argLineBase += "-h " + JSON_DEFS_DIR
+                + ((isWindows())
+                        ? "/hosts/win10_workHOSToriginal.json".replace("/", SEP)
+                        : "/hosts/ubuntu_vma_tioaHOSToriginal.json".replace("/", SEP)) + " ";
+
         // create the base argument list which use the local PostgreSQL DBMS
         argLinePostgres = argLineBase
-                + "-rpsr " + JSON_DEFS_DIR + "/reportsources/ubuntu_vma_tioaRepSrcoriginal.json ";
+                + "-rpsr " + JSON_DEFS_DIR + "/reportsources/ubuntu_vma_tioaRepSrcoriginal.json".replace("/", SEP) + " ";
         // create 2 variants of the PostgreSQL base argument list which either RUN the
         // experiement or PRINT the ground queryset
         argLinePostgresRun = argLinePostgres
-                + "-es " + JSON_DEFS_DIR + "/executionspecs/scalabilityESoriginal.json ";
+                + "-es " + JSON_DEFS_DIR + "/executionspecs/scalabilityESoriginal.json".replace("/", SEP) + " ";
         argLinePostgresPrint = argLinePostgres
-                + "-es " + JSON_DEFS_DIR + "/executionspecs/scalabilityESoriginal_PRINT.json ";
+                + "-es " + JSON_DEFS_DIR + "/executionspecs/scalabilityESoriginal_PRINT.json".replace("/", SEP) + " ";
     }
 
     @BeforeEach

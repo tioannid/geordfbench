@@ -54,7 +54,7 @@ public class PostgreSQLRepSrc extends JDBCRepSrc {
         // created <geordfbench> database
         schemaInitScript.put(4, "SET statement_timeout = 0;\n"
                 + "SET lock_timeout = 0;\n"
-//                + "SET idle_in_transaction_session_timeout = 0;\n"
+                //                + "SET idle_in_transaction_session_timeout = 0;\n"
                 + "SET client_encoding = 'UTF8';\n"
                 + "SET standard_conforming_strings = on;\n"
                 + "SELECT pg_catalog.set_config('search_path', '', false);\n"
@@ -292,11 +292,22 @@ public class PostgreSQLRepSrc extends JDBCRepSrc {
         return sb.toString();
     }
 
+    protected String getJdbcAlternateURL_NoDatabase() {
+        StringBuilder sb = new StringBuilder("jdbc:");
+        sb.append(this.driver).append("://");
+        sb.append(this.althostname).append(":");
+        sb.append(this.port).append("/");
+        sb.append("postgres").append("?");
+        sb.append("user=").append("postgres").append("&");
+        sb.append("password=").append("postgres");
+        return sb.toString();
+    }
+
     @Override
     public boolean isSchemaInitialized() {
         // check if database exists and if it has at least one
         // required table
-        boolean dbExists = false, initialized = false;
+        boolean dbExists = false, initialized = false, useAlthost = false;
         String sqlDatabaseExists = "SELECT Count(*) AS cntrows\n"
                 + "FROM pg_catalog.pg_database\n"
                 + "WHERE lower(datname) = lower('geordfbench');";
@@ -309,8 +320,22 @@ public class PostgreSQLRepSrc extends JDBCRepSrc {
         ResultSet rs;
         Connection tmpConn = null;
         try {
-            // connect to <postgres> database
+            // connect to <postgres> database using hostname
             tmpConn = DriverManager.getConnection(getJdbcURL_NoDatabase());
+        } catch (SQLException ex) {
+            if ("08001".equalsIgnoreCase(ex.getSQLState())) {
+                try {
+                    useAlthost = true;
+                    // connect to <postgres> database using althostname
+                    tmpConn = DriverManager.getConnection(getJdbcAlternateURL_NoDatabase());
+                } catch (SQLException exx) {
+                    logger.error(exx.getMessage());
+                }
+            } else {
+                logger.error(ex.getMessage());
+            }
+        }
+        try {
             // check if <geordfbench> database already exists
             stmt = tmpConn.createStatement();
             rs = stmt.executeQuery(sqlDatabaseExists);
@@ -322,7 +347,7 @@ public class PostgreSQLRepSrc extends JDBCRepSrc {
             // if <geordfbench> database exists check if it's initialized
             if (dbExists) {
                 // connect to <geordfbench> database
-                tmpConn = DriverManager.getConnection(getJdbcURL());
+                tmpConn = DriverManager.getConnection(useAlthost ? getAltJdbcURL() : getJdbcURL());
                 // check if PUBLIC.EXPERIMENT table exists
                 stmt = tmpConn.createStatement();
                 rs = stmt.executeQuery(sqlExistsTableExperiment);
@@ -343,13 +368,27 @@ public class PostgreSQLRepSrc extends JDBCRepSrc {
 
     @Override
     public boolean initializeSchema() {
-        boolean initialized = false;
+        boolean initialized = false, useAlthost = false;
         String sqlCmd;
         Statement stmt;
-        Connection tmpConn;
+        Connection tmpConn = null;
         try {
             // create the database and role
             tmpConn = DriverManager.getConnection(getJdbcURL_NoDatabase(), user, password);
+        } catch (SQLException ex) {
+            if ("08001".equalsIgnoreCase(ex.getSQLState())) {
+                try {
+                    useAlthost = true;
+                    // connect to <postgres> database using althostname
+                    tmpConn = DriverManager.getConnection(getJdbcAlternateURL_NoDatabase(), user, password);
+                } catch (SQLException exx) {
+                    logger.error(exx.getMessage());
+                }
+            } else {
+                logger.error(ex.getMessage());
+            }
+        }
+        try {
             logger.info("Creating " + this.driver + " database: "
                     + this.database + "\nExecuting SQL DDL commands (Phase 1):\n");
             for (int i = 1; i <= 3; i++) {
@@ -364,7 +403,7 @@ public class PostgreSQLRepSrc extends JDBCRepSrc {
             }
             tmpConn.close();
             // create all database schema objects (tables, views, etc)
-            tmpConn = DriverManager.getConnection(getJdbcURL());
+            tmpConn = DriverManager.getConnection(useAlthost ? getAltJdbcURL() : getJdbcURL());
             logger.info("Initializing schema for " + this.driver + " database: "
                     + this.database + "\nExecuting SQL DDL commands  (Phase 2):\n");
             for (int i = 4; i <= schemaInitScript.size(); i++) {

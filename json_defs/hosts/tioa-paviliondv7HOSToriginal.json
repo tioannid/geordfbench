@@ -4,6 +4,7 @@
   "ipAddr" : "192.168.1.6",
   "ram" : 16,
   "os" : {
+    "classname" : "gr.uoa.di.rdf.Geographica3.runtime.os.impl.DebianOS",
     "name" : "Debian-stretch",
     "shell_cmd" : "/bin/sh",
     "sync_cmd" : "sync",

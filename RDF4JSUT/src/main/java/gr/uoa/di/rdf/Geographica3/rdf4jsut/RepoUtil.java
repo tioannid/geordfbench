@@ -5,6 +5,7 @@
  */
 package gr.uoa.di.rdf.Geographica3.rdf4jsut;
 
+import static gr.uoa.di.rdf.Geographica3.runtime.hosts.IHost.SEP;
 import java.util.Map;
 import org.apache.log4j.Logger;
 
@@ -53,7 +54,7 @@ public class RepoUtil {
             Map<String, String> sysMap = RDF4JSystem.constructSysPropsMap(baseDir, repositoryId, indexes, reCreateRepo, hasLucene, wktIdxList);
             try {
                 rdf4j = new RDF4JSystem(sysMap);
-                logger.info("RDF4J created with manager " + ((hasLucene) ? "lucene " : "") + "repo \"" + baseDir + "/repositories/" + repositoryId + "\" in "
+                logger.info("RDF4J created with manager " + ((hasLucene) ? "lucene " : "") + "repo \"" + baseDir + "/repositories/".replace("/", SEP) + repositoryId + "\" in "
                         + RDF4JSystem.lastMeasuredOperation + " msecs");
             } catch (Exception e) {
                 logger.error(e.getMessage());
@@ -95,7 +96,7 @@ public class RepoUtil {
                 rdf4j = new RDF4JSystem(baseDir, repositoryId);
                 // load 
                 RDF4JSystem.lastMeasuredOperation = rdf4j.loadDirInNativeRepoWithManager(fileDir, rdfFormat, displayProgress);
-                logger.info("RDF4J loaded with manager all files from \"" + fileDir + "\" to repo \"" + baseDir + "/repositories/" + repositoryId + "\" in "
+                logger.info("RDF4J loaded with manager all files from \"" + fileDir + "\" to repo \"" + baseDir + "/repositories/".replace("/", SEP) + repositoryId + "\" in "
                         + RDF4JSystem.lastMeasuredOperation + " msecs");
             } catch (Exception e) {
                 logger.error(e.getMessage());

@@ -1,11 +1,16 @@
 /**
  *
- * @author GeoRDFBench Creator <GeoRDFBench@Creator>
+ * @author Theofilos Ioannidis <tioannid@di.uoa.gr>
+ * @creationdate 
+ * @updatedate 15/10/2024
  */
 package gr.uoa.di.rdf.Geographica3.runtime.os.impl;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.apache.log4j.Logger;
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY,
+        property = "classname")
 public class UbuntuJammyOS extends GenericLinuxOS {
 
     // --- Static members -----------------------------

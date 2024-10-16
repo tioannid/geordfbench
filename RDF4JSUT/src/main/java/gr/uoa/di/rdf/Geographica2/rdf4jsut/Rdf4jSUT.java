@@ -475,7 +475,7 @@ public class Rdf4jSUT implements SystemUnderTest {
             }
             // create a new embedded instance of RDF4J in baseDir
             repositoryManager = new LocalRepositoryManager(dir);
-            repositoryManager.initialize();
+            repositoryManager.init();
             // if repository does not exist check what the user requested
             if (!repositoryManager.hasRepositoryConfig(repositoryId)) {
                 if (!createRepository) {    // do not create new repository

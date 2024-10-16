@@ -1,7 +1,7 @@
 /**
  *
  * @author Theofilos Ioannidis <tioannid@di.uoa.gr>
- * @creationdate 
+ * @creationdate 13/10/2024
  * @updatedate 15/10/2024
  */
 package gr.uoa.di.rdf.Geographica3.runtime.os.impl;
@@ -11,10 +11,10 @@ import java.io.StringWriter;
 import org.apache.log4j.Logger;
 import gr.uoa.di.rdf.Geographica3.runtime.os.IOS;
 
-public abstract class GenericLinuxOS implements IOS {
+public abstract class GenericWindowsOS implements IOS {
 
     // --- Static members -----------------------------
-    static Logger logger = Logger.getLogger(GenericLinuxOS.class.getSimpleName());
+    static Logger logger = Logger.getLogger(GenericWindowsOS.class.getSimpleName());
 
     // --- Data members ------------------------------
     protected String name;  // Linux, Windows, etc
@@ -23,10 +23,10 @@ public abstract class GenericLinuxOS implements IOS {
     protected String clearcache_cmd;
 
     // --- Constructors ------------------------------
-    public GenericLinuxOS() {
+    public GenericWindowsOS() {
     }
 
-    public GenericLinuxOS(String name, String shell_cmd, String sync_cmd, String clearcache_cmd) {
+    public GenericWindowsOS(String name, String shell_cmd, String sync_cmd, String clearcache_cmd) {
         this.name = name;
         this.shell_cmd = shell_cmd;
         this.sync_cmd = sync_cmd;
@@ -39,7 +39,7 @@ public abstract class GenericLinuxOS implements IOS {
     }
 
     public static void setLogger(Logger logger) {
-        GenericLinuxOS.logger = logger;
+        GenericWindowsOS.logger = logger;
     }
 
     @Override
@@ -84,8 +84,8 @@ public abstract class GenericLinuxOS implements IOS {
     @Override
     public void clearCaches(int delay_mSecs) {
 
-        String[] sys_sync = {shell_cmd, "-c", sync_cmd};
-        String[] clear_caches = {shell_cmd, "-c", clearcache_cmd};
+        String[] sys_sync = {shell_cmd, "/c", sync_cmd};
+        String[] clear_caches = {shell_cmd, "/c", clearcache_cmd};
 
         Process pr;
 

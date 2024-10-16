@@ -1,9 +1,10 @@
 {
   "classname" : "gr.uoa.di.rdf.Geographica3.runtime.hosts.impl.SimpleHost",
   "name" : "ubuntu-vma-tioa",
-  "ipAddr" : "10.0.2.15",
+  "ipAddr" : "192.168.1.66",
   "ram" : 11,
   "os" : {
+    "classname" : "gr.uoa.di.rdf.Geographica3.runtime.os.impl.UbuntuBionicOS",
     "name" : "Ubuntu-bionic",
     "shell_cmd" : "/bin/sh",
     "sync_cmd" : "sync",

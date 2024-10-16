@@ -30,6 +30,8 @@ public class SimpleHost implements IHost {
     protected String name;  // Teleios3, VM, etc.
     protected String ipAddr;
     protected int ram;     // installed RAM
+    @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY,
+            property = "classname")
     protected IOS os; // installed operating system
     protected String sourceFileDir;
     protected String reposBaseDir;

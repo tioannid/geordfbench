@@ -12,6 +12,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import static gr.uoa.di.rdf.Geographica3.runtime.hosts.IHost.*;
 
 /**
  * A class that checks various Query Filtering options during experiment
@@ -38,24 +39,28 @@ public class RunRDF4JExperimentTest {
     public void setupAll() {
         System.out.println(RunRDF4JExperimentTest.class.getSimpleName() + " - Before All");
         // find the absolute path of the JSON Library in the test resources folder
-        File p = new File("src/test/resources/json_defs");
+        File p = new File("src/test/resources/json_defs".replace("/", SEP));
         JSON_DEFS_DIR = p.getAbsolutePath();
         String argLineNoQueryFilter
                 = // No Query Filter is specified - 3 queries (0,1,2) expected in output
                 "-rbd RDF4J_3.7.7_Repos/server "
                 + "-expdesc RDF4JSUT_RunRDF4JExperimentTest "
-                + "-ds " + JSON_DEFS_DIR + "/datasets/scalability_10Koriginal.json "
-                + "-qs " + JSON_DEFS_DIR + "/querysets/scalabilityFuncQSoriginal.json "
-                + "-es " + JSON_DEFS_DIR + "/executionspecs/scalabilityESoriginal_PRINT.json "
-                + "-h " + JSON_DEFS_DIR + "/hosts/ubuntu_vma_tioaHOSToriginal.json "
-                + "-rs " + JSON_DEFS_DIR + "/reportspecs/simplereportspec_original.json "
-                + "-rpsr " + JSON_DEFS_DIR + "/reportsources/ubuntu_vma_tioaRepSrcoriginal.json ";
+                + "-ds " + JSON_DEFS_DIR + "/datasets/scalability_10Koriginal.json".replace("/", SEP) + " "
+                + "-qs " + JSON_DEFS_DIR + "/querysets/scalabilityFuncQSoriginal.json".replace("/", SEP) + " "
+                + "-es " + JSON_DEFS_DIR + "/executionspecs/scalabilityESoriginal_PRINT.json".replace("/", SEP) + " "
+                + "-rs " + JSON_DEFS_DIR + "/reportspecs/simplereportspec_original.json".replace("/", SEP) + " "
+                + "-rpsr " + JSON_DEFS_DIR + "/reportsources/ubuntu_vma_tioaRepSrcoriginal.json".replace("/", SEP) + " ";
+        // based on OS choose an appropriate host spec
+        argLineNoQueryFilter += "-h " + JSON_DEFS_DIR
+                + ((isWindows())
+                        ? "/hosts/win10_workHOSToriginal.json".replace("/", SEP)
+                        : "/hosts/ubuntu_vma_tioaHOSToriginal.json".replace("/", SEP));
         argsNoQueryFilter = argLineNoQueryFilter.split(" ");
         String argLineWithQueryInclusionFilter = argLineNoQueryFilter // Query InclusionFilter specified - 2 queries (0,_,2) expected in output
-                + "-qif \"0,2\"";
+                + " -qif \"0,2\"";
         argsWithQueryInclusionFilter = argLineWithQueryInclusionFilter.split(" ");
         String argLineWithQueryExclusionFilter = argLineNoQueryFilter // Query ExclusionFilter specified - 1 query (_,1,_) expected in output
-                + "-qef \"0,2\"";
+                + " -qef \"0,2\"";
         argsWithQueryExclusionFilter = argLineWithQueryExclusionFilter.split(" ");
     }
 

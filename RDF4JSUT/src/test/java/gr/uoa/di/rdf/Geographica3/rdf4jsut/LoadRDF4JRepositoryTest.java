@@ -10,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import static gr.uoa.di.rdf.Geographica3.runtime.hosts.IHost.SEP;
 
 /**
  * A class that checks the following use cases: 1) Native Sail a) Load N-Triple
@@ -38,11 +39,11 @@ public class LoadRDF4JRepositoryTest {
     String createNativeRepoArgsLine,
             loadDirNativeRepoArgsLine,
             queryNativeRepoArgsLine;
-    final String NATIVE_REPO_BASE_REL_DIR = "src/test/resources/NativeRepos",
-            LUCENE_REPO_BASE_REL_DIR = "src/test/resources/LuceneRepos",
-            RDF_DATA_FILES_REL_DIR = "src/test/resources/RDFDataFiles";
-    final String NATIVE_REPO_SERVER_REL_DIR = NATIVE_REPO_BASE_REL_DIR + "/server",
-            LUCENE_REPO_SERVER_REL_DIR = LUCENE_REPO_BASE_REL_DIR + "/server";
+    final String NATIVE_REPO_BASE_REL_DIR = "src/test/resources/NativeRepos".replace("/", SEP),
+            LUCENE_REPO_BASE_REL_DIR = "src/test/resources/LuceneRepos".replace("/", SEP),
+            RDF_DATA_FILES_REL_DIR = "src/test/resources/RDFDataFiles".replace("/", SEP);
+    final String NATIVE_REPO_SERVER_REL_DIR = NATIVE_REPO_BASE_REL_DIR + "/server".replace("/", SEP),
+            LUCENE_REPO_SERVER_REL_DIR = LUCENE_REPO_BASE_REL_DIR + "/server".replace("/", SEP);
     String NATIVE_REPO_DIR_ABS, LUCENE_REPO_DIR_ABS, RDF_DATA_FILES_ABS_DIR;
 
     public void setupAll() {

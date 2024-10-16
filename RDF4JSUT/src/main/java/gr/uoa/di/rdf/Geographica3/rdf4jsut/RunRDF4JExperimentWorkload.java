@@ -5,6 +5,7 @@
  */
 package gr.uoa.di.rdf.Geographica3.rdf4jsut;
 
+import static gr.uoa.di.rdf.Geographica3.runtime.hosts.IHost.SEP;
 import gr.uoa.di.rdf.Geographica3.runtime.sys.interfaces.impl.RDF4JBasedGeographicaSystem;
 import gr.uoa.di.rdf.Geographica3.runtime.runsut.RunSUTExperimentWorkload;
 import java.util.HashMap;
@@ -53,7 +54,7 @@ public class RunRDF4JExperimentWorkload extends RunSUTExperimentWorkload {
         this.relbasedir = cmd.getOptionValue("relbasedir");
         // calculate the repository base directory by augmenting it
         // with the host repos base directory
-        String basedir = this.host.getReposBaseDir() + "/" + (relbasedir != null ? relbasedir : "");
+        String basedir = this.host.getReposBaseDir().replace("/", SEP) + "/" + (relbasedir != null ? relbasedir : "");
         // get the repository name/id from the dataset
         String repository = this.workLoadSpec.getGeospatialDataset().getName();
         // map variables to property map
@@ -69,10 +70,10 @@ public class RunRDF4JExperimentWorkload extends RunSUTExperimentWorkload {
 
     @Override
     protected String getReportDir() {
-        return this.host.getReportsBaseDir() + "/"
+        return this.host.getReportsBaseDir().replace("/", SEP) + "/"
                 + this.sut.getClass().getSimpleName() + "/"
                 + cmd.getOptionValue("expdescription") + "/"
-                + this.workLoadSpec.getGeospatialDataset().getRelativeBaseDir();
+                + this.workLoadSpec.getGeospatialDataset().getRelativeBaseDir().replace("/", SEP);
     }
 
     public static void main(String[] args) throws Exception {

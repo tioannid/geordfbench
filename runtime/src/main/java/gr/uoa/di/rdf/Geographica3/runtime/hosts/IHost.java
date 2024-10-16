@@ -16,6 +16,8 @@ import java.io.IOException;
 @JsonDeserialize(as = SimpleHost.class)
 public interface IHost {
 
+    public static String SEP = File.separator; // OS dependent separator for paths
+    
     /**
      * Gets the host’s name.
      *
@@ -130,5 +132,15 @@ public interface IHost {
      * @throws IOException
      */
     void serializeToJSON(File serObjFile) throws JsonGenerationException, JsonMappingException, IOException;
+
+    /**
+     * Is OS some Windows version?
+     *
+     * @return true if OS is Windows
+     */
+    public static boolean isWindows() {
+        String os = System.getProperty("os.name");
+        return os.startsWith("Windows");
+    }
     
 }

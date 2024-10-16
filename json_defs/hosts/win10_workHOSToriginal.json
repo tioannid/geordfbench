@@ -1,0 +1,16 @@
+{
+  "classname" : "gr.uoa.di.rdf.Geographica3.runtime.hosts.impl.SimpleHost",
+  "name" : "win10_work",
+  "ipAddr" : "localhost",
+  "ram" : 11,
+  "os" : {
+    "classname" : "gr.uoa.di.rdf.Geographica3.runtime.os.impl.Windows10OS",
+    "name" : "Windows 10",
+    "shell_cmd" : "cmd.exe",
+    "sync_cmd" : "echo sync",
+    "clearcache_cmd" : "echo drop_caches"
+  },
+  "sourceFileDir" : "F:\\VM_Shared\\PHD\\Geographica2_Datasets",
+  "reposBaseDir" : "F:\\VM_Shared\\PHD",
+  "reportsBaseDir" : "F:\\VM_Shared\\PHD\\Results_Store\\VM_Results"
+}

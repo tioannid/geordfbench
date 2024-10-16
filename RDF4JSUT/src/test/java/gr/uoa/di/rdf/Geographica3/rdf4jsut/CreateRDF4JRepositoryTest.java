@@ -17,6 +17,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import static gr.uoa.di.rdf.Geographica3.runtime.hosts.IHost.*;
 
 /**
  * A class that checks the following use cases: 1) Native Sail a) Create new
@@ -46,10 +47,10 @@ public class CreateRDF4JRepositoryTest {
             createLuceneRepoArgs,
             createLuceneRepoOverwriteArgs;
     String createNativeRepoArgsLine;
-    final String NATIVE_REPO_BASE_REL_DIR = "src/test/resources/NativeRepos",
-            LUCENE_REPO_BASE_REL_DIR = "src/test/resources/LuceneRepos";
-    final String NATIVE_REPO_SERVER_REL_DIR = NATIVE_REPO_BASE_REL_DIR + "/server",
-            LUCENE_REPO_SERVER_REL_DIR = LUCENE_REPO_BASE_REL_DIR + "/server";
+    final String NATIVE_REPO_BASE_REL_DIR = "src/test/resources/NativeRepos".replace("/", SEP),
+            LUCENE_REPO_BASE_REL_DIR = "src/test/resources/LuceneRepos".replace("/", SEP);
+    final String NATIVE_REPO_SERVER_REL_DIR = NATIVE_REPO_BASE_REL_DIR + "/server".replace("/", SEP),
+            LUCENE_REPO_SERVER_REL_DIR = LUCENE_REPO_BASE_REL_DIR + "/server".replace("/", SEP);
     String NATIVE_REPO_DIR_ABS, LUCENE_REPO_DIR_ABS;
     String NATIVE_SCALABILITY_10K_REPO_ABS, LUCENE_SCALABILITY_10K_REPO_ABS;
 
@@ -88,10 +89,10 @@ public class CreateRDF4JRepositoryTest {
            directories in the test resources folder */
         NATIVE_SCALABILITY_10K_REPO_ABS
                 = new File(NATIVE_REPO_SERVER_REL_DIR
-                        + "/repositories/scalability_10K").getAbsolutePath();
+                        + "/repositories/scalability_10K".replace("/", SEP)).getAbsolutePath();
         LUCENE_SCALABILITY_10K_REPO_ABS
                 = new File(LUCENE_REPO_SERVER_REL_DIR
-                        + "/repositories/scalability_10K").getAbsolutePath();
+                        + "/repositories/scalability_10K".replace("/", SEP)).getAbsolutePath();
         // create the Native Repo base directory if it doesn't exist
         File nativeRepoBaseDir = new File(NATIVE_REPO_DIR_ABS);
         if (!nativeRepoBaseDir.exists()) {
@@ -119,7 +120,7 @@ public class CreateRDF4JRepositoryTest {
         BasicFileAttributes attr = null;
         /* find the absolute path of the Native <scalability_10K>/config.ttl in the test 
            resources folder */
-        File nativeScal10KRepo = new File(NATIVE_SCALABILITY_10K_REPO_ABS + "/config.ttl");
+        File nativeScal10KRepo = new File(NATIVE_SCALABILITY_10K_REPO_ABS + "/config.ttl".replace("/", SEP));
         Path nativeScal10KRepoPath = nativeScal10KRepo.toPath();
         // a repo should be created before testing
         System.out.println("=> Precondition: A repo should exist before testing. Checking...");
@@ -179,7 +180,7 @@ public class CreateRDF4JRepositoryTest {
         BasicFileAttributes attr = null;
         /* find the absolute path of the Native <scalability_10K>/config.ttl in the test 
            resources folder */
-        File nativeScal10KRepo = new File(NATIVE_SCALABILITY_10K_REPO_ABS + "/config.ttl");
+        File nativeScal10KRepo = new File(NATIVE_SCALABILITY_10K_REPO_ABS + "/config.ttl".replace("/", SEP));
         Path nativeScal10KRepoPath = nativeScal10KRepo.toPath();
         // a repo should be created before testing
         System.out.println("=> Precondition: A repo should exist before testing. Checking...");
@@ -239,7 +240,7 @@ public class CreateRDF4JRepositoryTest {
         BasicFileAttributes attr = null;
         /* find the absolute path of the Lucene <scalability_10K>/config.ttl in the test 
            resources folder */
-        File luceneScal10KRepo = new File(LUCENE_SCALABILITY_10K_REPO_ABS + "/config.ttl");
+        File luceneScal10KRepo = new File(LUCENE_SCALABILITY_10K_REPO_ABS + "/config.ttl".replace("/", SEP));
         Path luceneScal10KRepoPath = luceneScal10KRepo.toPath();
         // a repo should be created before testing
         System.out.println("=> Precondition: A repo should exist before testing. Checking...");
@@ -299,7 +300,7 @@ public class CreateRDF4JRepositoryTest {
         BasicFileAttributes attr = null;
         /* find the absolute path of the Lucene <scalability_10K>/config.ttl in the test 
            resources folder */
-        File luceneScal10KRepo = new File(LUCENE_SCALABILITY_10K_REPO_ABS + "/config.ttl");
+        File luceneScal10KRepo = new File(LUCENE_SCALABILITY_10K_REPO_ABS + "/config.ttl".replace("/", SEP));
         Path luceneScal10KRepoPath = luceneScal10KRepo.toPath();
         // a repo should be created before testing
         System.out.println("=> Precondition: A repo should exist before testing. Checking...");
