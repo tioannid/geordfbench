@@ -7,7 +7,28 @@
     <version>1.3.0</version>
     <packaging>pom</packaging>
     <name>GeoRDFBench</name>
+    <url>https://geordfbench.di.uoa.gr/</url>
 
+    <inceptionYear>2019</inceptionYear>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+            <distribution>repo</distribution>
+            <comments>A business-friendly OSS license</comments>
+        </license>
+    </licenses>
+    
+    <developers>
+        <developer>
+            <id>tioannid</id>
+            <name>Theofilos Ioannidis (Θεόφιλος Ιωαννίδης)</name>
+            <email>tioannid@di.uoa.gr</email>
+            <url>http://users.uoa.gr/~tioannid/</url>
+            <organization>National and Kapodistrian University of Athens</organization>
+        </developer>
+    </developers>    
+    
     <modules>
         <module>generators</module>
         <module>runtime</module>
