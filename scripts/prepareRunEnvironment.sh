@@ -93,11 +93,11 @@ echo "Running script with syntax: source ${SCRIPT_NAME} ${Environment} ${ActiveS
 export ExperimentShortDesc="${ActiveSUT}_${ShortDesc}"
 
 #       1.3: set the versions of the SUTs
-export verRDF4J="3.7.7"
-export verGRAPHDB="9.11.1"
-export verSTARDOG="7.9.1"
-export verVIRTUOSO="7.2.9"
-export verJENA="3.17.0"
+export verRDF4J="4.3.15"
+export verGRAPHDB="10.8.0"
+export verSTARDOG="8.2.2"
+export verVIRTUOSO="7.2.14"
+export verJENA="4.10.0"
 
 #       1.4: set other SUT dependent variables
 #           GraphDB dependent, environment independent
@@ -272,7 +272,7 @@ elif [ "$Environment" == "NUC8I7BEH" ]; then
     export StrabonBaseDir="${EnvironmentBaseDir}/Strabon"
     export StrabonLoaderBaseDir="${EnvironmentBaseDir}/StrabonLoader"
     # VirtuosoSUT only
-    export VirtuosoBaseDir="${EnvironmentBaseDir}/virtuoso-opensource"
+    export VirtuosoBaseDir="${EnvironmentBaseDir}/virtuoso-opensource-7.2.14"
     export VirtuosoDataBaseDir="${VirtuosoBaseDir}/repos"
     # StardogSUT only
     export STARDOG_HOME="${EnvironmentBaseDir}/StarDog" # directory where all Stardog databases and files will be stored

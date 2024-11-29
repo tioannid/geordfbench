@@ -6,7 +6,9 @@
 */nbproject/
 nbactions-official.xml
 nbactions.xml
+nb-configuration.xml
 */geographica.log
 scripts/h2embeddedreportsource/geordfbench.mv.db
 scripts/h2embeddedreportsource/geordfbench.trace.db
 */scripts/*/*.log
+.idea/

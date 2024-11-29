@@ -28,7 +28,7 @@ import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFParseException;
 import org.eclipse.rdf4j.sail.config.SailImplConfig;
 import static org.eclipse.rdf4j.sail.lucene.LuceneSail.WKT_FIELDS;
-import org.eclipse.rdf4j.sail.lucene.config.LuceneSailConfig;
+import org.eclipse.rdf4j.sail.lucene.impl.config.LuceneSailConfig;
 import org.eclipse.rdf4j.sail.nativerdf.config.NativeStoreConfig;
 
 /**

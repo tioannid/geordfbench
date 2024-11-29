@@ -45,7 +45,7 @@ import org.eclipse.rdf4j.rio.RDFParseException;
 import org.eclipse.rdf4j.sail.config.SailImplConfig;
 import org.eclipse.rdf4j.sail.lucene.LuceneSail;
 import static org.eclipse.rdf4j.sail.lucene.LuceneSail.WKT_FIELDS;
-import org.eclipse.rdf4j.sail.lucene.config.LuceneSailConfig;
+import org.eclipse.rdf4j.sail.lucene.impl.config.LuceneSailConfig;
 import org.eclipse.rdf4j.sail.nativerdf.NativeStore;
 import org.eclipse.rdf4j.sail.nativerdf.config.NativeStoreConfig;
 
@@ -127,7 +127,7 @@ public class Rdf4jSUT implements SystemUnderTest {
             // wrap base sail
             lucenesail.setBaseSail(ns);
             Repository repo = new SailRepository(lucenesail);
-            repo.initialize();
+            repo.init();
             return (System.currentTimeMillis() - start);
         }
 
@@ -137,7 +137,7 @@ public class Rdf4jSUT implements SystemUnderTest {
             // create a new LocalRepositoryManager in <baseDirString>
             File baseDir = new File(baseDirString);
             LocalRepositoryManager manager = new LocalRepositoryManager(baseDir);
-            manager.initialize();
+            manager.init();
             // if necessary remove existing repository
             if (removeExisting) {
                 if (manager.hasRepositoryConfig(repoId)) {
@@ -164,7 +164,7 @@ public class Rdf4jSUT implements SystemUnderTest {
             RepositoryConfig repConfig = new RepositoryConfig(repoId, repositoryTypeSpec);
             manager.addRepositoryConfig(repConfig);
             Repository repository = manager.getRepository(repoId);
-            repository.initialize();
+            repository.init();
             return (System.currentTimeMillis() - start);
         }
 
@@ -192,10 +192,10 @@ public class Rdf4jSUT implements SystemUnderTest {
             // create a new LocalRepositoryManager in <baseDirString>
             File baseDir = new File(baseDirString);
             LocalRepositoryManager manager = new LocalRepositoryManager(baseDir);
-            manager.initialize();
+            manager.init();
             // request the repository <repoId> back from the LocalRepositoryManager
             Repository repository = manager.getRepository(repoId);
-            repository.initialize();
+            repository.init();
             // Open a connection to the database
             try (RepositoryConnection conn = repository.getConnection()) {
                 try (InputStream input
@@ -222,7 +222,7 @@ public class Rdf4jSUT implements SystemUnderTest {
             long start = System.currentTimeMillis();
             File dataDir = new File(repoDir);
             Repository repo = new SailRepository(new NativeStore(dataDir));
-            repo.initialize();
+            repo.init();
             // Open a connection to the database
             try (RepositoryConnection conn = repo.getConnection()) {
                 try (InputStream input
@@ -250,7 +250,7 @@ public class Rdf4jSUT implements SystemUnderTest {
             long t1 = 0;
             File dataDir = new File(repoDir);
             Repository repo = new SailRepository(new NativeStore(dataDir));
-            repo.initialize();
+            repo.init();
             // Open a connection to the database
             try (RepositoryConnection conn = repo.getConnection()) {
                 File dir = new File(trigFileDir);
@@ -294,10 +294,10 @@ public class Rdf4jSUT implements SystemUnderTest {
             // create a new LocalRepositoryManager in <baseDirString>
             File baseDir = new File(baseDirString);
             LocalRepositoryManager manager = new LocalRepositoryManager(baseDir);
-            manager.initialize();
+            manager.init();
             // request the repository <repoId> back from the LocalRepositoryManager
             Repository repository = manager.getRepository(repoId);
-            repository.initialize();
+            repository.init();
             // Open a connection to the database
             try (RepositoryConnection conn = repository.getConnection()) {
                 File dir = new File(trigFileDir);
@@ -339,7 +339,7 @@ public class Rdf4jSUT implements SystemUnderTest {
             long start = System.currentTimeMillis();
             File dataDir = new File(repoDir);
             Repository repo = new SailRepository(new NativeStore(dataDir));
-            repo.initialize();
+            repo.init();
             // Open a connection to the database
             try (RepositoryConnection conn = repo.getConnection()) {
                 TupleQuery tupleQuery = conn.prepareTupleQuery(QueryLanguage.SPARQL, queryString);
@@ -379,10 +379,10 @@ public class Rdf4jSUT implements SystemUnderTest {
             // create a new LocalRepositoryManager in <baseDirString>
             File baseDir = new File(baseDirString);
             LocalRepositoryManager manager = new LocalRepositoryManager(baseDir);
-            manager.initialize();
+            manager.init();
             // request the repository <repoId> back from the LocalRepositoryManager
             Repository repository = manager.getRepository(repoId);
-            repository.initialize();
+            repository.init();
             // Open a connection to the database
             try (RepositoryConnection conn = repository.getConnection()) {
                 TupleQuery tupleQuery = conn.prepareTupleQuery(QueryLanguage.SPARQL, queryString);
@@ -451,7 +451,7 @@ public class Rdf4jSUT implements SystemUnderTest {
                 ns = new NativeStore(dir);
             }
             this.repository = new SailRepository(ns);
-            this.repository.initialize();
+            this.repository.init();
 
             // create a repository connection, otherwise throw exception
             try {
