@@ -1,5 +1,5 @@
 {
-  "classname" : "gr.uoa.di.rdf.Geographica3.runtime.workloadspecs.impl.SimpleGeospatialWL",
+  "classname" : "gr.uoa.di.rdf.geordfbench.runtime.workloadspecs.impl.SimpleGeospatialWL",
   "name" : "CensusMacroGeo",
   "relativeBaseDir" : "",
   "geospatialDataset" : {
@@ -33,7 +33,7 @@
     "n" : 0
   },
   "geospatialQueryset" : {
-    "classname" : "gr.uoa.di.rdf.Geographica3.runtime.querysets.partofworkload.impl.MacroGeocodingQS",
+    "classname" : "gr.uoa.di.rdf.geordfbench.runtime.querysets.partofworkload.impl.MacroGeocodingQS",
     "name" : "geocoding",
     "relativeBaseDir" : "",
     "hasPredicateQueriesAlso" : false,

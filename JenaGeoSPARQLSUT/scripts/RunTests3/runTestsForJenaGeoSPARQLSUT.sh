@@ -5,9 +5,9 @@
 # EXAMPLE :
 # <script> -Xmx24g -rbd JenaGeoSPRAQL_3.17.0_Repos -expdesc 194#_2023-03-20_JenaGeoSPARQLSUT_Run_Scal10K
 #          -ds '~/json_defs/datasets/syntheticDSoriginal.json' 
-#          -h /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/hosts/ubuntu_vma_tioaHOSToriginal.json 
-#          -rs /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/reportspecs/simplereportspec_original.json 
-#          -rpsr /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/reportsources/ubuntu_vma_tioaRepSrcoriginal.json
+#          -h /home/tioannid/NetBeansProjects/PhD/geordfbench/json_defs/hosts/ubuntu_vma_tioaHOSToriginal.json 
+#          -rs /home/tioannid/NetBeansProjects/PhD/geordfbench/json_defs/reportspecs/simplereportspec_original.json 
+#          -rpsr /home/tioannid/NetBeansProjects/PhD/geordfbench/json_defs/reportsources/ubuntu_vma_tioaRepSrcoriginal.json
 #          -es '~/json_defs/reportspecs/microESoriginal.json'
 #          -qs '~/json_defs/querysets/syntheticQSoriginal.json'
 SCRIPT_NAME=`basename "$0"`
@@ -68,7 +68,7 @@ cd ${BASE}/../../target
 CLASS_PATH="$(for file in `ls -1 *.jar`; do myVar=$myVar./$file":"; done;echo $myVar;)runtime/src/main/resources/timestamps.txt"
 
 # define the executing-main class
-MAIN_CLASS="gr.uoa.di.rdf.Geographica3.jenageosparqlsut.RunJenaGeoSPARQLExperiment"
+MAIN_CLASS="gr.uoa.di.rdf.geordfbench.jenageosparqlsut.RunJenaGeoSPARQLExperiment"
 
 # run experiment
 START_TIME=`date`

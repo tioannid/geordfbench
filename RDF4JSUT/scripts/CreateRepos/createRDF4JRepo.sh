@@ -90,7 +90,7 @@ cd ${BASE}/../../target
 CLASS_PATH="$(for file in `ls -1 *.jar`; do myVar=$myVar./$file":"; done;echo $myVar;)"
 
 # define the executing-main class
-MAIN_CLASS="gr.uoa.di.rdf.Geographica3.rdf4jsut.RepoUtil"
+MAIN_CLASS="gr.uoa.di.rdf.geordfbench.rdf4jsut.RepoUtil"
 
 # define the run command arguments to CREATE REPO
 CREATE_REPO_ARGS="createman \"$RepoDir\" \"$RepoID\" \"$RmRepo\" \"$EnableLuceneSail\" \"$RepoIndexes\" \"$WKTIdxList\""

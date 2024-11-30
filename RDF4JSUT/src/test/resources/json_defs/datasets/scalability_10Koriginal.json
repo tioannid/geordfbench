@@ -1,5 +1,5 @@
 {
-  "classname" : "gr.uoa.di.rdf.Geographica3.runtime.datasets.complex.impl.GeographicaDS",
+  "classname" : "gr.uoa.di.rdf.geordfbench.runtime.datasets.complex.impl.GeographicaDS",
   "name" : "scalability_10K",
   "relativeBaseDir" : "Scalability/10K",
   "simpleGeospatialDataSetList" : [ {

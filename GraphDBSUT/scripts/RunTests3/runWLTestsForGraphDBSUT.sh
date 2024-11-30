@@ -4,10 +4,10 @@
 #    <script> JVM_Xmx MAIN_CLASS_ARGS
 # EXAMPLE :
 # <script> -Xmx24g -rbd GraphDB_Repos -expdesc 175#_2023-02-25_GraphDBSUT_Run_Scal10K 
-#          -wl /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/workloads/scalabilityFunc10K_WLoriginal.json 
-#          -h /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/hosts/ubuntu_vma_tioaHOSToriginal_1.json 
-#          -rs /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/reportspecs/simplereportspec_original.json 
-#          -rpsr /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/reportsources/ubuntu_vma_tioaRepSrcoriginal.json
+#          -wl /home/tioannid/NetBeansProjects/PhD/geordfbench/json_defs/workloads/scalabilityFunc10K_WLoriginal.json 
+#          -h /home/tioannid/NetBeansProjects/PhD/geordfbench/json_defs/hosts/ubuntu_vma_tioaHOSToriginal_1.json 
+#          -rs /home/tioannid/NetBeansProjects/PhD/geordfbench/json_defs/reportspecs/simplereportspec_original.json 
+#          -rpsr /home/tioannid/NetBeansProjects/PhD/geordfbench/json_defs/reportsources/ubuntu_vma_tioaRepSrcoriginal.json
 SCRIPT_NAME=`basename "$0"`
 SYNTAX1="SYNTAX 1: $SCRIPT_NAME <JVM_Xmx> <MAIN_CLASS_ARGS>"
 SYNTAX="$SYNTAX1
@@ -70,7 +70,7 @@ cd ${BASE}/../../target
 CLASS_PATH="$(for file in `ls -1 *.jar`; do myVar=$myVar./$file":"; done;echo $myVar;)classes:runtime/src/main/resources/timestamps.txt"
 
 # define the executing-main class
-MAIN_CLASS="gr.uoa.di.rdf.Geographica3.graphdbsut.RunGraphDBExperimentWorkload"
+MAIN_CLASS="gr.uoa.di.rdf.geordfbench.graphdbsut.RunGraphDBExperimentWorkload"
 
 # run experiment
 START_TIME=`date`

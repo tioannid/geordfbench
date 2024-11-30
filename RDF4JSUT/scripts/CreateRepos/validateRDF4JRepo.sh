@@ -54,7 +54,7 @@ cd ${BASE}/../../target
 CLASS_PATH="$(for file in `ls -1 *.jar`; do myVar=$myVar./$file":"; done;echo $myVar;)"
 
 # define the executing-main class
-MAIN_CLASS="gr.uoa.di.rdf.Geographica3.rdf4jsut.RepoUtil"
+MAIN_CLASS="gr.uoa.di.rdf.geordfbench.rdf4jsut.RepoUtil"
 LUCENE_UPGRADE_CLASS="org.apache.lucene.index.IndexUpgrader"
 luceneIndexDir=${RDF4JRepoBaseDir}/repositories/${RepoID}/luceneidx
 #echo ${luceneIndexDir}

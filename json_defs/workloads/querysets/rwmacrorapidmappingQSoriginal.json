@@ -1,5 +1,5 @@
 {
-  "classname" : "gr.uoa.di.rdf.Geographica3.runtime.querysets.partofworkload.impl.MacroRapidMappingQS",
+  "classname" : "gr.uoa.di.rdf.geordfbench.runtime.querysets.partofworkload.impl.MacroRapidMappingQS",
   "name" : "rapidmapping",
   "relativeBaseDir" : "",
   "hasPredicateQueriesAlso" : false,

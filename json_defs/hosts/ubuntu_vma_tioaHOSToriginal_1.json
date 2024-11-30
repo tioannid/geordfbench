@@ -1,5 +1,5 @@
 {
-  "classname" : "gr.uoa.di.rdf.Geographica3.runtime.hosts.impl.SimpleHost",
+  "classname" : "gr.uoa.di.rdf.geordfbench.runtime.hosts.impl.SimpleHost",
   "name" : "ubuntu-vma-tioa",
   "ipAddr" : "10.0.2.15",
   "ram" : 11,

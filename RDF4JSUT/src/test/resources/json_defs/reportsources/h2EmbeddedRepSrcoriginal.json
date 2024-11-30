@@ -1,5 +1,5 @@
 {
-  "classname" : "gr.uoa.di.rdf.Geographica3.runtime.reportsource.impl.H2EmbeddedRepSrc",
+  "classname" : "gr.uoa.di.rdf.geordfbench.runtime.reportsource.impl.H2EmbeddedRepSrc",
   "driver" : "h2",
   "relativeBaseDir" : "../scripts/h2embeddedreportsource",
   "database" : "geordfbench",

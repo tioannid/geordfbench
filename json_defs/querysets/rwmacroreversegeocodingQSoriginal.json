@@ -1,5 +1,5 @@
 {
-  "classname" : "gr.uoa.di.rdf.Geographica3.runtime.querysets.complex.impl.MacroReverseGeocodingQS",
+  "classname" : "gr.uoa.di.rdf.geordfbench.runtime.querysets.complex.impl.MacroReverseGeocodingQS",
   "name" : "reversegeocoding",
   "relativeBaseDir" : "",
   "hasPredicateQueriesAlso" : false,
