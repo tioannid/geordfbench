@@ -159,7 +159,7 @@ if [ "${EnableGeoSPARQLPlugin}" = "TRUE" ]; then
     cd ${BASE}/../../target
     #pwd
     CLASS_PATH="$(for file in `ls -1 *.jar`; do myVar=$myVar./$file":"; done;echo $myVar;)"
-    MAIN_CLASS="gr.uoa.di.rdf.Geographica2.graphdbsut.RepoUtil"
+    MAIN_CLASS="gr.uoa.di.rdf.Geographica3.graphdbsut.RepoUtil"
     EXEC_QUERY_REPO="java $JAVA_OPTS -cp $CLASS_PATH $MAIN_CLASS ${EnableGeoSPARQLPlugin} ${IndexingAlgorithm} ${IndexingPrecision} \"${GraphDBDataDir}\" $RepoName"
     #echo $EXEC_QUERY_REPO
     eval ${EXEC_QUERY_REPO}

@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
-import gr.uoa.di.rdf.Geographica2.queries.SyntheticQueriesSet;
+import gr.uoa.di.rdf.Geographica3.runtime.querysets.util.SyntheticQueriesSet;
 
 // StaticTempParamQS relates a GeographicaDataSet dataset
 // and an AbstractGeographicaSystem<C> _sys. By default the mapUsefulPrefixes

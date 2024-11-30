@@ -6,13 +6,12 @@
  * Copyright (C) 2013, Pyravlos Team
  *
  */
-package gr.uoa.di.rdf.Geographica2.queries;
+package gr.uoa.di.rdf.Geographica3.runtime.querysets.util;
 
 import java.io.IOException;
 import org.eclipse.rdf4j.query.MalformedQueryException;
 import org.eclipse.rdf4j.query.QueryEvaluationException;
 import org.eclipse.rdf4j.query.TupleQueryResultHandlerException;
-import gr.uoa.di.rdf.Geographica2.systemsundertest.SystemUnderTest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -65,7 +64,6 @@ public abstract class QueriesSet {
     }
 
     public String prefixes;
-    protected SystemUnderTest sut;
     protected int queriesN;
 
     public int getQueriesN() {
@@ -80,9 +78,7 @@ public abstract class QueriesSet {
         return mapsHasGeometry;
     }
 
-    public QueriesSet(SystemUnderTest sut) {
-
-        this.sut = sut;
+    public QueriesSet() {
 
         prefixes = "PREFIX clc: <http://geo.linkedopendata.gr/corine/ontology#> \n"
                 + "PREFIX noa: <http://teleios.di.uoa.gr/ontologies/noaOntology.owl#> \n"

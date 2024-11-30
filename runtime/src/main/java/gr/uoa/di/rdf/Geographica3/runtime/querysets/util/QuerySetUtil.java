@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import gr.uoa.di.rdf.Geographica2.queries.SyntheticQueriesSet;
 import gr.uoa.di.rdf.Geographica3.runtime.querysets.complex.impl.DynamicTempParamQS;
 import gr.uoa.di.rdf.Geographica3.runtime.querysets.complex.impl.StaticTempParamQS;
 import gr.uoa.di.rdf.Geographica3.runtime.querysets.complex.impl.MacroMapSearchQS;

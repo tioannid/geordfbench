@@ -1,4 +1,4 @@
-package gr.uoa.di.rdf.Geographica2.graphdbsut;
+package gr.uoa.di.rdf.Geographica3.graphdbsut;
 
 import org.apache.log4j.Logger;
 
@@ -26,14 +26,14 @@ public abstract class RepoUtil {
             baseDir = args[3];
             repoID = args[4];
             try {
-                long t1 = GraphDBSUT.GraphDB.execGeoSPARQL_UpdateConfiguration(indexingAlgorith, indexingPrecision, baseDir, repoID);
+                long t1 = GraphDB.execGeoSPARQL_UpdateConfiguration(indexingAlgorith, indexingPrecision, baseDir, repoID);
                 logger.info("GraphDB configured and enabled GeoSPARQL plugin for repo \"" + repoID + "\" in "
                         + t1 + " msecs");
                 /* DISABLED IT JUST TO TEST IF forced re-indexing is required!
                 long t2 = GraphDBSUT.GraphDB.execGeoSPARQL_ForceReindex(baseDir, repoID);
                 logger.info("GraphDB forced re-index GeoSPARQL plugin for repo \"" + repoID + "\" in "
                         + t2 + " msecs");
-                */
+                 */
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
@@ -41,7 +41,7 @@ public abstract class RepoUtil {
             baseDir = args[1];
             repoID = args[2];
             logger.info("GraphDB disabled GeoSPARQL plugin for repo \"" + repoID + "\" in "
-                    + (GraphDBSUT.GraphDB.execGeoSPARQL_DisablePlugin(baseDir, repoID)) + " msecs");
-        } 
+                    + (GraphDB.execGeoSPARQL_DisablePlugin(baseDir, repoID)) + " msecs");
+        }
     }
 }
