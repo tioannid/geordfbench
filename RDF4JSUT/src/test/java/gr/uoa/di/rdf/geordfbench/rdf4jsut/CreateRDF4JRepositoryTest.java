@@ -1,6 +1,5 @@
 package gr.uoa.di.rdf.geordfbench.rdf4jsut;
 
-import gr.uoa.di.rdf.geordfbench.rdf4jsut.RepoUtil;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -57,7 +56,7 @@ public class CreateRDF4JRepositoryTest {
 
     @BeforeAll
     public void setupAll() {
-        System.out.println("BEFORE ALL EXPERIMENTS");
+        System.out.println("=> BEFORE ALL TESTS - EXPERIMENT: " + CreateRDF4JRepositoryTest.class.getSimpleName());
         // Create an arguments array for creating a Native repo (no overwrite)
         createNativeRepoArgsLine
                 = "createman " // choose operation mode for RepoUtil class
@@ -108,14 +107,14 @@ public class CreateRDF4JRepositoryTest {
 
     @BeforeEach
     public void setup() {
-        System.out.println("Should print before each test");
+        System.out.println("===> BEFORE EACH TEST");
     }
 
     @Test
     @Order(1)
     @DisplayName("Should Not Create A Native Repo When Repo Exists")
     public void shouldNotCreateANativeRepoWhenRepoExists() {
-        System.out.println("EXPERIMENT: Should Not Create A Native Repo When Repo Exists");
+        System.out.println("TEST: Should Not Create A Native Repo When Repo Exists");
         FileTime fileTimeBefore = FileTime.from(Instant.now());
         FileTime fileTimeAfter = FileTime.fromMillis(fileTimeBefore.toMillis() + 1);
         BasicFileAttributes attr = null;
@@ -175,7 +174,7 @@ public class CreateRDF4JRepositoryTest {
     @Order(2)
     @DisplayName("Should Overwrite An Existing Native Repo")
     public void shouldOverwriteAnExistingNativeRepo() throws Exception {
-        System.out.println("EXPERIMENT: Should Overwrite An Existing Native Repo");
+        System.out.println("TEST: Should Overwrite An Existing Native Repo");
         FileTime fileTimeBefore = FileTime.from(Instant.now());
         FileTime fileTimeAfter = FileTime.fromMillis(fileTimeBefore.toMillis() + 1);
         BasicFileAttributes attr = null;
@@ -235,7 +234,7 @@ public class CreateRDF4JRepositoryTest {
     @Order(3)
     @DisplayName("Should Not Create A Lucene Repo When Repo Exists")
     public void shouldNotCreateALuceneRepoWhenRepoExists() throws Exception {
-        System.out.println("EXPERIMENT: Should Not Create A Lucene Repo When Repo Exists");
+        System.out.println("TEST: Should Not Create A Lucene Repo When Repo Exists");
         FileTime fileTimeBefore = FileTime.from(Instant.now());
         FileTime fileTimeAfter = FileTime.fromMillis(fileTimeBefore.toMillis() + 1);
         BasicFileAttributes attr = null;
@@ -295,7 +294,7 @@ public class CreateRDF4JRepositoryTest {
     @Order(4)
     @DisplayName("Should Overwrite An Existing Lucene Repo")
     public void shouldOverwriteAnExistingLuceneRepo() throws Exception {
-        System.out.println("EXPERIMENT: Should Overwrite An Existing Lucene Repo");
+        System.out.println("TEST: Should Overwrite An Existing Lucene Repo");
         FileTime fileTimeBefore = FileTime.from(Instant.now());
         FileTime fileTimeAfter = FileTime.fromMillis(fileTimeBefore.toMillis() + 1);
         BasicFileAttributes attr = null;
@@ -353,12 +352,12 @@ public class CreateRDF4JRepositoryTest {
 
     @AfterEach
     public void tearDown() {
-        System.out.println("Should print after each test");
+        System.out.println("<=== AFTER EACH TEST");
     }
 
     @AfterAll
     public void tearDownAll() {
-        System.out.println("AFTER ALL EXPERIMENTS");
+        System.out.println("<= AFTER ALL EXPERIMENTS");
         // wait for fsync in repository operations
         try {
             Thread.sleep(1000);

@@ -61,14 +61,33 @@ if [[ ! " ${ValidEnvironments[*]} " =~ " ${Environment} " ]]; then
     export Environment=${DefaultEnvironment}
 fi
 
-# check if mercurial is installed and define the changeset value
+# check if mercurial or git is installed and define the changeset value
 Changeset="00"
-export res=`type -p "hg"`
-if [[ ! -z "$res" ]]; then 
-   # echo "hg exists"; 
-   Changeset=`hg parents | head -1 | cut -d ":" -f2 | xargs`  # should be a number nn or nnn, xargs trims whitespace
+changeset_set_by=""
+# check the installation path of the git utility
+git_installed=`type -p "git"` # returns empty string if binary is not installed
+# if git binary is installed then retrieve the git commit
+if [[ ! -z "$git_installed" ]]; then
+	git_repo_exists=`git rev-parse --is-inside-work-tree`
+	if [[ $git_repo_exists == "true" ]]; then
+		echo "Git repo exists"
+		Changeset=`git rev-parse --short HEAD`  # should be a 7 digit hexadecimal number
+		changeset_set_by="git"
+	fi
 fi
-
+if [[ $changeset_set_by == "" ]]; then # there was no git repo active in this folder tree
+	hg_installed=`type -p "hg"` # returns empty string if binary is not installed
+	# if mercurial binary is installed then retrieve the hg commit
+	if [[ ! -z "$hg_installed" ]]; then
+		hg_repo_exists=$((`hg identify 2>&1 | cut -b 1-5 -` != "abort"))
+		if [[ $hg_repo_exists -eq 0 ]]; then
+			echo "Mercurial repo exists" 
+			Changeset=`hg identify | cut -d " " -f1`  # should be a 10 digit hexadecimal number
+			changeset_set_by="hg"
+		fi
+	fi
+fi
+	
 #       set the active SUT and description
 if (( $# == 3 )); then
     export ActiveSUT=${2}
@@ -94,10 +113,11 @@ export ExperimentShortDesc="${ActiveSUT}_${ShortDesc}"
 
 #       1.3: set the versions of the SUTs
 export verRDF4J="4.3.15"
-export verGRAPHDB="10.8.0"
+export verGRAPHDB="10.8.1"
 export verSTARDOG="8.2.2"
 export verVIRTUOSO="7.2.14"
 export verJENA="4.10.0"
+export verSTRABON="3.3.3-SNAPSHOT"
 
 #       1.4: set other SUT dependent variables
 #           GraphDB dependent, environment independent

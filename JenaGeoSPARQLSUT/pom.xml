@@ -46,6 +46,12 @@
             <version>${jena.version}</version>
             <type>jar</type>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.jena/jena-tdb2 -->
+        <!--        <dependency>
+            <groupId>org.apache.jena</groupId>
+            <artifactId>jena-tdb2</artifactId>
+            <version>${jena.version}</version>
+        </dependency>-->        
         <dependency>
             <groupId>org.apache.jena</groupId>
             <artifactId>jena-geosparql</artifactId>
@@ -71,4 +77,17 @@
             <scope>runtime</scope>
         </dependency>-->
     </dependencies>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>

@@ -1,7 +1,5 @@
 package gr.uoa.di.rdf.geordfbench.rdf4jsut;
 
-import gr.uoa.di.rdf.geordfbench.rdf4jsut.RunRDF4JExperiment;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
 import org.junit.jupiter.api.AfterAll;
@@ -14,6 +12,11 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import static gr.uoa.di.rdf.geordfbench.runtime.hosts.IHost.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
 
 /**
  * A class that checks various Query Filtering options during experiment
@@ -34,17 +37,21 @@ public class RunRDF4JExperimentTest {
     String JSON_DEFS_DIR;
 
     private final PrintStream standardOut = System.out;
-    private ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
+    // Creates a FileOutputStream
+    private final String FILEOUTSTREAM = "fileOutStream.txt";
+    private FileOutputStream fileOutStream = null;
+    private PrintStream outPrintStream = null;
+    private File outputFile = null;
 
     @BeforeAll
     public void setupAll() {
-        System.out.println(RunRDF4JExperimentTest.class.getSimpleName() + " - Before All");
+        System.out.println("=> BEFORE ALL TESTS - EXPERIMENT: " + RunRDF4JExperimentTest.class.getSimpleName());
         // find the absolute path of the JSON Library in the test resources folder
         File p = new File("src/test/resources/json_defs".replace("/", SEP));
         JSON_DEFS_DIR = p.getAbsolutePath();
         String argLineNoQueryFilter
                 = // No Query Filter is specified - 3 queries (0,1,2) expected in output
-                "-rbd RDF4J_3.7.7_Repos/server "
+                "-rbd RDF4J_4.3.15_Repos/server "
                 + "-expdesc RDF4JSUT_RunRDF4JExperimentTest "
                 + "-ds " + JSON_DEFS_DIR + "/datasets/scalability_10Koriginal.json".replace("/", SEP) + " "
                 + "-qs " + JSON_DEFS_DIR + "/querysets/scalabilityFuncQSoriginal.json".replace("/", SEP) + " "
@@ -67,49 +74,129 @@ public class RunRDF4JExperimentTest {
 
     @BeforeEach
     public void setup() {
-        System.out.println("Should print before each test");
-        outputStreamCaptor = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(outputStreamCaptor));
+        System.out.println("===> BEFORE EACH TEST");
+        outputFile = new File(("src/test/resources/" + FILEOUTSTREAM).replace("/", SEP));
+        outputFile.delete();
+        try {
+            fileOutStream = new FileOutputStream(outputFile.getAbsolutePath());
+        } catch (FileNotFoundException ex) {
+            System.out.println(ex.getMessage());
+        }
+        outPrintStream = new PrintStream(fileOutStream, true);
+
     }
 
     @Test
     @Order(1)
     @DisplayName("Should Display the 3 Scalability Ground Queries 0,1,2")
     public void shouldDisplay3ScalabilityGroundQueries() throws Exception {
+        System.out.println("TEST: Should Display 3 Scalability Ground Queries 0, 1, 2");
+        System.setOut(outPrintStream);
         RunRDF4JExperiment.main(this.argsNoQueryFilter);
-        Assertions.assertTrue(outputStreamCaptor.toString().contains("Query 0 -"));
-        Assertions.assertTrue(outputStreamCaptor.toString().contains("Query 1 -"));
-        Assertions.assertTrue(outputStreamCaptor.toString().contains("Query 2 -"));
+        fileOutStream.close();
+        BufferedReader br = new BufferedReader(new FileReader(outputFile));
+        String line = "";
+        boolean bl1 = false, bl2 = false, bl3 = false;
+        while ((line = br.readLine()) != null) {
+            if (line.contains("Query 0 -")) {
+                bl1 = true;
+            }
+            if (line.contains("Query 1 -")) {
+                bl2 = true;
+            }
+            if (line.contains("Query 2 -")) {
+                bl3 = true;
+            }
+        }
+        br.close();
+        Assertions.assertTrue(bl1);
+        Assertions.assertTrue(bl2);
+        Assertions.assertTrue(bl3);
     }
 
     @Test
     @Order(2)
     @DisplayName("Should Display the 2 Included Scalability Ground Queries 0,2")
     public void shouldDisplayThe2IncludedScalabilityGroundQueries() throws Exception {
+        System.out.println("TEST: Should Display The 2 Included Scalability Ground Queries 0, 2");
+        System.setOut(outPrintStream);
         RunRDF4JExperiment.main(this.argsWithQueryInclusionFilter);
-        Assertions.assertTrue(outputStreamCaptor.toString().contains("Query 0 -"));
-        Assertions.assertFalse(outputStreamCaptor.toString().contains("Query 1 -"));
-        Assertions.assertTrue(outputStreamCaptor.toString().contains("Query 2 -"));
+        fileOutStream.close();
+        BufferedReader br = new BufferedReader(new FileReader(outputFile));
+        String line = "";
+        boolean bl1 = false, bl2 = false, bl3 = false;
+        while ((line = br.readLine()) != null) {
+            if (line.contains("Query 0 -")) {
+                bl1 = true;
+            }
+            if (line.contains("Query 1 -")) {
+                bl2 = true;
+            }
+            if (line.contains("Query 2 -")) {
+                bl3 = true;
+            }
+        }
+        br.close();
+        Assertions.assertTrue(bl1);
+        Assertions.assertFalse(bl2);
+        Assertions.assertTrue(bl3);
     }
 
     @Test
     @Order(3)
     @DisplayName("Should Not Display the 2 Excluded Scalability Ground Queries 0,2")
     public void shouldNotDisplayThe2ExcludedScalabilityGroundQueries() throws Exception {
+        System.out.println("TEST: Should Not Display The 2 Excluded Scalability Ground Queries 0, 2");
+        System.setOut(outPrintStream);
         RunRDF4JExperiment.main(this.argsWithQueryExclusionFilter);
-        Assertions.assertFalse(outputStreamCaptor.toString().contains("Query 0 -"));
-        Assertions.assertTrue(outputStreamCaptor.toString().contains("Query 1 -"));
-        Assertions.assertFalse(outputStreamCaptor.toString().contains("Query 2 -"));
+        fileOutStream.close();
+        BufferedReader br = new BufferedReader(new FileReader(outputFile));
+        String line = "";
+        boolean bl1 = false, bl2 = false, bl3 = false;
+        while ((line = br.readLine()) != null) {
+            if (line.contains("Query 0 -")) {
+                bl1 = true;
+            }
+            if (line.contains("Query 1 -")) {
+                bl2 = true;
+            }
+            if (line.contains("Query 2 -")) {
+                bl3 = true;
+            }
+        }
+        br.close();
+        Assertions.assertFalse(bl1);
+        Assertions.assertTrue(bl2);
+        Assertions.assertFalse(bl3);
     }
 
     @AfterEach
     public void tearDown() {
-        System.out.println("Should print after each test");
         System.setOut(standardOut);
+        outPrintStream.close();
+        outPrintStream = null;
+        try {
+            fileOutStream.close();
+            fileOutStream = null;
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(outputFile));
+            br.lines().forEach(System.out::println);
+            br.close();
+        } catch (FileNotFoundException ex) {
+            System.out.println(ex.getMessage());
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+        System.out.println("<=== AFTER EACH TEST");
     }
 
     @AfterAll
     public void tearDownAll() {
-        System.out.println("Should print after all tests");
+        System.out.println("<= AFTER ALL EXPERIMENTS");
+        outputFile.delete();
     }
 }

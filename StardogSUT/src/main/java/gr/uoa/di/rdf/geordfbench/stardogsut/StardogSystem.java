@@ -128,7 +128,7 @@ public class StardogSystem extends RDF4JBasedGeographicaSystem {
         //Connection aConn = connectionConfiguration.connect();
         if (repository == null) {
             repository = new StardogRepository(connectionConfiguration);
-            repository.initialize();
+            repository.init();
         }
 
         if (connection == null) {

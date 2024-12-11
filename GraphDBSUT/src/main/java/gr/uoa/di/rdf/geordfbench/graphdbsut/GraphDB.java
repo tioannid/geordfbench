@@ -22,7 +22,7 @@ import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.eclipse.rdf4j.repository.config.RepositoryConfig;
 import org.eclipse.rdf4j.repository.config.RepositoryConfigException;
-import org.eclipse.rdf4j.repository.config.RepositoryConfigSchema;
+import org.eclipse.rdf4j.model.vocabulary.CONFIG;
 import org.eclipse.rdf4j.repository.manager.LocalRepositoryManager;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFParser;
@@ -30,9 +30,9 @@ import org.eclipse.rdf4j.rio.Rio;
 import org.eclipse.rdf4j.rio.helpers.StatementCollector;
 
 /**
- * TODO: Remove class ASAP
- * It is used in create repo script and deals with spatial indexing
- * Move functionality elsewhere 
+ * TODO: Remove class ASAP It is used in create repo script and deals with
+ * spatial indexing Move functionality elsewhere
+ *
  * @author tioannid
  */
 public class GraphDB {
@@ -169,10 +169,10 @@ public class GraphDB {
             config = new BufferedInputStream(new FileInputStream(templateTTL));
             RDFParser rdfParser = Rio.createParser(RDFFormat.TURTLE);
             rdfParser.setRDFHandler(new StatementCollector(graph));
-            rdfParser.parse(config, RepositoryConfigSchema.NAMESPACE);
+            rdfParser.parse(config, CONFIG.NAMESPACE);
             config.close();
-            Resource repositoryNode = Models.subject(graph.filter(null, RDF.TYPE, RepositoryConfigSchema.REPOSITORY)).orElse(null);
-            graph.add(repositoryNode, RepositoryConfigSchema.REPOSITORYID,
+            Resource repositoryNode = Models.subject(graph.filter(null, RDF.TYPE, CONFIG.Rep.Repository)).orElse(null);
+            graph.add(repositoryNode, CONFIG.Rep.id,
                     SimpleValueFactory.getInstance().createLiteral(repositoryId));
             RepositoryConfig repositoryConfig = RepositoryConfig.create(graph, repositoryNode);
             repositoryManager.addRepositoryConfig(repositoryConfig);

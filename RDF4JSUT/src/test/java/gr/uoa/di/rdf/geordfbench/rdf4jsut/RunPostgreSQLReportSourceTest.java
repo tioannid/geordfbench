@@ -1,6 +1,5 @@
 package gr.uoa.di.rdf.geordfbench.rdf4jsut;
 
-import gr.uoa.di.rdf.geordfbench.rdf4jsut.RunRDF4JExperiment;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import static gr.uoa.di.rdf.geordfbench.runtime.hosts.IHost.SEP;
 import gr.uoa.di.rdf.geordfbench.runtime.reportsource.IReportSource;
@@ -87,7 +86,7 @@ public class RunPostgreSQLReportSourceTest {
         // the detailed benchmark specifications
         argLineBase
                 = // Report Source: PostgreSQL in ubuntu-vma-tioa
-                "-rbd " + "RDF4J_3.7.7_Repos/server".replace("/", SEP) + " "
+                "-rbd " + "RDF4J_4.3.15_Repos/server".replace("/", SEP) + " "
                 + "-expdesc RDF4JSUT_RunPostgreSQLReportSourceTest "
                 + "-ds " + JSON_DEFS_DIR + "/datasets/scalability_10Koriginal.json".replace("/", SEP) + " "
                 + "-qs " + JSON_DEFS_DIR + "/querysets/scalabilityFuncQSoriginal.json".replace("/", SEP) + " "

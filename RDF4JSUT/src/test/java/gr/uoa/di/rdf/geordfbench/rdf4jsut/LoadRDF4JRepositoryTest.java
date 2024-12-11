@@ -1,6 +1,5 @@
 package gr.uoa.di.rdf.geordfbench.rdf4jsut;
 
-import gr.uoa.di.rdf.geordfbench.rdf4jsut.RepoUtil;
 import java.io.File;
 import java.io.IOException;
 import org.apache.commons.io.file.PathUtils;
@@ -48,7 +47,7 @@ public class LoadRDF4JRepositoryTest {
     String NATIVE_REPO_DIR_ABS, LUCENE_REPO_DIR_ABS, RDF_DATA_FILES_ABS_DIR;
 
     public void setupAll() {
-        logger.info("Setup experiment");
+        System.out.println("=> TEST: Create base dirs for Native and Lucene repos");
         // Create an arguments array for creating a Native repo (no overwrite)
         createNativeRepoArgsLine
                 = "createman " // choose operation mode for RepoUtil class
@@ -118,7 +117,7 @@ public class LoadRDF4JRepositoryTest {
     }
 
     public void shouldCreateANativeRepo() throws Exception {
-        logger.info("EXPERIMENT: Should Create A Native Repo");
+        logger.info("Should Create A Native Repo");
         /* trying to create the same repo in the same location using overwrite=true
            should logically re-create the repo
          */
@@ -131,7 +130,7 @@ public class LoadRDF4JRepositoryTest {
     }
 
     public void shouldLoadToANativeRepo() throws Exception {
-        logger.info("EXPERIMENT: Should Load To A Native Repo");
+        logger.info("Should Load To A Native Repo");
         // trying to load RDF data to an existing Native repo
         logger.info("Loading N-Triple data to an existing Native repo");
         try {
@@ -153,7 +152,7 @@ public class LoadRDF4JRepositoryTest {
     }
 
     public void shouldCreateALuceneRepo() throws Exception {
-        logger.info("EXPERIMENT: Should Create A Lucene Repo");
+        logger.info("Should Create A Lucene Repo");
         /* trying to create the same repo in the same location using overwrite=true
            should logically re-create the repo
          */
@@ -166,7 +165,7 @@ public class LoadRDF4JRepositoryTest {
     }
 
     public void shouldLoadToALuceneRepo() throws Exception {
-        logger.info("EXPERIMENT: Should Load To A Lucene Repo");
+        logger.info("Should Load To A Lucene Repo");
         // trying to load RDF data to an existing Lucene repo
         logger.info("Loading N-Triple data to an existing Lucene repo");
         try {
@@ -188,6 +187,7 @@ public class LoadRDF4JRepositoryTest {
     }
 
     public void tearDownAll() {
+        System.out.println("Delete all Native and Lucene test repos");
         logger.info("Remove all repositories");
         // wait for fsync in repository operations
         try {
@@ -224,6 +224,7 @@ public class LoadRDF4JRepositoryTest {
 
     @BeforeEach
     public void setup() {
+        System.out.println("===> BEFORE EACH TEST");
         // make sure all Native and Lucene test repos are deleted
         tearDownAll();
         // create base dirs for Native and Lucene repos
@@ -232,6 +233,7 @@ public class LoadRDF4JRepositoryTest {
 
     @AfterEach
     public void tearDown() {
+        System.out.println("<=== AFTER EACH TEST");
         // make sure all Native and Lucene test repos are deleted
         tearDownAll();
     }
@@ -240,20 +242,22 @@ public class LoadRDF4JRepositoryTest {
     @Order(1)
     @DisplayName("Should Query A Native Repo Before And After Loading")
     public void shouldQueryANativeRepoBeforeAndAfterLoading() throws Exception {
+        System.out.println("TEST: Should Query A Native Repo Before And After Loading");
         // create 1 Native scalability_10K repo
         shouldCreateANativeRepo();
         // query the empty Native scalability_10K repo
-        shouldQueryANativeRepo("EXPERIMENT: Query An Empty Native Repo");
+        shouldQueryANativeRepo("STEP: Query An Empty Native Repo");
         // load Scalability 10K data into Native scalability_10K repo
         shouldLoadToANativeRepo();
         // query Scalability 10K data from the loaded Native scalability_10K repo
-        shouldQueryANativeRepo("EXPERIMENT: Query A Loaded Native Repo");
+        shouldQueryANativeRepo("STEP: Query A Loaded Native Repo");
     }
 
     @Test
     @Order(2)
     @DisplayName("Should Query A Lucene Repo Before And After Loading")
     public void shouldQueryALuceneRepoBeforeAndAfterLoading() throws Exception {
+        System.out.println("TEST: Should Query A Lucene Repo Before And After Loading");
         // create 1 Lucene scalability_10K repo
         shouldCreateALuceneRepo();
         // query the empty Lucene scalability_10K repo

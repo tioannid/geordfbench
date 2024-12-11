@@ -139,7 +139,12 @@ public class JenaBasedExecutor extends AbstractExecutor<JenaBasedGeographicaSyst
         try {
             qe = QueryExecutionFactory.create(qry, geoSys.getConnection());
             int remainingExecutionTimeInSecs = (int) ((this.getMaxQueryExecTime() * 1000 - (System.currentTimeMillis() - tStart)) / 1000);
+            /* Deprecated 
+            * https://www.javadoc.io/doc/org.apache.jena/jena-arq/4.3.2/deprecated-list.html
+            
             qe.setTimeout(remainingExecutionTimeInSecs, TimeUnit.SECONDS);
+            */
+            QueryExecution.create().timeout(remainingExecutionTimeInSecs, TimeUnit.SECONDS);
             logger.debug("remainingExecutionTimeInSecs = " + remainingExecutionTimeInSecs);
         } finally {
 
