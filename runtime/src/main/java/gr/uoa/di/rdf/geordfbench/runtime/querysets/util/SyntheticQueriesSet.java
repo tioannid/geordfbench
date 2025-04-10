@@ -12,6 +12,7 @@ import gr.uoa.di.rdf.Geographica.generators.SyntheticGenerator;
 import java.io.IOException;
 import org.apache.log4j.Logger;
 import gr.uoa.di.rdf.geordfbench.runtime.sut.ISUT;
+import gr.uoa.di.rdf.geordfbench.runtime.sys.interfaces.IGeographicaSystem;
 
 /**
  * @author Kostis Kyzirakos <kkyzri@di.uoa.gr>
@@ -21,9 +22,9 @@ public class SyntheticQueriesSet extends QueriesSet {
     static Logger logger = Logger.getLogger(SyntheticQueriesSet.class.getSimpleName());
     int N;
     private SyntheticGenerator generator;
-    ISUT sut;
+    ISUT<IGeographicaSystem> sut;
 
-    public SyntheticQueriesSet(ISUT sut, int N) throws IOException {
+    public SyntheticQueriesSet(ISUT<IGeographicaSystem> sut, int N) throws IOException {
         this.sut = sut;
         queriesN = 36; // IMPORTANT: Add/remove queries in getQuery implies changing queriesN
         this.N = N;

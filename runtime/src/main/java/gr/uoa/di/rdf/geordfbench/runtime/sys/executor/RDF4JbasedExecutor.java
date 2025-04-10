@@ -206,9 +206,9 @@ public class RDF4JbasedExecutor extends AbstractExecutor<RDF4JBasedGeographicaSy
         } catch (Exception e) { // probably invalid geometry
             logger.error(e.getMessage());
         } finally {
-            return this.qryRepResult;
+            // return this.qryRepResult;
         }
-
+        return this.qryRepResult;
     }
 
     @Override

@@ -21,6 +21,7 @@ import gr.uoa.di.rdf.geordfbench.runtime.reportsource.IReportSource;
 import gr.uoa.di.rdf.geordfbench.runtime.reportsource.util.ReportSourceUtil;
 import gr.uoa.di.rdf.geordfbench.runtime.reportspecs.IReportSpec;
 import gr.uoa.di.rdf.geordfbench.runtime.sut.ISUT;
+import gr.uoa.di.rdf.geordfbench.runtime.sys.interfaces.IGeographicaSystem;
 
 public abstract class RunSUTExperiment {
 
@@ -28,7 +29,7 @@ public abstract class RunSUTExperiment {
 
     protected Options options = new Options();
     protected CommandLine cmd = null;
-    protected ISUT sut = null;
+    protected ISUT<? extends IGeographicaSystem> sut = null;
     protected IHost host;
     protected IGeospatialDataSet geoDS;
     protected IReportSpec rptSpec;

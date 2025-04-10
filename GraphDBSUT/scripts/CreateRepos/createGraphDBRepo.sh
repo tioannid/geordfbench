@@ -71,10 +71,11 @@ if [ "${RDFFormat}" != "TRIG" ] && [ "${RDFFormat}" != "N-TRIPLES" ]; then
 fi
 
 # STEP 2: Assess whether the script's preconditions are met
-#      2.1: check whether the $GraphDBBaseDir/bin/preload exists
-PreLoad_Exe="${GraphDBBaseDir}/bin/preload"
-if [ ! -e "$PreLoad_Exe" ]; then
-	echo "File $PreLoad_Exe does not exist!"
+#      2.1: check whether the $GraphDBBaseDir/bin/importrdf exists
+ImportRDF_Exe="${GraphDBBaseDir}/bin/importrdf"
+PreLoad_Exe="${GraphDBBaseDir}/bin/importrdf preload"
+if [ ! -e "$ImportRDF_Exe" ]; then
+	echo "File ${ImportRDF_Exe} does not exist!"
 	exit 4
 fi
 

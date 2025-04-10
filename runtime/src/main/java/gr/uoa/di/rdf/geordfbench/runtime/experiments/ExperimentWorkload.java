@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import gr.uoa.di.rdf.geordfbench.runtime.reportsource.IReportSource;
 import gr.uoa.di.rdf.geordfbench.runtime.reportspecs.IReportSpec;
 import gr.uoa.di.rdf.geordfbench.runtime.sut.ISUT;
+import gr.uoa.di.rdf.geordfbench.runtime.sys.interfaces.IGeographicaSystem;
 import gr.uoa.di.rdf.geordfbench.runtime.workloadspecs.IGeospatialWorkLoadSpec;
 
 // <C> represents the connection class for each library (Sesame, RDF4J, Jena)
@@ -39,7 +40,7 @@ public class ExperimentWorkload extends Experiment {
      * @throws Exception
      */
     public ExperimentWorkload(IGeospatialWorkLoadSpec simpleGeospatialWL,
-            ISUT sut, int[] qif, IReportSpec rptSpec, IReportSource rptSrcSpec,
+            ISUT<? extends IGeographicaSystem> sut, int[] qif, IReportSpec rptSpec, IReportSource rptSrcSpec,
             String logPath, String description) throws Exception {
         super(sut, simpleGeospatialWL.getGeospatialQueryset(), qif,
                 simpleGeospatialWL.getGeospatialDataset(),

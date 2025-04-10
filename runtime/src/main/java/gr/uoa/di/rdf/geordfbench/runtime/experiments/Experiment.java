@@ -20,6 +20,7 @@ import gr.uoa.di.rdf.geordfbench.runtime.reportspecs.IReportSpec;
 import gr.uoa.di.rdf.geordfbench.runtime.resultscollector.IExperimentResultsCollector;
 import gr.uoa.di.rdf.geordfbench.runtime.resultscollector.impl.QueryRepResults.QueryRepResult;
 import gr.uoa.di.rdf.geordfbench.runtime.sut.ISUT;
+import gr.uoa.di.rdf.geordfbench.runtime.sys.interfaces.IGeographicaSystem;
 
 // <C> represents the connection class for each library (Sesame, RDF4J, Jena)
 // IMPORTANT: Concrete subclass of Experiment should take care of appropriately
@@ -38,7 +39,7 @@ public class Experiment {
     public String logPath;
     protected IQuerySet qrySet = null;
     protected int[] qif = null;
-    protected ISUT sut = null;
+    protected ISUT<? extends IGeographicaSystem> sut = null;
     protected IGeospatialDataSet geoDS = null;
     protected IReportSpec rptSpec = null;
     protected IReportSource rptSrcSpec;
@@ -49,7 +50,7 @@ public class Experiment {
     // 1. Autonomous constructor:
     //      all data members receive user-provided, properly instantiated objects
     //      queriesToRun[] is initialized through the qrySet object
-    public Experiment(ISUT sut,
+    public Experiment(ISUT<? extends IGeographicaSystem> sut,
             IQuerySet queriesSet,
             int[] qif,
             IGeospatialDataSet geodataset,
@@ -112,7 +113,7 @@ public class Experiment {
         return execSpec;
     }
 
-    public ISUT getSut() {
+    public ISUT<? extends IGeographicaSystem> getSut() {
         return sut;
     }
 

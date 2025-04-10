@@ -18,6 +18,7 @@ import gr.uoa.di.rdf.geordfbench.runtime.reportsource.IReportSource;
 import gr.uoa.di.rdf.geordfbench.runtime.reportsource.util.ReportSourceUtil;
 import gr.uoa.di.rdf.geordfbench.runtime.reportspecs.IReportSpec;
 import gr.uoa.di.rdf.geordfbench.runtime.sut.ISUT;
+import gr.uoa.di.rdf.geordfbench.runtime.sys.interfaces.IGeographicaSystem;
 import gr.uoa.di.rdf.geordfbench.runtime.workloadspecs.IGeospatialWorkLoadSpec;
 import gr.uoa.di.rdf.geordfbench.runtime.workloadspecs.util.WorkLoadSpecUtil;
 
@@ -27,7 +28,7 @@ public abstract class RunSUTExperimentWorkload {
 
     protected Options options = new Options();
     protected CommandLine cmd = null;
-    protected ISUT sut = null;
+    protected ISUT<? extends IGeographicaSystem> sut = null;
     protected IHost host;
     protected IReportSpec rptSpec;
     protected IReportSource rptSrcSpec;
