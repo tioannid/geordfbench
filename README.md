@@ -21,14 +21,15 @@ Their status can be followed up in a [GitHub Project](https://github.com/users/t
 
 GeoRDFBench's runtime was created to support:
 - `RDF store integration`: fast integration of new or updated RDF stores by 
-incorporating the common logic of working with RDF repositories through anyone 
-of the common RDF Java Frameworks: OpenRDF Sesame, Eclipse RDF4J, Apache Jena.
-- `Benchmark specification Ser/Der`: easy construction of GeoSPARQL/SPARQL
-benchmark specifications and even easier serialization/deserialization of these
-JSON specification files, increasing the reusability of these specifications 
-and equally important improving the repeatability of experiments and confidence
-on experiment results.
+<ins>incorporating the common logic of working with RDF repositories through any 
+of the well-known RDF Java Frameworks</ins>: **OpenRDF Sesame**, **Eclipse RDF4J**, 
+**Apache Jena**.
+- `Benchmark specification Ser/Der`: easy construction of **GeoSPARQL/SPARQL
+benchmark specifications** and even easier **serialization/deserialization of 
+these JSON** specification files, increasing the **reusability of these 
+specifications** and equally important improving the **repeatability of 
+experiments** and **confidence on experiment results**.
 
-Current limitations include the non automatic serialization/deserialization of 
-the benchmark environment (host, os, RDF store components) and the lack of support
-for distributed RDF stores.
+Current limitations include the *non automatic serialization/deserialization of 
+the benchmark environment (host, os, RDF store components) specifications* and 
+the *lack of support for distributed RDF stores*.
