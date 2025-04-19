@@ -15,7 +15,7 @@ SYNTAX: $SCRIPT_NAME <repoDir> <repoId> <rmRepo> <repoIndexes> <RDFFileType> <RD
 \t<RptDaemonIP>\t:\treport daemon IP,
 \t<RptDaemonPort>\t:\treport daemon port"
 
-MAP_CONTEXTS_FILE="${GeographicaScriptsDir}/map_to_contexts.txt"
+MAP_CONTEXTS_FILE="${GeoRDFBenchScriptsDir}/map_to_contexts.txt"
 
 # STEP 0: Find the directory where the script is located in
 BASE="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"

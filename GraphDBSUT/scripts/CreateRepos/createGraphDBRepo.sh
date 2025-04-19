@@ -21,7 +21,7 @@ SYNTAX: $SCRIPT_NAME RepoConfig RDFDir RDFFormat GraphDBBaseDir EnableGeoSPARQLP
 # 4) A "maps_to_contexts.txt" file exists in ntripleDir if context/graph IRIs need to be specified in TRIG files
 # 5) The repoConf file has the appropriate repository name!
 
-MAP_CONTEXTS_FILE="${GeographicaScriptsDir}/map_to_contexts.txt"
+MAP_CONTEXTS_FILE="${GeoRDFBenchScriptsDir}/map_to_contexts.txt"
 
 # STEP 0: Find the directory where the script is located in
 BASE="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"

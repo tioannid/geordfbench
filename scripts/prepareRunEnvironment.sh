@@ -45,7 +45,8 @@ $SYNTAX3
 \t<shortdesc>\t:\tExperiment short description"
 
 # STEP 0: Find the directory where the script is located in, Geographica/scripts
-export GeographicaScriptsDir="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+export GeoRDFBenchScriptsDir="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+export GeoRDFBenchJSONLibDir=`readlink -f "${GeoRDFBenchScriptsDir}/../json_defs"`
 
 # STEP 1: Validate the script's syntax
 #      1.1: check number of arguments
@@ -137,7 +138,7 @@ fi
 export StardogSpatialPrecision=11 #  value lower than the default (11) can improve the performance of spatial queries at the cost of accuracy
 
 # Virtuoso dependent, environment variables
-export VirtuosoTemplateConfigurationFile="${GeographicaScriptsDir}/../VirtuosoSUT/scripts/CreateRepos/virtuoso_geographica.ini"
+export VirtuosoTemplateConfigurationFile="${GeoRDFBenchScriptsDir}/../VirtuosoSUT/scripts/CreateRepos/virtuoso_geographica.ini"
 export NumberOfBuffers=2000 # default value
 export MaxDirtyBuffers=1200 # default value
 
@@ -181,7 +182,7 @@ if [ "$Environment" == "VM" ]; then
     export CompletionReportDaemonPort="3333"
     export JVM_Xmx="-Xmx8g"
     # GraphDBSUT only
-    export GraphDBBaseDir="${EnvironmentBaseDir}/graphdb-free-${verGRAPHDB}"
+    export GraphDBBaseDir="${EnvironmentBaseDir}/graphdb-${verGRAPHDB}"
     # RDF4JSUT only
     export RDF4JRepoBaseDir="${EnvironmentBaseDir}/RDF4J_${verRDF4J}_${RDF4JLuceneReposPrefix}Repos/server"
     # StrabonSUT only
@@ -207,7 +208,7 @@ elif [ "$Environment" == "PAVILIONDV7" ]; then
     export CompletionReportDaemonPort="3333"
     export JVM_Xmx="-Xmx8g"
     # GraphDBSUT only
-    export GraphDBBaseDir="${EnvironmentBaseDir}/graphdb-free-${verGRAPHDB}"
+    export GraphDBBaseDir="${EnvironmentBaseDir}/graphdb-${verGRAPHDB}"
     # RDF4JSUT only
     export RDF4JRepoBaseDir="${EnvironmentBaseDir}/RDF4J_${verRDF4J}_${RDF4JLuceneReposPrefix}Repos/server"
     # StrabonSUT only
@@ -233,7 +234,7 @@ elif [ "$Environment" == "PYRAVLOS6" ]; then
     export CompletionReportDaemonPort="3333"
     export JVM_Xmx="-Xmx64g"
     # GraphDBSUT only
-    export GraphDBBaseDir="${EnvironmentBaseDir}/graphdb-free-${verGRAPHDB}"
+    export GraphDBBaseDir="${EnvironmentBaseDir}/graphdb-${verGRAPHDB}"
     # RDF4JSUT only
     export RDF4JRepoBaseDir="${EnvironmentBaseDir}/RDF4J_${verRDF4J}_${RDF4JLuceneReposPrefix}Repos/server"
     # StrabonSUT only
@@ -259,7 +260,7 @@ elif [ "$Environment" == "TELEIOS3" ]; then
     export CompletionReportDaemonPort="3333"
     export JVM_Xmx="-Xmx24g"
     # GraphDBSUT only
-    export GraphDBBaseDir="${EnvironmentBaseDir}/graphdb-free-${verGRAPHDB}"
+    export GraphDBBaseDir="${EnvironmentBaseDir}/graphdb-${verGRAPHDB}"
     # RDF4JSUT only
     export RDF4JRepoBaseDir="${EnvironmentBaseDir}/RDF4J_${verRDF4J}_${RDF4JLuceneReposPrefix}Repos/server"
     # StrabonSUT only
@@ -285,7 +286,7 @@ elif [ "$Environment" == "NUC8I7BEH" ]; then
     export CompletionReportDaemonPort="3333"
     export JVM_Xmx="-Xmx24g"
     # GraphDBSUT only
-    export GraphDBBaseDir="${EnvironmentBaseDir}/graphdb-free-${verGRAPHDB}"
+    export GraphDBBaseDir="${EnvironmentBaseDir}/graphdb-${verGRAPHDB}"
     # RDF4JSUT only
     export RDF4JRepoBaseDir="${EnvironmentBaseDir}/RDF4J_${verRDF4J}_${RDF4JLuceneReposPrefix}Repos/server"
     # StrabonSUT only
