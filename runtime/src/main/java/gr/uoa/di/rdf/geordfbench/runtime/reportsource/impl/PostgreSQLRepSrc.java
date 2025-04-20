@@ -3,6 +3,7 @@ package gr.uoa.di.rdf.geordfbench.runtime.reportsource.impl;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.apache.log4j.Logger;
 import java.sql.*;
+import java.util.logging.Level;
 
 /**
  * A base abstract class for all non-embedded JDBC report sources implementing
@@ -321,6 +322,7 @@ public class PostgreSQLRepSrc extends JDBCRepSrc {
         Connection tmpConn = null;
         try {
             // connect to <postgres> database using hostname
+            Class.forName("org.postgresql.Driver");
             tmpConn = DriverManager.getConnection(getJdbcURL_NoDatabase());
         } catch (SQLException ex) {
             if ("08001".equalsIgnoreCase(ex.getSQLState())) {
@@ -334,6 +336,8 @@ public class PostgreSQLRepSrc extends JDBCRepSrc {
             } else {
                 logger.error(ex.getMessage());
             }
+        } catch (ClassNotFoundException ex) {
+            logger.error(ex.getMessage());
         }
         try {
             // check if <geordfbench> database already exists

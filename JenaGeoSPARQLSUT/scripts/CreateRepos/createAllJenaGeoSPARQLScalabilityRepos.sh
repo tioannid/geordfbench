@@ -60,16 +60,32 @@ for level in "${levels[@]}"; do
     fi
     # load all N-Triple file
     # using tdb2_tdbloader which is appropriate for loading into new TDB2 databases
-	# - first increase the vm.max_map_count value
-	#   as described in https://jena.apache.org/documentation/tdb2/tdb2_cmds.html
-	cur_vm_max_map_count=`sudo sysctl -a 2>&1 | grep vm.max_map_count | cut -d "=" -f2 | xargs`
-	sudo sysctl -w vm.max_map_count=262144
-	# - then bulk load and ...
+    # - first increase the vm.max_map_count value
+    #   as described in https://jena.apache.org/documentation/tdb2/tdb2_cmds.html
+    # - In case we are inside a docker container do not use 'sudo'
+    if [ -f /.dockerenv ]; then
+        # sysctl: setting key "vm.max_map_count", ignoring: Read-only file system
+        ## cur_vm_max_map_count=`sysctl -a 2>&1 | grep vm.max_map_count | cut -d "=" -f2 | xargs`
+        ## sysctl -w vm.max_map_count=262144
+        echo "Running in a docker container. File system is read-only. Cannot set sysctl key \"vm.max_map_count\""
+    else
+        cur_vm_max_map_count=`sudo sysctl -a 2>&1 | grep vm.max_map_count | cut -d "=" -f2 | xargs`
+        sudo sysctl -w vm.max_map_count=262144
+    fi
+    
+    # - then bulk load and ...
     for file in `ls -1 ${ScalabilityRDFBaseDir}/${level}/*.nt`; do
         ${JenaBaseDir}/bin/tdb2.tdbloader --loc ${RepoDir} ${file}
     done
-	# - then restore the old value
-	sudo sysctl -w vm.max_map_count=$cur_vm_max_map_count
+    # - then restore the old value
+    # - In case we are inside a docker container do not use 'sudo'
+    if [ -f /.dockerenv ]; then
+        # sysctl: setting key "vm.max_map_count", ignoring: Read-only file system
+        ## sysctl -w vm.max_map_count=$cur_vm_max_map_count
+        echo "Running in a docker container. File system is read-only. Cannot restore sysctl key \"vm.max_map_count\""
+    else
+        sudo sysctl -w vm.max_map_count=$cur_vm_max_map_count
+    fi    
 	
     # print repository size in MB
     echo -e "JenaGeoSPARQL TDB2 repository \"${RepoDir}\" has size: `du -hs -BM ${RepoDir} | cut -d 'M' -f 1`MB"

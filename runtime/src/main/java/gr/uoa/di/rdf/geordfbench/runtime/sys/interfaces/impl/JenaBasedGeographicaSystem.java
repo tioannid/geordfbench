@@ -6,7 +6,7 @@ import org.apache.log4j.Logger;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.ReadWrite;
-import org.apache.jena.tdb.TDBFactory;
+import org.apache.jena.tdb2.TDB2Factory;
 
 /**
  * A Jena base extention of the {@link AbstractGeographicaSystem<C>} abstract
@@ -147,7 +147,7 @@ public class JenaBasedGeographicaSystem extends AbstractGeographicaSystem<Model>
     public void init() throws Exception {
         // Make a TDB-backed dataset
         String directory = baseDir + "/" + repositoryId;
-        repository = TDBFactory.createDataset(directory);
+        repository = TDB2Factory.connectDataset(directory);
         repository.begin(ReadWrite.READ);
         // Get model inside the transaction
         connection = repository.getDefaultModel();
@@ -167,6 +167,5 @@ public class JenaBasedGeographicaSystem extends AbstractGeographicaSystem<Model>
     public Dataset getRepository() {
         return repository;
     }
-    
-    
+
 }
