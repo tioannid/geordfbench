@@ -58,7 +58,8 @@ if [ -z ${GraphDBBaseDir+x} ]; then
 fi
 
 # define the JVM options/parameters
-JAVA_OPTS="${1} -Dlog4j.configuration=file:${LOG4J_CONFIGURATION} -Dgraphdb.extra.plugins=${GraphDBBaseDir}/lib/plugins"
+#JAVA_OPTS="${1} -Dlog4j.configuration=file:${LOG4J_CONFIGURATION} -Dgraphdb.extra.plugins=${GraphDBBaseDir}/lib/plugins"
+JAVA_OPTS="${1} -Dlog4j.configuration=file:${LOG4J_CONFIGURATION} -Dgraphdb.dist=${GraphDBBaseDir}"
 #echo "JAVA_OPTS = $JAVA_OPTS"
 
 # remove the 1st argument so that only the MAIN_CLASS_ARGS remain

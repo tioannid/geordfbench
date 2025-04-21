@@ -44,6 +44,19 @@
                     <groupId>org.eclipse.rdf4j</groupId>
                     <artifactId>rdf4j-sail-solr</artifactId>
                 </exclusion>
+                <!-- exclude logback dependencies -->
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-classic</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>log4j-over-slf4j</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
