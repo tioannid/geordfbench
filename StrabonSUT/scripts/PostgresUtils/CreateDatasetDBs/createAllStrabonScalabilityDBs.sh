@@ -34,7 +34,7 @@ for level in "${levels[@]}"; do
         sudo -u postgres `which psql` -c 'VACUUM ANALYZE;' ${DatabaseName}
         # load all N-Triple file
         for file in `ls -1 ${DatasetBaseDir}/Scalability/${level}/*.nt`; do
-            java ${JVM_Xmx} -cp $CLASS_PATH eu.earthobservatory.runtime.postgis.StoreOp localhost 5432 ${DatabaseName} postgres postgres ${file}
+            time java ${JVM_Xmx} -cp $CLASS_PATH eu.earthobservatory.runtime.postgis.StoreOp localhost 5432 ${DatabaseName} postgres postgres ${file}
         done
 
         echo "Querying database \"${DatabaseName}\" to verify the number of entries..."

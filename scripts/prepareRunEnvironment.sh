@@ -114,7 +114,7 @@ export ExperimentShortDesc="${ActiveSUT}_${ShortDesc}"
 
 #       1.3: set the versions of the SUTs
 export verRDF4J="4.3.15"
-export verGRAPHDB="10.8.1"
+export verGRAPHDB="10.8.4" # could not find the 10.8.5 distributable, moved to 11.0 directly
 export verSTARDOG="8.2.2"
 export verVIRTUOSO="7.2.14"
 export verJENA="4.10.0"
