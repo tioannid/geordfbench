@@ -4,6 +4,7 @@
   "ipAddr" : "10.0.2.15",
   "ram" : 11,
   "os" : {
+    "classname" : "gr.uoa.di.rdf.geordfbench.runtime.os.impl.UbuntuBionicOS",
     "name" : "Ubuntu-bionic",
     "shell_cmd" : "/bin/sh",
     "sync_cmd" : "sync",

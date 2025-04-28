@@ -48,8 +48,8 @@
         <!--  Virtuoso -->
         <dependency>
             <groupId>com.openlinksw</groupId>
-            <artifactId>virt_rdf4j_v4_0</artifactId>
-            <version>1.17</version>
+            <artifactId>virt_rdf4j_v3_7</artifactId>
+            <version>1.16</version>
         </dependency>
         <dependency>
             <groupId>com.openlinksw</groupId>
