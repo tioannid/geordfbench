@@ -122,12 +122,50 @@ export verSTRABON="3.3.3-SNAPSHOT"
 
 #       1.4: set other SUT dependent variables
 #           GraphDB dependent, environment independent
-export EnableGeoSPARQLPlugin=false
-export IndexingAlgorithm=quad   # default: quad
-export IndexingPrecision=11     # default: 11, quad (1-50), geohash(1-24)
-
+if [ -z ${EnableGeoSPARQLPlugin+x} ]; then
+	export EnableGeoSPARQLPlugin=false
+	export IndexingAlgorithm=quad   # default: quad
+	export IndexingPrecision=11     # default: 11, quad (1-50), geohash(1-24)
+fi
+if [ "${EnableGeoSPARQLPlugin}" = "true" ]; then
+	echo "EnableGeoSPARQLPlugin was explicitly set to true"
+	if [ -z ${IndexingAlgorithm+x} ]; then  # IndexingAlgorithm not provided
+		export IndexingAlgorithm=quad   	# default: quad
+		export IndexingPrecision=11     	# default: 11, quad (1-50), geohash(1-24)
+	else					# IndexingAlgorithm provided
+		# check if IndexingAlgorithm is valid
+		echo "IndexingAlgorithm was explicitly set to ${IndexingAlgorithm}"
+		ValidIndexingAlgorithm=$( [[ "$IndexingAlgorithm" == "quad" || "$IndexingAlgorithm" == "geohash" ]]; echo $? )
+		if ! [ "$ValidIndexingAlgorithm" -eq 0 ]; then	# IndexingAlgorithm is invalid
+				echo -e "IndexingAlgorithm = ${IndexingAlgorithm} is not in valid range [quad, geohash]"
+    				return 1
+		fi
+		# check if IndexingPrecision is in range
+		if [ -z ${IndexingPrecision+x} ]; then # IndexingPrecision not provided
+			export IndexingPrecision=11    		# default: 11, quad (1-50), geohash(1-24)
+		else				       # IndexingPrecision provided
+			echo "IndexingPrecision was explicitly set to ${IndexingPrecision}"
+			if [ "$IndexingAlgorithm" = quad ]; then 
+				IndexPrecisionRange="[1..50]"
+				if [ "$IndexingPrecision" -lt 1 ] || [ "$IndexingPrecision" -gt 50 ]; then
+					echo -e "IndexPrecision = ${IndexingPrecision} is not in valid range ${IndexPrecisionRange}"
+    					return 1
+				fi 
+			elif [ "$IndexingAlgorithm" = geohash ]; then
+				IndexPrecisionRange="[1..24]"
+				if [ "$IndexingPrecision" -lt 1 ] || [ "$IndexingPrecision" -gt 24 ]; then
+					echo -e "IndexPrecision = ${IndexingPrecision} is not in valid range ${IndexPrecisionRange}"
+    					return 1
+				fi 
+			fi
+		fi
+	fi	
+fi
+	
 #           RDF4J dependent, environment independent
-export EnableLuceneSail=false
+if [ -z ${EnableLuceneSail+x} ]; then
+	export EnableLuceneSail=false
+fi
 if [ "${EnableLuceneSail}" = "true" ]; then
     export RDF4JLuceneReposPrefix="Lucene"
 else

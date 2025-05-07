@@ -13,7 +13,6 @@ import gr.uoa.di.rdf.geordfbench.runtime.reportspecs.IReportSpec;
 import gr.uoa.di.rdf.geordfbench.runtime.resultscollector.impl.QueryEvaluationFlag;
 import gr.uoa.di.rdf.geordfbench.runtime.resultscollector.impl.QueryRepResults.QueryRepResult;
 import gr.uoa.di.rdf.geordfbench.runtime.resultscollector.impl.ResultException;
-import static gr.uoa.di.rdf.geordfbench.runtime.sys.executor.RDF4JbasedExecutor.logger;
 import gr.uoa.di.rdf.geordfbench.runtime.sys.interfaces.impl.SesamePostGISBasedGeographicaSystem;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.MalformedQueryException;

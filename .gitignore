@@ -12,3 +12,4 @@ scripts/h2embeddedreportsource/geordfbench.mv.db
 scripts/h2embeddedreportsource/geordfbench.trace.db
 */scripts/*/*.log
 .idea/
+*/nb-configuration.xml
