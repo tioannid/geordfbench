@@ -13,6 +13,11 @@ import gr.uoa.di.rdf.geordfbench.runtime.hosts.IHost;
 import gr.uoa.di.rdf.geordfbench.runtime.os.impl.UbuntuJammyOS;
 import gr.uoa.di.rdf.geordfbench.runtime.os.impl.Windows10OS;
 import static gr.uoa.di.rdf.geordfbench.runtime.hosts.IHost.*;
+import java.lang.management.ManagementFactory;
+import com.sun.management.OperatingSystemMXBean;
+import gr.uoa.di.rdf.geordfbench.runtime.os.IOS;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  *
@@ -142,6 +147,54 @@ public class HostUtil {
                         "F:\\VM_Shared\\PHD\\Results_Store\\VM_Results");
         try {
             win10_work.serializeToJSON(new File(WIN10_WORKJSONDEF_FILE));
+        } catch (JsonMappingException ex) {
+            logger.error(ex.getMessage());
+        } catch (IOException ex) {
+            logger.error(ex.getMessage());
+        }
+    }
+
+    /**
+     * Creates a transient JSON definition file for the current host in
+     * current_host.json
+     *
+     * @param testHostFile
+     */
+    public static void createCurrent_TestHost_JSONDefFile(File testHostFile) {
+        String hostName = "";
+        String IP = "";
+        int RAM;
+        IOS os;
+
+        try {
+            hostName = InetAddress.getLocalHost().getHostName();
+            IP = InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException ex) {
+            logger.error(ex.getMessage());
+        }
+        long osrambytes = ((OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean())
+                .getTotalPhysicalMemorySize();
+        RAM = (int) (osrambytes / (1024 * 1024 * 1024));
+        if (isLinux()) {
+            os = new UbuntuJammyOS();
+        } else if (isWindows()) {
+            os = new Windows10OS();
+        } else {
+            throw new RuntimeException("Could not identify host's operating system!");
+        }
+        // find the absolute path of the test resources folder
+        File p = new File("src/test/resources".replace("/", SEP));
+        String TEST_RESOURCES_DIR = p.getAbsolutePath();
+        SimpleHost currentHost
+                = new SimpleHost(hostName,
+                        IP,
+                        RAM, // GB
+                        os,
+                        TEST_RESOURCES_DIR + SEP + "RDFDataFiles",
+                        TEST_RESOURCES_DIR,
+                        TEST_RESOURCES_DIR + SEP + "Results_Store");
+        try {
+            currentHost.serializeToJSON(testHostFile);
         } catch (JsonMappingException ex) {
             logger.error(ex.getMessage());
         } catch (IOException ex) {

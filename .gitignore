@@ -1,6 +1,7 @@
 /target/
 **/test/resources/LuceneRepos/
 **/test/resources/NativeRepos/
+**/test/resources/Results_Store/
 */target/
 */nbactions.xml
 */nbproject/

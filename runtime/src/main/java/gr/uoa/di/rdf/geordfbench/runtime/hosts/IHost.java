@@ -17,7 +17,7 @@ import java.io.IOException;
 public interface IHost {
 
     public static String SEP = File.separator; // OS dependent separator for paths
-    
+
     /**
      * Gets the host’s name.
      *
@@ -63,13 +63,13 @@ public interface IHost {
     /**
      * Gets the host’s IOS (operating system).
      *
-     * @return The host's {@link IOS} (operating system) 
+     * @return The host's {@link IOS} (operating system)
      */
     IOS getOs();
 
     /**
      * Sets the host’s IOS (operating system).
-     * 
+     *
      * @param os An {@link IOS} object representing the host's operating system
      */
     void setOs(IOS os);
@@ -78,44 +78,44 @@ public interface IHost {
      * Gets the source files directory on the host.
      *
      * @return A String with the host's directory o fthe source files
-     */    
+     */
     String getSourceFileDir();
 
     /**
      * Sets the source files directory on the host.
      *
      * @param sourceFileDir A String with the source files directory on the host
-     */    
+     */
     void setSourceFileDir(String sourceFileDir);
 
     /**
      * Gets the repos base directory on the host.
      *
      * @return A String with the host's repo base directory
-     */    
+     */
     String getReposBaseDir();
 
     /**
      * Sets the repos base directory on the host.
      *
      * @param reposBaseDir A String with the repos base directory on the host
-     */    
+     */
     void setReposBaseDir(String reposBaseDir);
 
     /**
      * Gets the reports base directory on the host.
      *
      * @return A String with the host's reports base directory
-     */    
+     */
     String getReportsBaseDir();
 
     /**
      * Sets the reports base directory on the host.
      *
-     * @param reportsBaseDir the host's reports base directory 
-     */    
+     * @param reportsBaseDir the host's reports base directory
+     */
     void setReportsBaseDir(String reportsBaseDir);
-    
+
     /**
      * Serialize the geographica host to a JSON string
      *
@@ -142,5 +142,14 @@ public interface IHost {
         String os = System.getProperty("os.name");
         return os.startsWith("Windows");
     }
-    
+
+    public static boolean isMac() {
+        String os = System.getProperty("os.name");
+        return (os.contains("Mac"));
+    }
+
+    public static boolean isLinux() {
+        String os = System.getProperty("os.name");
+        return (os.contains("Linux"));
+    }
 }

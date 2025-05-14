@@ -1,6 +1,7 @@
 package gr.uoa.di.rdf.geordfbench.rdf4jsut;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
+import gr.uoa.di.rdf.geordfbench.runtime.hosts.IHost;
 import static gr.uoa.di.rdf.geordfbench.runtime.hosts.IHost.SEP;
 import gr.uoa.di.rdf.geordfbench.runtime.reportsource.IReportSource;
 import gr.uoa.di.rdf.geordfbench.runtime.reportsource.impl.PostgreSQLRepSrc;
@@ -24,7 +25,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import static gr.uoa.di.rdf.geordfbench.runtime.hosts.IHost.*;
+import gr.uoa.di.rdf.geordfbench.runtime.hosts.util.HostUtil;
+import org.apache.commons.io.file.PathUtils;
 
 /**
  * A class that checks whether PostgreSQL report source work properly in several
@@ -46,7 +48,12 @@ public class RunPostgreSQLReportSourceTest {
     String TEST_RESOURCES_DIR,
             JSON_DEFS_DIR,
             NEW_POSTGRESQL_SPEC_FILE,
-            POSTGRESQL_SPEC_FILE;
+            POSTGRESQL_SPEC_FILE,
+            HOST_SPEC_FILE,
+            RDF4J_REPOS_DIR,
+            CREATEMAN_ARGS_LIST,
+            DIRLOADMAN_ARGS_LIST;
+    IHost currentTestHost;
 
     // Static Methods
     public static long filesCompareByLine(Path path1, Path path2) throws IOException {
@@ -75,6 +82,8 @@ public class RunPostgreSQLReportSourceTest {
         // find the absolute path of the test resources folder
         File p = new File("src/test/resources".replace("/", SEP));
         TEST_RESOURCES_DIR = p.getAbsolutePath();
+        String RDF4J_Repos_server = "RDF4J_Repos/server".replace("/", SEP);
+        RDF4J_REPOS_DIR = TEST_RESOURCES_DIR + SEP + RDF4J_Repos_server;
         NEW_POSTGRESQL_SPEC_FILE = TEST_RESOURCES_DIR + SEP
                 + "ubuntu_vma_tioaRepSrcoriginal.json";
         // find the absolute path of the JSON Library in the test resources folder
@@ -86,16 +95,17 @@ public class RunPostgreSQLReportSourceTest {
         // the detailed benchmark specifications
         argLineBase
                 = // Report Source: PostgreSQL in ubuntu-vma-tioa
-                "-rbd " + "RDF4J_4.3.15_Repos/server".replace("/", SEP) + " "
+                "-rbd " + RDF4J_Repos_server + " "
                 + "-expdesc RDF4JSUT_RunPostgreSQLReportSourceTest "
                 + "-ds " + JSON_DEFS_DIR + "/datasets/scalability_10Koriginal.json".replace("/", SEP) + " "
                 + "-qs " + JSON_DEFS_DIR + "/querysets/scalabilityFuncQSoriginal.json".replace("/", SEP) + " "
                 + "-rs " + JSON_DEFS_DIR + "/reportspecs/simplereportspec_original.json".replace("/", SEP) + " ";
-        // based on OS choose an appropriate host spec
-        argLineBase += "-h " + JSON_DEFS_DIR
-                + ((isWindows())
-                        ? "/hosts/win10_workHOSToriginal.json".replace("/", SEP)
-                        : "/hosts/ubuntu_vma_tioaHOSToriginal.json".replace("/", SEP)) + " ";
+        // create a current test HOST
+        HOST_SPEC_FILE = JSON_DEFS_DIR + "/hosts/current_testHOST.json".replace("/", SEP);
+        HostUtil.createCurrent_TestHost_JSONDefFile(new File(HOST_SPEC_FILE));
+        currentTestHost = HostUtil.deserializeFromJSON(HOST_SPEC_FILE);
+
+        argLineBase += "-h " + HOST_SPEC_FILE + " ";
 
         // create the base argument list which use the local PostgreSQL DBMS
         argLinePostgres = argLineBase
@@ -106,6 +116,11 @@ public class RunPostgreSQLReportSourceTest {
                 + "-es " + JSON_DEFS_DIR + "/executionspecs/scalabilityESoriginal.json".replace("/", SEP) + " ";
         argLinePostgresPrint = argLinePostgres
                 + "-es " + JSON_DEFS_DIR + "/executionspecs/scalabilityESoriginal_PRINT.json".replace("/", SEP) + " ";
+
+        CREATEMAN_ARGS_LIST = "createman " + RDF4J_REPOS_DIR + " scalability_10K"
+                + " false false spoc,posc \"http://www.opengis.net/ont/geosparql#asWKT\"";
+        DIRLOADMAN_ARGS_LIST = "dirloadman " + RDF4J_REPOS_DIR + " scalability_10K"
+                + " N-TRIPLES " + currentTestHost.getSourceFileDir() + " true";
     }
 
     @BeforeEach
@@ -215,6 +230,18 @@ public class RunPostgreSQLReportSourceTest {
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
+        // check if RDF4J_REPOS_DIR exists and if not create it
+        File reposBaseDir = new File(RDF4J_REPOS_DIR);
+        if (!reposBaseDir.exists()) {
+            reposBaseDir.mkdirs();
+        }
+        RepoUtil.main(CREATEMAN_ARGS_LIST.split(" "));
+        RepoUtil.main(DIRLOADMAN_ARGS_LIST.split(" "));
+
+        File resultsDir = new File(currentTestHost.getReportsBaseDir());
+        if (resultsDir.exists()) {
+            PathUtils.deleteDirectory(resultsDir.toPath());
+        }
         // Run the Scalability experiment which should create 1 record in EXPERIMENT table
         // and 18 records in QUERYEXECUTION
         RunRDF4JExperiment.main(argLinePostgresRun.split(" "));
@@ -241,6 +268,14 @@ public class RunPostgreSQLReportSourceTest {
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
+        // delete the RDF4J_REPOS_DIR if it exists
+        if (reposBaseDir.exists()) {
+            try {
+                PathUtils.deleteDirectory(new File(reposBaseDir.getParent()).toPath());
+            } catch (IOException ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
         // Assert that:
         //  a) rowsExperimentAfter = rowsExperimentBefore + 1
         //  b) rowsQueryExecutionAfter = rowsQueryExecutionBefore + 18 (3*[3+3])
@@ -259,5 +294,10 @@ public class RunPostgreSQLReportSourceTest {
     @AfterAll
     public void tearDownAll() {
         System.out.println("Should print after all tests");
+        // delete the current test HOST if it exists
+        File currentTestHOSTFile = new File(HOST_SPEC_FILE);
+        if (currentTestHOSTFile.exists()) {
+            currentTestHOSTFile.delete();
+        }
     }
 }
