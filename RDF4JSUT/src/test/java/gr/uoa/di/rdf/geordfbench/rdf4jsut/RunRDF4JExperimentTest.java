@@ -1,5 +1,6 @@
 package gr.uoa.di.rdf.geordfbench.rdf4jsut;
 
+import gr.uoa.di.rdf.geordfbench.runtime.hosts.IHost;
 import java.io.File;
 import java.io.PrintStream;
 import org.junit.jupiter.api.AfterAll;
@@ -12,11 +13,13 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import static gr.uoa.di.rdf.geordfbench.runtime.hosts.IHost.*;
+import gr.uoa.di.rdf.geordfbench.runtime.hosts.util.HostUtil;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import org.apache.commons.io.file.PathUtils;
 
 /**
  * A class that checks various Query Filtering options during experiment
@@ -34,7 +37,13 @@ public class RunRDF4JExperimentTest {
     String[] argsNoQueryFilter,
             argsWithQueryInclusionFilter,
             argsWithQueryExclusionFilter;
-    String JSON_DEFS_DIR;
+    String TEST_RESOURCES_DIR,
+            JSON_DEFS_DIR,
+            HOST_SPEC_FILE,
+            RDF4J_REPOS_DIR,
+            CREATEMAN_ARGS_LIST,
+            DIRLOADMAN_ARGS_LIST;
+    IHost currentTestHost;
 
     private final PrintStream standardOut = System.out;
     // Creates a FileOutputStream
@@ -47,22 +56,29 @@ public class RunRDF4JExperimentTest {
     public void setupAll() {
         System.out.println("=> BEFORE ALL TESTS - EXPERIMENT: " + RunRDF4JExperimentTest.class.getSimpleName());
         // find the absolute path of the JSON Library in the test resources folder
-        File p = new File("src/test/resources/json_defs".replace("/", SEP));
+        File p = new File("src/test/resources".replace("/", SEP));
+        TEST_RESOURCES_DIR = p.getAbsolutePath();
+        String RDF4J_Repos_server = "RDF4J_Repos/server".replace("/", SEP);
+        RDF4J_REPOS_DIR = TEST_RESOURCES_DIR + SEP + RDF4J_Repos_server;
+        p = new File("src/test/resources/json_defs".replace("/", SEP));
         JSON_DEFS_DIR = p.getAbsolutePath();
+
         String argLineNoQueryFilter
                 = // No Query Filter is specified - 3 queries (0,1,2) expected in output
-                "-rbd RDF4J_4.3.15_Repos/server "
+                "-rbd " + RDF4J_Repos_server + " "
                 + "-expdesc RDF4JSUT_RunRDF4JExperimentTest "
                 + "-ds " + JSON_DEFS_DIR + "/datasets/scalability_10Koriginal.json".replace("/", SEP) + " "
                 + "-qs " + JSON_DEFS_DIR + "/querysets/scalabilityFuncQSoriginal.json".replace("/", SEP) + " "
                 + "-es " + JSON_DEFS_DIR + "/executionspecs/scalabilityESoriginal_PRINT.json".replace("/", SEP) + " "
                 + "-rs " + JSON_DEFS_DIR + "/reportspecs/simplereportspec_original.json".replace("/", SEP) + " "
                 + "-rpsr " + JSON_DEFS_DIR + "/reportsources/ubuntu_vma_tioaRepSrcoriginal.json".replace("/", SEP) + " ";
-        // based on OS choose an appropriate host spec
-        argLineNoQueryFilter += "-h " + JSON_DEFS_DIR
-                + ((isWindows())
-                        ? "/hosts/win10_workHOSToriginal.json".replace("/", SEP)
-                        : "/hosts/ubuntu_vma_tioaHOSToriginal.json".replace("/", SEP));
+        // create a current test HOST
+        HOST_SPEC_FILE = JSON_DEFS_DIR + "/hosts/current_testHOST.json".replace("/", SEP);
+        HostUtil.createCurrent_TestHost_JSONDefFile(new File(HOST_SPEC_FILE));
+        currentTestHost = HostUtil.deserializeFromJSON(HOST_SPEC_FILE);
+
+        argLineNoQueryFilter += "-h " + HOST_SPEC_FILE;
+
         argsNoQueryFilter = argLineNoQueryFilter.split(" ");
         String argLineWithQueryInclusionFilter = argLineNoQueryFilter // Query InclusionFilter specified - 2 queries (0,_,2) expected in output
                 + " -qif \"0,2\"";
@@ -70,6 +86,11 @@ public class RunRDF4JExperimentTest {
         String argLineWithQueryExclusionFilter = argLineNoQueryFilter // Query ExclusionFilter specified - 1 query (_,1,_) expected in output
                 + " -qef \"0,2\"";
         argsWithQueryExclusionFilter = argLineWithQueryExclusionFilter.split(" ");
+
+        CREATEMAN_ARGS_LIST = "createman " + RDF4J_REPOS_DIR + " scalability_10K"
+                + " false false spoc,posc \"http://www.opengis.net/ont/geosparql#asWKT\"";
+        DIRLOADMAN_ARGS_LIST = "dirloadman " + RDF4J_REPOS_DIR + " scalability_10K"
+                + " N-TRIPLES " + currentTestHost.getSourceFileDir() + " true";
     }
 
     @BeforeEach
@@ -92,6 +113,19 @@ public class RunRDF4JExperimentTest {
     public void shouldDisplay3ScalabilityGroundQueries() throws Exception {
         System.out.println("TEST: Should Display 3 Scalability Ground Queries 0, 1, 2");
         System.setOut(outPrintStream);
+        // check if RDF4J_REPOS_DIR exists and if not create it
+        File reposBaseDir = new File(RDF4J_REPOS_DIR);
+        if (!reposBaseDir.exists()) {
+            reposBaseDir.mkdirs();
+        }
+        RepoUtil.main(CREATEMAN_ARGS_LIST.split(" "));
+        RepoUtil.main(DIRLOADMAN_ARGS_LIST.split(" "));
+
+        File resultsDir = new File(currentTestHost.getReportsBaseDir());
+        if (resultsDir.exists()) {
+            PathUtils.deleteDirectory(resultsDir.toPath());
+        }
+        // Run the Scalability experiment        
         RunRDF4JExperiment.main(this.argsNoQueryFilter);
         fileOutStream.close();
         BufferedReader br = new BufferedReader(new FileReader(outputFile));
@@ -109,6 +143,14 @@ public class RunRDF4JExperimentTest {
             }
         }
         br.close();
+        // delete the RDF4J_REPOS_DIR if it exists
+        if (reposBaseDir.exists()) {
+            try {
+                PathUtils.deleteDirectory(new File(reposBaseDir.getParent()).toPath());
+            } catch (IOException ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
         Assertions.assertTrue(bl1);
         Assertions.assertTrue(bl2);
         Assertions.assertTrue(bl3);
@@ -120,6 +162,19 @@ public class RunRDF4JExperimentTest {
     public void shouldDisplayThe2IncludedScalabilityGroundQueries() throws Exception {
         System.out.println("TEST: Should Display The 2 Included Scalability Ground Queries 0, 2");
         System.setOut(outPrintStream);
+        // check if RDF4J_REPOS_DIR exists and if not create it
+        File reposBaseDir = new File(RDF4J_REPOS_DIR);
+        if (!reposBaseDir.exists()) {
+            reposBaseDir.mkdirs();
+        }
+        RepoUtil.main(CREATEMAN_ARGS_LIST.split(" "));
+        RepoUtil.main(DIRLOADMAN_ARGS_LIST.split(" "));
+
+        File resultsDir = new File(currentTestHost.getReportsBaseDir());
+        if (resultsDir.exists()) {
+            PathUtils.deleteDirectory(resultsDir.toPath());
+        }
+        // Run the Scalability experiment  
         RunRDF4JExperiment.main(this.argsWithQueryInclusionFilter);
         fileOutStream.close();
         BufferedReader br = new BufferedReader(new FileReader(outputFile));
@@ -137,6 +192,14 @@ public class RunRDF4JExperimentTest {
             }
         }
         br.close();
+        // delete the RDF4J_REPOS_DIR if it exists
+        if (reposBaseDir.exists()) {
+            try {
+                PathUtils.deleteDirectory(new File(reposBaseDir.getParent()).toPath());
+            } catch (IOException ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
         Assertions.assertTrue(bl1);
         Assertions.assertFalse(bl2);
         Assertions.assertTrue(bl3);
@@ -148,6 +211,19 @@ public class RunRDF4JExperimentTest {
     public void shouldNotDisplayThe2ExcludedScalabilityGroundQueries() throws Exception {
         System.out.println("TEST: Should Not Display The 2 Excluded Scalability Ground Queries 0, 2");
         System.setOut(outPrintStream);
+        // check if RDF4J_REPOS_DIR exists and if not create it
+        File reposBaseDir = new File(RDF4J_REPOS_DIR);
+        if (!reposBaseDir.exists()) {
+            reposBaseDir.mkdirs();
+        }
+        RepoUtil.main(CREATEMAN_ARGS_LIST.split(" "));
+        RepoUtil.main(DIRLOADMAN_ARGS_LIST.split(" "));
+
+        File resultsDir = new File(currentTestHost.getReportsBaseDir());
+        if (resultsDir.exists()) {
+            PathUtils.deleteDirectory(resultsDir.toPath());
+        }
+        // Run the Scalability experiment  
         RunRDF4JExperiment.main(this.argsWithQueryExclusionFilter);
         fileOutStream.close();
         BufferedReader br = new BufferedReader(new FileReader(outputFile));
@@ -165,6 +241,14 @@ public class RunRDF4JExperimentTest {
             }
         }
         br.close();
+        // delete the RDF4J_REPOS_DIR if it exists
+        if (reposBaseDir.exists()) {
+            try {
+                PathUtils.deleteDirectory(new File(reposBaseDir.getParent()).toPath());
+            } catch (IOException ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
         Assertions.assertFalse(bl1);
         Assertions.assertTrue(bl2);
         Assertions.assertFalse(bl3);
@@ -198,5 +282,10 @@ public class RunRDF4JExperimentTest {
     public void tearDownAll() {
         System.out.println("<= AFTER ALL EXPERIMENTS");
         outputFile.delete();
+        // delete the current test HOST if it exists
+        File currentTestHOSTFile = new File(HOST_SPEC_FILE);
+        if (currentTestHOSTFile.exists()) {
+            currentTestHOSTFile.delete();
+        }
     }
 }
