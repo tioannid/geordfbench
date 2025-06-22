@@ -18,12 +18,12 @@ $SYNTAX2
 # STEP 1: Validate the script's syntax
 #      1.1: check number of arguments
 
-# check if the Geographica/scripts/prepareRunEnvironment.sh has initialized 
+# check if the geordfbench/scripts/prepareRunEnvironment.sh has initialized 
 # the required variables for this script ...
 if [ -z ${DatasetBaseDir+x} ] || [ -z ${RDF4JRepoBaseDir+x} ] || [ -z ${JVM_Xmx+x} ] || [ -z ${EnableLuceneSail+x} ] || [ -z ${CompletionReportDaemonIP+x} ] || [ -z ${CompletionReportDaemonPort+x} ] || [ -z ${ScalabilityGenScriptName+x} ] || [ -z ${ScalabilityGzipRefDSName+x} ]; then
     # One or more or the required variables has not been initialized
     # check the number of arguments ...
-    echo -e "Some of the following environment variables (Geographica/scripts/prepareRunEnvironment.sh) are missing:
+    echo -e "Some of the following environment variables (geordfbench/scripts/prepareRunEnvironment.sh) are missing:
 \t{DatasetBaseDir, RDF4JRepoBaseDir, JVM_Xmx, EnableLuceneSail, CompletionReportDaemonIP, CompletionReportDaemonPort, ScalabilityGenScriptName, ScalabilityGzipRefDSName}";
     if (( $# != 9 )); then
         # script cannot proceed, because arguments are missing
@@ -31,7 +31,7 @@ if [ -z ${DatasetBaseDir+x} ] || [ -z ${RDF4JRepoBaseDir+x} ] || [ -z ${JVM_Xmx+
 	exit 1    # return instead of exit because we need to source the script
     else
         # all arguments have been provided to completely customize the run
-        echo -e "All script arguments have been provided and will override any related values defined through Geographica/scripts/prepareRunEnvironment.sh"
+        echo -e "All script arguments have been provided and will override any related values defined through geordfbench/scripts/prepareRunEnvironment.sh"
         export RemoveIfExists=${1}
         export DatasetBaseDir=${2}
         export RDF4JRepoBaseDir=${3}
@@ -44,11 +44,11 @@ if [ -z ${DatasetBaseDir+x} ] || [ -z ${RDF4JRepoBaseDir+x} ] || [ -z ${JVM_Xmx+
     fi
 else
     # all required variables have been initialized
-    echo -e "All of the following environment variables (Geographica/scripts/prepareRunEnvironment.sh) are defined: 
+    echo -e "All of the following environment variables (geordfbench/scripts/prepareRunEnvironment.sh) are defined: 
 \t{DatasetBaseDir, RDF4JRepoBaseDir, JVM_Xmx, EnableLuceneSail, CompletionReportDaemonIP, CompletionReportDaemonPort, ScalabilityGenScriptName, ScalabilityGzipRefDSName}";
     if (( $# == 9 )); then
         # but, all arguments have been provided to completely customize the run
-        echo -e "All script arguments have been provided and will override all related values of Geographica/scripts/prepareRunEnvironment.sh"
+        echo -e "All script arguments have been provided and will override all related values of geordfbench/scripts/prepareRunEnvironment.sh"
         export RemoveIfExists=${1}
         export DatasetBaseDir=${2}
         export RDF4JRepoBaseDir=${3}

@@ -20,5 +20,5 @@ listDirsArr=(
 # Looping through keys and values in the associative array <listDirsArr>
 for db in "${!listDirsArr[@]}"; do
     echo "Creating database \"${db}\" by importing files from \"${DatasetBaseDir}/${listDirsArr[${db}]}/\"";
-    ./createVirtuosoRepo.sh -d ${db} ${DatasetBaseDir}/${listDirsArr[${db}]}
+    time ./createVirtuosoRepo.sh -d ${db} ${DatasetBaseDir}/${listDirsArr[${db}]}
 done

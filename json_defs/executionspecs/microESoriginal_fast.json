@@ -1,5 +1,5 @@
 {
-  "classname" : "gr.uoa.di.rdf.Geographica3.runtime.executionspecs.impl.SimpleES",
+  "classname" : "gr.uoa.di.rdf.geordfbench.runtime.executionspecs.impl.SimpleES",
   "execTypeReps" : {
     "COLD" : 1,
     "WARM" : 1

@@ -93,7 +93,7 @@ dbPath="${VirtuosoDataBaseDir}/${db}"
 #echo "dbPath = $dbPath"
 binPath="${VirtuosoBaseDir}/bin"
 #echo "binPath = $binPath"
-contextmapfilePath=${GeographicaScriptsDir}/${contextsmapfile}
+contextmapfilePath=${GeoRDFBenchScriptsDir}/${contextsmapfile}
 #echo ${contextmapfilePath}
 
 # STEP 1: Validate the script's parameters

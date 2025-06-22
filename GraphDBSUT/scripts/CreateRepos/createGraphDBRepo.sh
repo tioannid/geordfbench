@@ -21,7 +21,7 @@ SYNTAX: $SCRIPT_NAME RepoConfig RDFDir RDFFormat GraphDBBaseDir EnableGeoSPARQLP
 # 4) A "maps_to_contexts.txt" file exists in ntripleDir if context/graph IRIs need to be specified in TRIG files
 # 5) The repoConf file has the appropriate repository name!
 
-MAP_CONTEXTS_FILE="${GeographicaScriptsDir}/map_to_contexts.txt"
+MAP_CONTEXTS_FILE="${GeoRDFBenchScriptsDir}/map_to_contexts.txt"
 
 # STEP 0: Find the directory where the script is located in
 BASE="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -71,10 +71,11 @@ if [ "${RDFFormat}" != "TRIG" ] && [ "${RDFFormat}" != "N-TRIPLES" ]; then
 fi
 
 # STEP 2: Assess whether the script's preconditions are met
-#      2.1: check whether the $GraphDBBaseDir/bin/preload exists
-PreLoad_Exe="${GraphDBBaseDir}/bin/preload"
-if [ ! -e "$PreLoad_Exe" ]; then
-	echo "File $PreLoad_Exe does not exist!"
+#      2.1: check whether the $GraphDBBaseDir/bin/importrdf exists
+ImportRDF_Exe="${GraphDBBaseDir}/bin/importrdf"
+PreLoad_Exe="${GraphDBBaseDir}/bin/importrdf preload"
+if [ ! -e "$ImportRDF_Exe" ]; then
+	echo "File ${ImportRDF_Exe} does not exist!"
 	exit 4
 fi
 
@@ -159,7 +160,7 @@ if [ "${EnableGeoSPARQLPlugin}" = "TRUE" ]; then
     cd ${BASE}/../../target
     #pwd
     CLASS_PATH="$(for file in `ls -1 *.jar`; do myVar=$myVar./$file":"; done;echo $myVar;)"
-    MAIN_CLASS="gr.uoa.di.rdf.Geographica2.graphdbsut.RepoUtil"
+    MAIN_CLASS="gr.uoa.di.rdf.geordfbench.graphdbsut.RepoUtil"
     EXEC_QUERY_REPO="java $JAVA_OPTS -cp $CLASS_PATH $MAIN_CLASS ${EnableGeoSPARQLPlugin} ${IndexingAlgorithm} ${IndexingPrecision} \"${GraphDBDataDir}\" $RepoName"
     #echo $EXEC_QUERY_REPO
     eval ${EXEC_QUERY_REPO}

@@ -1,10 +1,10 @@
 {
-  "classname" : "gr.uoa.di.rdf.Geographica3.runtime.hosts.impl.SimpleHost",
+  "classname" : "gr.uoa.di.rdf.geordfbench.runtime.hosts.impl.SimpleHost",
   "name" : "win10_work",
   "ipAddr" : "localhost",
   "ram" : 11,
   "os" : {
-    "classname" : "gr.uoa.di.rdf.Geographica3.runtime.os.impl.Windows10OS",
+    "classname" : "gr.uoa.di.rdf.geordfbench.runtime.os.impl.Windows10OS",
     "name" : "Windows 10",
     "shell_cmd" : "cmd.exe",
     "sync_cmd" : "echo sync",

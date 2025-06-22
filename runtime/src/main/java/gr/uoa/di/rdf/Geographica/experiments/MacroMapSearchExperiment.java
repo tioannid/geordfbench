@@ -82,7 +82,7 @@ public class MacroMapSearchExperiment extends MacroExperiment {
 					measurements =  sut.runQueryWithTimeout(queryStruct.getQuery(), timeoutSecs);
 					
 					if (queryI == 0) {
-						BindingSet firstBindingSet = (BindingSet) sut.getFirstBindingSet();
+						BindingSet firstBindingSet = sut.getFirstBindingSet();
 						Binding geo = firstBindingSet.getBinding("wkt");
 						((MacroMapSearchQueriesSet)queriesSet).setCurrentPoint(geo.getValue().stringValue());
 					}

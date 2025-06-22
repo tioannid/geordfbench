@@ -1,5 +1,5 @@
 {
-  "classname" : "gr.uoa.di.rdf.Geographica3.runtime.querysets.partofworkload.impl.DynamicTempParamQS",
+  "classname" : "gr.uoa.di.rdf.geordfbench.runtime.querysets.partofworkload.impl.DynamicTempParamQS",
   "name" : "rwmicro",
   "relativeBaseDir" : "",
   "hasPredicateQueriesAlso" : false,

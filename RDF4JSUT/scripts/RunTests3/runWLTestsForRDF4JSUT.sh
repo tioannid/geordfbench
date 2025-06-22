@@ -4,10 +4,10 @@
 #    <script> JVM_Xmx MAIN_CLASS_ARGS
 # EXAMPLE :
 # <script> -Xmx24g -rbd RDF4J_3.7.7_Repos/server -expdesc 175#_2023-02-25_RDF4JSUT_Run_Scal10K 
-#          -wl /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/workloads/scalabilityFunc10K_WLoriginal.json 
-#          -h /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/hosts/ubuntu_vma_tioaHOSToriginal.json 
-#          -rs /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/reportspecs/simplereportspec_original.json 
-#          -rpsr /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/reportsources/ubuntu_vma_tioaRepSrcoriginal.json
+#          -wl /home/tioannid/NetBeansProjects/PhD/geordfbench/json_defs/workloads/scalabilityFunc10K_WLoriginal.json 
+#          -h /home/tioannid/NetBeansProjects/PhD/geordfbench/json_defs/hosts/ubuntu_vma_tioaHOSToriginal.json 
+#          -rs /home/tioannid/NetBeansProjects/PhD/geordfbench/json_defs/reportspecs/simplereportspec_original.json 
+#          -rpsr /home/tioannid/NetBeansProjects/PhD/geordfbench/json_defs/reportsources/ubuntu_vma_tioaRepSrcoriginal.json
 SCRIPT_NAME=`basename "$0"`
 SYNTAX1="SYNTAX 1: $SCRIPT_NAME <JVM_Xmx> <MAIN_CLASS_ARGS>"
 SYNTAX="$SYNTAX1
@@ -62,7 +62,7 @@ cd ${BASE}/../../target
 CLASS_PATH="$(for file in `ls -1 *.jar`; do myVar=$myVar./$file":"; done;echo $myVar;)runtime/src/main/resources/timestamps.txt"
 
 # define the executing-main class
-MAIN_CLASS="gr.uoa.di.rdf.Geographica3.rdf4jsut.RunRDF4JExperimentWorkload"
+MAIN_CLASS="gr.uoa.di.rdf.geordfbench.rdf4jsut.RunRDF4JExperimentWorkload"
 
 # run experiment
 START_TIME=`date`

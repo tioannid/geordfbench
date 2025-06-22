@@ -1,10 +1,10 @@
 {
-  "classname" : "gr.uoa.di.rdf.Geographica3.runtime.hosts.impl.SimpleHost",
+  "classname" : "gr.uoa.di.rdf.geordfbench.runtime.hosts.impl.SimpleHost",
   "name" : "teleios3",
   "ipAddr" : "10.0.10.12",
   "ram" : 32,
   "os" : {
-    "classname" : "gr.uoa.di.rdf.Geographica3.runtime.os.impl.UbuntuBionicOS",
+    "classname" : "gr.uoa.di.rdf.geordfbench.runtime.os.impl.UbuntuBionicOS",
     "name" : "Ubuntu-precise",
     "shell_cmd" : "/bin/sh",
     "sync_cmd" : "sync",

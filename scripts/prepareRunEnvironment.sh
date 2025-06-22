@@ -45,7 +45,8 @@ $SYNTAX3
 \t<shortdesc>\t:\tExperiment short description"
 
 # STEP 0: Find the directory where the script is located in, Geographica/scripts
-export GeographicaScriptsDir="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+export GeoRDFBenchScriptsDir="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+export GeoRDFBenchJSONLibDir=`readlink -f "${GeoRDFBenchScriptsDir}/../json_defs"`
 
 # STEP 1: Validate the script's syntax
 #      1.1: check number of arguments
@@ -61,14 +62,33 @@ if [[ ! " ${ValidEnvironments[*]} " =~ " ${Environment} " ]]; then
     export Environment=${DefaultEnvironment}
 fi
 
-# check if mercurial is installed and define the changeset value
+# check if mercurial or git is installed and define the changeset value
 Changeset="00"
-export res=`type -p "hg"`
-if [[ ! -z "$res" ]]; then 
-   # echo "hg exists"; 
-   Changeset=`hg parents | head -1 | cut -d ":" -f2 | xargs`  # should be a number nn or nnn, xargs trims whitespace
+changeset_set_by=""
+# check the installation path of the git utility
+git_installed=`type -p "git"` # returns empty string if binary is not installed
+# if git binary is installed then retrieve the git commit
+if [[ ! -z "$git_installed" ]]; then
+	git_repo_exists=`git rev-parse --is-inside-work-tree`
+	if [[ $git_repo_exists == "true" ]]; then
+		echo "Git repo exists"
+		Changeset=`git rev-parse --short HEAD`  # should be a 7 digit hexadecimal number
+		changeset_set_by="git"
+	fi
 fi
-
+if [[ $changeset_set_by == "" ]]; then # there was no git repo active in this folder tree
+	hg_installed=`type -p "hg"` # returns empty string if binary is not installed
+	# if mercurial binary is installed then retrieve the hg commit
+	if [[ ! -z "$hg_installed" ]]; then
+		hg_repo_exists=$((`hg identify 2>&1 | cut -b 1-5 -` != "abort"))
+		if [[ $hg_repo_exists -eq 0 ]]; then
+			echo "Mercurial repo exists" 
+			Changeset=`hg identify | cut -d " " -f1`  # should be a 10 digit hexadecimal number
+			changeset_set_by="hg"
+		fi
+	fi
+fi
+	
 #       set the active SUT and description
 if (( $# == 3 )); then
     export ActiveSUT=${2}
@@ -93,20 +113,59 @@ echo "Running script with syntax: source ${SCRIPT_NAME} ${Environment} ${ActiveS
 export ExperimentShortDesc="${ActiveSUT}_${ShortDesc}"
 
 #       1.3: set the versions of the SUTs
-export verRDF4J="3.7.7"
-export verGRAPHDB="9.11.1"
-export verSTARDOG="7.9.1"
-export verVIRTUOSO="7.2.9"
-export verJENA="3.17.0"
+export verRDF4J="4.3.15"
+export verGRAPHDB="10.8.4" # could not find the 10.8.5 distributable, moved to 11.0 directly
+export verSTARDOG="8.2.2"
+export verVIRTUOSO="7.2.14"
+export verJENA="4.10.0"
+export verSTRABON="3.3.3-SNAPSHOT"
 
 #       1.4: set other SUT dependent variables
 #           GraphDB dependent, environment independent
-export EnableGeoSPARQLPlugin=false
-export IndexingAlgorithm=quad   # default: quad
-export IndexingPrecision=11     # default: 11, quad (1-50), geohash(1-24)
-
+if [ -z ${EnableGeoSPARQLPlugin+x} ]; then
+	export EnableGeoSPARQLPlugin=false
+	export IndexingAlgorithm=quad   # default: quad
+	export IndexingPrecision=11     # default: 11, quad (1-50), geohash(1-24)
+fi
+if [ "${EnableGeoSPARQLPlugin}" = "true" ]; then
+	echo "EnableGeoSPARQLPlugin was explicitly set to true"
+	if [ -z ${IndexingAlgorithm+x} ]; then  # IndexingAlgorithm not provided
+		export IndexingAlgorithm=quad   	# default: quad
+		export IndexingPrecision=11     	# default: 11, quad (1-50), geohash(1-24)
+	else					# IndexingAlgorithm provided
+		# check if IndexingAlgorithm is valid
+		echo "IndexingAlgorithm was explicitly set to ${IndexingAlgorithm}"
+		ValidIndexingAlgorithm=$( [[ "$IndexingAlgorithm" == "quad" || "$IndexingAlgorithm" == "geohash" ]]; echo $? )
+		if ! [ "$ValidIndexingAlgorithm" -eq 0 ]; then	# IndexingAlgorithm is invalid
+				echo -e "IndexingAlgorithm = ${IndexingAlgorithm} is not in valid range [quad, geohash]"
+    				return 1
+		fi
+		# check if IndexingPrecision is in range
+		if [ -z ${IndexingPrecision+x} ]; then # IndexingPrecision not provided
+			export IndexingPrecision=11    		# default: 11, quad (1-50), geohash(1-24)
+		else				       # IndexingPrecision provided
+			echo "IndexingPrecision was explicitly set to ${IndexingPrecision}"
+			if [ "$IndexingAlgorithm" = quad ]; then 
+				IndexPrecisionRange="[1..50]"
+				if [ "$IndexingPrecision" -lt 1 ] || [ "$IndexingPrecision" -gt 50 ]; then
+					echo -e "IndexPrecision = ${IndexingPrecision} is not in valid range ${IndexPrecisionRange}"
+    					return 1
+				fi 
+			elif [ "$IndexingAlgorithm" = geohash ]; then
+				IndexPrecisionRange="[1..24]"
+				if [ "$IndexingPrecision" -lt 1 ] || [ "$IndexingPrecision" -gt 24 ]; then
+					echo -e "IndexPrecision = ${IndexingPrecision} is not in valid range ${IndexPrecisionRange}"
+    					return 1
+				fi 
+			fi
+		fi
+	fi	
+fi
+	
 #           RDF4J dependent, environment independent
-export EnableLuceneSail=false
+if [ -z ${EnableLuceneSail+x} ]; then
+	export EnableLuceneSail=false
+fi
 if [ "${EnableLuceneSail}" = "true" ]; then
     export RDF4JLuceneReposPrefix="Lucene"
 else
@@ -117,7 +176,7 @@ fi
 export StardogSpatialPrecision=11 #  value lower than the default (11) can improve the performance of spatial queries at the cost of accuracy
 
 # Virtuoso dependent, environment variables
-export VirtuosoTemplateConfigurationFile="${GeographicaScriptsDir}/../VirtuosoSUT/scripts/CreateRepos/virtuoso_geographica.ini"
+export VirtuosoTemplateConfigurationFile="${GeoRDFBenchScriptsDir}/../VirtuosoSUT/scripts/CreateRepos/virtuoso_geographica.ini"
 export NumberOfBuffers=2000 # default value
 export MaxDirtyBuffers=1200 # default value
 
@@ -161,7 +220,7 @@ if [ "$Environment" == "VM" ]; then
     export CompletionReportDaemonPort="3333"
     export JVM_Xmx="-Xmx8g"
     # GraphDBSUT only
-    export GraphDBBaseDir="${EnvironmentBaseDir}/graphdb-free-${verGRAPHDB}"
+    export GraphDBBaseDir="${EnvironmentBaseDir}/graphdb-${verGRAPHDB}"
     # RDF4JSUT only
     export RDF4JRepoBaseDir="${EnvironmentBaseDir}/RDF4J_${verRDF4J}_${RDF4JLuceneReposPrefix}Repos/server"
     # StrabonSUT only
@@ -187,7 +246,7 @@ elif [ "$Environment" == "PAVILIONDV7" ]; then
     export CompletionReportDaemonPort="3333"
     export JVM_Xmx="-Xmx8g"
     # GraphDBSUT only
-    export GraphDBBaseDir="${EnvironmentBaseDir}/graphdb-free-${verGRAPHDB}"
+    export GraphDBBaseDir="${EnvironmentBaseDir}/graphdb-${verGRAPHDB}"
     # RDF4JSUT only
     export RDF4JRepoBaseDir="${EnvironmentBaseDir}/RDF4J_${verRDF4J}_${RDF4JLuceneReposPrefix}Repos/server"
     # StrabonSUT only
@@ -213,7 +272,7 @@ elif [ "$Environment" == "PYRAVLOS6" ]; then
     export CompletionReportDaemonPort="3333"
     export JVM_Xmx="-Xmx64g"
     # GraphDBSUT only
-    export GraphDBBaseDir="${EnvironmentBaseDir}/graphdb-free-${verGRAPHDB}"
+    export GraphDBBaseDir="${EnvironmentBaseDir}/graphdb-${verGRAPHDB}"
     # RDF4JSUT only
     export RDF4JRepoBaseDir="${EnvironmentBaseDir}/RDF4J_${verRDF4J}_${RDF4JLuceneReposPrefix}Repos/server"
     # StrabonSUT only
@@ -239,7 +298,7 @@ elif [ "$Environment" == "TELEIOS3" ]; then
     export CompletionReportDaemonPort="3333"
     export JVM_Xmx="-Xmx24g"
     # GraphDBSUT only
-    export GraphDBBaseDir="${EnvironmentBaseDir}/graphdb-free-${verGRAPHDB}"
+    export GraphDBBaseDir="${EnvironmentBaseDir}/graphdb-${verGRAPHDB}"
     # RDF4JSUT only
     export RDF4JRepoBaseDir="${EnvironmentBaseDir}/RDF4J_${verRDF4J}_${RDF4JLuceneReposPrefix}Repos/server"
     # StrabonSUT only
@@ -265,14 +324,14 @@ elif [ "$Environment" == "NUC8I7BEH" ]; then
     export CompletionReportDaemonPort="3333"
     export JVM_Xmx="-Xmx24g"
     # GraphDBSUT only
-    export GraphDBBaseDir="${EnvironmentBaseDir}/graphdb-free-${verGRAPHDB}"
+    export GraphDBBaseDir="${EnvironmentBaseDir}/graphdb-${verGRAPHDB}"
     # RDF4JSUT only
     export RDF4JRepoBaseDir="${EnvironmentBaseDir}/RDF4J_${verRDF4J}_${RDF4JLuceneReposPrefix}Repos/server"
     # StrabonSUT only
     export StrabonBaseDir="${EnvironmentBaseDir}/Strabon"
     export StrabonLoaderBaseDir="${EnvironmentBaseDir}/StrabonLoader"
     # VirtuosoSUT only
-    export VirtuosoBaseDir="${EnvironmentBaseDir}/virtuoso-opensource"
+    export VirtuosoBaseDir="${EnvironmentBaseDir}/virtuoso-opensource-7.2.14"
     export VirtuosoDataBaseDir="${VirtuosoBaseDir}/repos"
     # StardogSUT only
     export STARDOG_HOME="${EnvironmentBaseDir}/StarDog" # directory where all Stardog databases and files will be stored

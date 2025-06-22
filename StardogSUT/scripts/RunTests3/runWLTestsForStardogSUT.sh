@@ -5,10 +5,10 @@
 # EXAMPLE :
 # <script> '-Xms4g -Xmx4g -XX:MaxDirectMemorySize=6g' -surl 'http://localhost:5820' 
 #          -susr admin -spwd admin -rbd Stardog -expdesc 180#_2023-03-05_StardogSUT_WLScalFunc_10K 
-#          -wl /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/workloads/scalabilityFunc10K_WLoriginal.json 
-#          -h /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/hosts/ubuntu_vma_tioaHOSToriginal_1.json 
-#          -rs /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/reportspecs/simplereportspec_original.json 
-#          -rpsr /home/tioannid/NetBeansProjects/PhD/Geographica3/json_defs/reportsources/ubuntu_vma_tioaRepSrcoriginal.json
+#          -wl /home/tioannid/NetBeansProjects/PhD/geordfbench/json_defs/workloads/scalabilityFunc10K_WLoriginal.json 
+#          -h /home/tioannid/NetBeansProjects/PhD/geordfbench/json_defs/hosts/ubuntu_vma_tioaHOSToriginal_1.json 
+#          -rs /home/tioannid/NetBeansProjects/PhD/geordfbench/json_defs/reportspecs/simplereportspec_original.json 
+#          -rpsr /home/tioannid/NetBeansProjects/PhD/geordfbench/json_defs/reportsources/ubuntu_vma_tioaRepSrcoriginal.json
 SCRIPT_NAME=`basename "$0"`
 SYNTAX1="SYNTAX 1: $SCRIPT_NAME <STARDOG_SERVER_JAVA_ARGS> <MAIN_CLASS_ARGS>"
 SYNTAX="$SYNTAX1
@@ -75,7 +75,7 @@ cd ${BASE}/../../target
 CLASS_PATH="$(for file in `ls -1 *.jar`; do myVar=$myVar./$file":"; done;echo $myVar;)runtime/src/main/resources/timestamps.txt"
 
 # define the executing-main class
-MAIN_CLASS="gr.uoa.di.rdf.Geographica3.stardogsut.RunStardogExperimentWorkload"
+MAIN_CLASS="gr.uoa.di.rdf.geordfbench.stardogsut.RunStardogExperimentWorkload"
 
 # run experiment
 START_TIME=`date`

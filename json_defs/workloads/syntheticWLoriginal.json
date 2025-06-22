@@ -1,5 +1,5 @@
 {
-  "classname" : "gr.uoa.di.rdf.Geographica3.runtime.workloadspecs.impl.SimpleGeospatialWL",
+  "classname" : "gr.uoa.di.rdf.geordfbench.runtime.workloadspecs.impl.SimpleGeospatialWL",
   "name" : "Synthetic-512",
   "relativeBaseDir" : "",
   "geospatialDataset" : {
@@ -119,7 +119,7 @@
     "n" : 512
   },
   "geospatialQueryset" : {
-    "classname" : "gr.uoa.di.rdf.Geographica3.runtime.querysets.partofworkload.impl.StaticTempParamQS",
+    "classname" : "gr.uoa.di.rdf.geordfbench.runtime.querysets.partofworkload.impl.StaticTempParamQS",
     "name" : "synthetic",
     "relativeBaseDir" : "",
     "hasPredicateQueriesAlso" : false,
