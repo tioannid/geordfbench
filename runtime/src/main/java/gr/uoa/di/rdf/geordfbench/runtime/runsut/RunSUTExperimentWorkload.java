@@ -58,6 +58,7 @@ public abstract class RunSUTExperimentWorkload {
         // -- host related options
         //    TODO: check if <logpath> option is necessary or if it means only the relative part of the logpath
         options.addOption("h", "hostconffile", true, "Host configuration JSON file");
+        options.addOption("rh", "remotehostconffile", true, "Remote Host configuration JSON file");
 
         // -- report related options
         options.addOption("rs", "reportspec", true, "Report specs configuration JSON file");
@@ -90,6 +91,7 @@ public abstract class RunSUTExperimentWorkload {
 
         // -- host related options
         logger.info("Host configuration JSON file:\t" + cmd.getOptionValue("hostconffile"));
+        logger.info("Remote Host configuration JSON file:\t" + cmd.getOptionValue("remotehostconffile"));
         // -- report related options
         logger.info("Report specs configuration JSON file:\t" + cmd.getOptionValue("reportspec"));
         // -- report source related options
@@ -147,8 +149,12 @@ public abstract class RunSUTExperimentWorkload {
             }
         }
         logger.info(workLoadSpec.toString());
-        // read host related options
-        host = HostUtil.deserializeFromJSON(cmd.getOptionValue("hostconffile"));
+        // read host related options - BEWARE: local spec takes precedence over remote HTTP spec
+        if (cmd.hasOption("hostconffile")) {
+            host = HostUtil.deserializeFromJSON(cmd.getOptionValue("hostconffile"));
+        } else if (cmd.hasOption("remotehostconffile")) {
+            host = HostUtil.deserializeFromJSON(cmd.getOptionValue("remotehostconffile"));
+        }
         // -- report related options
         rptSpec = ReportSpecUtil.deserializeFromJSON(cmd.getOptionValue("reportspec"));
         // -- report source related options

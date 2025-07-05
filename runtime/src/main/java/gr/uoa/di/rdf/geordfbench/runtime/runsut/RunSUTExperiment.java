@@ -22,6 +22,13 @@ import gr.uoa.di.rdf.geordfbench.runtime.reportsource.util.ReportSourceUtil;
 import gr.uoa.di.rdf.geordfbench.runtime.reportspecs.IReportSpec;
 import gr.uoa.di.rdf.geordfbench.runtime.sut.ISUT;
 import gr.uoa.di.rdf.geordfbench.runtime.sys.interfaces.IGeographicaSystem;
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
+import java.util.logging.Level;
 
 public abstract class RunSUTExperiment {
 
@@ -59,6 +66,7 @@ public abstract class RunSUTExperiment {
         // -- host related options
         //    TODO: check if <logpath> option is necessary or if it means only the relative part of the logpath
         options.addOption("h", "hostconffile", true, "Host configuration JSON file");
+        options.addOption("rh", "remotehostconffile", true, "Remote Host configuration JSON file");
 
         // -- report related options
         options.addOption("rs", "reportspec", true, "Report specs configuration JSON file");
@@ -91,6 +99,7 @@ public abstract class RunSUTExperiment {
         logger.info("Dataset configuration JSON file:\t" + cmd.getOptionValue("datasetconffile"));
         // -- host related options
         logger.info("Host configuration JSON file:\t" + cmd.getOptionValue("hostconffile"));
+        logger.info("Remote Host configuration JSON file:\t" + cmd.getOptionValue("remotehostconffile"));
         // -- report related options
         logger.info("Report specs configuration JSON file:\t" + cmd.getOptionValue("reportspec"));
         // -- report source related options
@@ -112,8 +121,23 @@ public abstract class RunSUTExperiment {
         // -- dataset related options
         geoDS = DataSetUtil.deserializeFromJSON(cmd.getOptionValue("datasetconffile"));
         logger.info(geoDS.toString());
-        // read host related options
-        host = HostUtil.deserializeFromJSON(cmd.getOptionValue("hostconffile"));
+        // read host related options - BEWARE: local spec takes precedence over remote HTTP spec
+        if (cmd.hasOption("hostconffile")) {
+            host = HostUtil.deserializeFromJSON(cmd.getOptionValue("hostconffile"));
+        } else if (cmd.hasOption("remotehostconffile")) {
+            HttpClient client = HttpClient.newHttpClient();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(cmd.getOptionValue("remotehostconffile")))
+                    .setHeader("Content-type", "application/json")
+                    .build();
+            HttpResponse<String> response = null;
+            try {
+                response = client.send(request, BodyHandlers.ofString());
+            } catch (IOException | InterruptedException ex) {
+                logger.error(ex.getMessage());
+            }
+            host = HostUtil.deserializeFromJSONString(response.body());
+        }
         // -- report related options
         rptSpec = ReportSpecUtil.deserializeFromJSON(cmd.getOptionValue("reportspec"));
         // -- report source related options
@@ -124,7 +148,9 @@ public abstract class RunSUTExperiment {
         querySet = QuerySetUtil.deserializeFromJSON(cmd.getOptionValue("querysetspec"));
         // -- queryset query include filter
         // apply filter
-        if (cmd.hasOption("queryincludefilter")) {
+
+        if (cmd.hasOption(
+                "queryincludefilter")) {
             String[] qryPositionsStr = cmd.getOptionValue("queryincludefilter").split(",");
             qif = new int[qryPositionsStr.length];
             for (int i = 0; i < qryPositionsStr.length; i++) {
@@ -135,7 +161,8 @@ public abstract class RunSUTExperiment {
             if (cmd.hasOption("queryexcludefilter")) {
                 logger.warn("Exclusion filter is ignored!");
             }
-        } else if (cmd.hasOption("queryexcludefilter")) {
+        } else if (cmd.hasOption(
+                "queryexcludefilter")) {
             String[] qryPositionsStr = cmd.getOptionValue("queryexcludefilter").split(",");
             qef = new int[qryPositionsStr.length];
             for (int i = 0; i < qryPositionsStr.length; i++) {
@@ -261,7 +288,7 @@ public abstract class RunSUTExperiment {
         
         System.exit(0);
         
-        */
+         */
     }
 
     /**

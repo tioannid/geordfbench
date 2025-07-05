@@ -227,6 +227,29 @@ public class HostUtil {
         return sh;
     }
 
+    /**
+     * Creates a geographica host from a customized JSON definition file which
+     * contains the serialized host details.
+     *
+     * @param fileName the file path of the JSON definition file
+     *
+     * @return
+     */
+    public static IHost deserializeFromJSONString(String jsonSpec) {
+        // create the mapper
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+        SimpleHost sh = null;
+        try {
+            sh = mapper.readValue(jsonSpec, new TypeReference<SimpleHost>() {
+            });
+        } catch (IOException ex) {
+            logger.info(ex.getMessage());
+        }
+        // sh.initializeAfterDeserialization();
+        return sh;
+    }
+
     public static void main(String[] args) {
         // ubuntu-vma-tioa host
         HostUtil.createUBUNTU_VMA_TIOA_Host_OriginalJSONDefFile();

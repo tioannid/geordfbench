@@ -14,3 +14,4 @@ scripts/h2embeddedreportsource/geordfbench.trace.db
 */scripts/*/*.log
 .idea/
 */nb-configuration.xml
+.vscode

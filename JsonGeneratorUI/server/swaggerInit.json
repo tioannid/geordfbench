@@ -1,0 +1,997 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "GeoRDFBench Framework JSON Specification API with Swagger",
+    "version": "0.1.0",
+    "description": "A cRud API application made with Express and documented with Swagger",
+    "license": {
+      "name": "Apache-2.0",
+      "url": "https://spdx.org/licenses/Apache-2.0.html"
+    },
+    "contact": {
+      "name": "Theofilos Ioannidis",
+      "url": "http://users.uoa.gr/~tioannid/",
+      "email": "tioannid@di.uoa.gr"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000"
+    }
+  ],
+  "paths": {
+    "/config": {
+      "get": {
+        "summary": "Lists the endpoint's configuration",
+        "tags": ["Config"],
+        "responses": {
+          "200": {
+            "description": "The list of the endpoint's configuration values",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Config"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/categories": {
+      "get": {
+        "summary": "Lists all available specification categories",
+        "tags": ["Specification Categories"],
+        "responses": {
+          "200": {
+            "description": "The list of the available specification categories",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Category"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reportspecs": {
+      "get": {
+        "summary": "Lists all available report (logging) specifications",
+        "tags": ["Report (Logging) Specifications"],
+        "responses": {
+          "200": {
+            "description": "The list of the available report (logging) specifications",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ReportSpecification"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reportspecs/{spec}": {
+      "get": {
+        "summary": "Get the report (logging) by specification name",
+        "tags": ["Report (Logging) Specifications"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "spec",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The report (logging) specification name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The specification for the report (logging) specification name provided",
+            "contens": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportSpecification"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The report (logging) specification name was not found"
+          }
+        }
+      }
+    },
+    "/reportsources": {
+      "get": {
+        "summary": "Lists all available report source specifications",
+        "tags": ["Report Sources"],
+        "responses": {
+          "200": {
+            "description": "The list of the available report source specifications",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Reportsource"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reportsources/{spec}": {
+      "get": {
+        "summary": "Get the report source by specification name",
+        "tags": ["Report Sources"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "spec",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The report source specification name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The specification for the report source specification name provided",
+            "contens": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Reportsource"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The report source specification name was not found"
+          }
+        }
+      }
+    },
+    "/hosts": {
+      "get": {
+        "summary": "Lists all available host specifications",
+        "tags": ["Hosts"],
+        "responses": {
+          "200": {
+            "description": "The list of the available host specifications",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Host"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/hosts/{spec}": {
+      "get": {
+        "summary": "Get the host by specification name",
+        "tags": ["Hosts"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "spec",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The host specification name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The specification for the host specification name provided",
+            "contens": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Host"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The host specification name was not found"
+          }
+        }
+      }
+    },
+    "/datasets": {
+      "get": {
+        "summary": "Lists all available dataset specifications",
+        "tags": ["Datasets"],
+        "responses": {
+          "200": {
+            "description": "The list of the available dataset specifications",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Dataset"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/datasets/{spec}": {
+      "get": {
+        "summary": "Get the dataset by specification name",
+        "tags": ["Datasets"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "spec",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The dataset specification name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The specification for the dataset specification name provided",
+            "contens": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dataset"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The dataset specification name was not found"
+          }
+        }
+      }
+    },
+    "/querysets": {
+      "get": {
+        "summary": "Lists all available queryset specifications",
+        "tags": ["Querysets"],
+        "responses": {
+          "200": {
+            "description": "The list of the available queryset specifications",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Queryset"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/querysets/{spec}": {
+      "get": {
+        "summary": "Get the queryset by specification name",
+        "tags": ["Querysets"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "spec",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The queryset specification name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The specification for the queryset specification name provided",
+            "contens": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Queryset"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The queryset specification name was not found"
+          }
+        }
+      }
+    },
+    "/executionspecs": {
+      "get": {
+        "summary": "Lists all available execution specifications",
+        "tags": ["Execution Specifications"],
+        "responses": {
+          "200": {
+            "description": "The list of the available execution specifications",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ExecutionSpec"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/executionspecs/{spec}": {
+      "get": {
+        "summary": "Get the execution by specification name",
+        "tags": ["Execution Specifications"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "spec",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The execution specification name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The specification for the execution specification name provided",
+            "contens": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExecutionSpec"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The dataset specification name was not found"
+          }
+        }
+      }
+    },
+    "/workloads": {
+      "get": {
+        "summary": "Lists all available workload specifications",
+        "tags": ["Workloads"],
+        "responses": {
+          "200": {
+            "description": "The list of the available workload specifications",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Workload"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workloads/{spec}": {
+      "get": {
+        "summary": "Get the workload by specification name",
+        "tags": ["Workloads"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "spec",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The workload specification name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The specification for the workload specification name provided",
+            "contens": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Workload"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The workload specification name was not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Reportsource": {
+        "type": "array",
+        "required": ["classname", "driver", "database", "user", "password"],
+        "properties": {
+          "classname": {
+            "type": "string",
+            "description": "The java full class name"
+          },
+          "driver": {
+            "type": "string",
+            "enum": ["postgresql", "h2"]
+          },
+          "database": {
+            "type": "string",
+            "description": "The database name"
+          },
+          "user": {
+            "type": "string",
+            "description": "The database user name"
+          },
+          "password": {
+            "type": "string",
+            "description": "The database user password"
+          },
+          "hostname": {
+            "type": "string",
+            "description": "The PostgreSQL server host name or IPv4"
+          },
+          "althostname": {
+            "type": "string",
+            "description": "The alternative PostgreSQL server host name or IPv4"
+          },
+          "port": {
+            "type": "number",
+            "format": "int32",
+            "description": "The PostgreSQL server's listening port"
+          },
+          "relativeBaseDir": {
+            "type": "string",
+            "description": "The H2 database path relative to the host's sourceFileDir"
+          }
+        },
+        "example": {
+          "classname": "gr.uoa.di.rdf.geordfbench.runtime.reportsource.impl.PostgreSQLRepSrc",
+          "driver": "postgresql",
+          "hostname": "10.0.2.15",
+          "althostname": "localhost",
+          "port": 5432,
+          "database": "geordfbench",
+          "user": "geordfbench",
+          "password": "geordfbench"
+        }
+      },
+      "Dataset": {
+        "type": "object",
+        "required": [
+          "classname",
+          "name",
+          "relativeBaseDir",
+          "simpleGeospatialDataSetList",
+          "mapDataSetContexts",
+          "n"
+        ],
+        "properties": {
+          "classname": {
+            "type": "string",
+            "description": "The java full class name"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the dataset"
+          },
+          "relativeBaseDir": {
+            "type": "string",
+            "format": "path",
+            "description": "The actual dataset's path relative to the host's sourceFileDir"
+          },
+          "simpleGeospatialDataSetList": {
+            "type": "object",
+            "description": "A single file dataset"
+          },
+          "mapDataSetContexts": {
+            "type": "array",
+            "description": "The named graphs (contexts) used in the simple dataset files"
+          },
+          "n": {
+            "type": "number",
+            "format": "int32",
+            "description": "Scaling factor for synthetially generated datasets"
+          }
+        },
+        "example": {
+          "classname": "gr.uoa.di.rdf.geordfbench.runtime.datasets.complex.impl.GeographicaDS",
+          "name": "scalability_500M",
+          "relativeBaseDir": "Scalability/500M",
+          "simpleGeospatialDataSetList": {
+            "name": "scalability_500M",
+            "relativeBaseDir": "Scalability/500M",
+            "dataFile": "scalability_500M.nt",
+            "rdfFormat": "N-TRIPLES",
+            "mapUsefulNamespacePrefixes": {
+              "geo": "<http://www.opengis.net/ont/geosparql#>",
+              "rdf": "<http://www.w3.org/1999/02/22-rdf-syntax-ns#>",
+              "owl": "<http://www.w3.org/2002/07/owl#>",
+              "geof": "<http://www.opengis.net/def/function/geosparql/>",
+              "lgo": "<http://data.linkedeodata.eu/ontology#>",
+              "xsd": "<http://www.w3.org/2001/XMLSchema#>",
+              "rdfs": "<http://www.w3.org/2000/01/rdf-schema#>",
+              "geo-sf": "<http://www.opengis.net/ont/sf#>"
+            },
+            "mapAsWKT": {
+              "scalabilityAsWKT": "<http://www.opengis.net/ont/geosparql#asWKT>"
+            },
+            "mapHasGeometry": {
+              "scalabilityHasGeometry": "<http://www.opengis.net/ont/geosparql#hasGeometry>"
+            }
+          },
+          "mapDataSetContexts": {
+            "scalability_500M": null
+          },
+          "n": 0
+        }
+      },
+      "Queryset": {
+        "type": "object",
+        "required": [
+          "classname",
+          "name",
+          "relativeBaseDir",
+          "hasPredicateQueriesAlso",
+          "mapQueries",
+          "mapUsefulNamespacePrefixes",
+          "mapTemplateParams",
+          "mapGraphPrefixes"
+        ],
+        "properties": {
+          "classname": {
+            "type": "string",
+            "description": "The java full class name"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the queryset"
+          },
+          "relativeBaseDir": {
+            "type": "string",
+            "format": "path",
+            "description": "The queryset's path relative to the host's sourceFileDir"
+          },
+          "hasPredicateQueriesAlso": {
+            "type": "boolean",
+            "description": "There exist queries with spatial predicate queries"
+          },
+          "mapQueries": {
+            "type": "array",
+            "description": "The queries that make up the queryset"
+          },
+          "mapUsefulNamespacePrefixes": {
+            "type": "array",
+            "description": "The queries that make up the queryset"
+          },
+          "mapTemplateParams": {
+            "type": "array",
+            "description": "The template parameters used in the queryset"
+          },
+          "mapGraphPrefixes": {
+            "type": "array",
+            "description": "The named graph prefixes closely related to the target dataset"
+          }
+        },
+        "example": {
+          "classname": "gr.uoa.di.rdf.geordfbench.runtime.querysets.complex.impl.StaticTempParamQS",
+          "name": "scalabilityFunc",
+          "relativeBaseDir": "",
+          "hasPredicateQueriesAlso": false,
+          "mapQueries": {
+            "0": {
+              "label": "SC1_Geometries_Intersects_GivenPolygon",
+              "text": "SELECT ?s1 ?o1 WHERE { \n ?s1 geo:asWKT ?o1 . \n  FILTER(geof:FUNCTION(?o1, GIVEN_SPATIAL_LITERAL)). \n} \n",
+              "usePredicate": false,
+              "expectedResults": -1
+            },
+            "1": {
+              "label": "SC2_Intensive_Geometries_Intersect_Geometries",
+              "text": "SELECT ?s1 ?s2 \nWHERE { \n ?s1 geo:hasGeometry [ geo:asWKT ?o1 ] ;\n    lgo:has_code \"1001\"^^xsd:integer . \n ?s2 geo:hasGeometry [ geo:asWKT ?o2 ] ;\n    lgo:has_code ?code2 .  \n FILTER(?code2>5000 && ?code2<6000 && ?code2 != 5260) .\n FILTER(geof:FUNCTION(?o1, ?o2)). \n} \n",
+              "usePredicate": false,
+              "expectedResults": -1
+            },
+            "2": {
+              "label": "SC3_Relaxed_Geometries_Intersect_Geometries",
+              "text": "SELECT ?s1 ?s2\nWHERE {\n ?s1 geo:hasGeometry [ geo:asWKT ?o1 ] ;\n    lgo:has_code \"1001\"^^xsd:integer .\n ?s2 geo:hasGeometry [ geo:asWKT ?o2 ] ;\n    lgo:has_code ?code2 .\n FILTER(?code2 IN (5622, 5601, 5641, 5621, 5661)) .\n FILTER(geof:FUNCTION(?o1, ?o2)).\n} \n",
+              "usePredicate": false,
+              "expectedResults": -1
+            }
+          },
+          "mapUsefulNamespacePrefixes": {},
+          "mapTemplateParams": {
+            "GIVEN_SPATIAL_LITERAL": "\"POLYGON((23.708496093749996 37.95719224376526,22.906494140625 40.659805938378526,11.524658203125002 48.16425348854739,-0.1181030273437499 51.49506473014367,-3.2189941406250004 55.92766341247031,-5.940856933593749 54.59116279530599,-3.1668090820312504 51.47967237816337,23.708496093749996 37.95719224376526))\"^^<http://www.opengis.net/ont/geosparql#wktLiteral>",
+            "FUNCTION": "sfIntersects"
+          },
+          "mapGraphPrefixes": {}
+        }
+      },
+      "Category": {
+        "type": "array",
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the specification category"
+          }
+        },
+        "example": [
+          "datasets",
+          "executionspecs",
+          "hosts",
+          "querysets",
+          "reportsources",
+          "reportspecs",
+          "workloads"
+        ]
+      },
+      "ReportSpecification": {
+        "type": "array",
+        "required": ["noQueryResultToReport"],
+        "properties": {
+          "noQueryResultToReport": {
+            "type": "number",
+            "format": "int32",
+            "description": "The number of results to display for each query execution"
+          }
+        },
+        "example": {
+          "noQueryResultToReport": 3
+        }
+      },
+      "Host": {
+        "type": "object",
+        "required": [
+          "classname",
+          "name",
+          "ipAddr",
+          "ram",
+          "os",
+          "sourceFileDir",
+          "reposBaseDir",
+          "reportsBaseDir"
+        ],
+        "properties": {
+          "classname": {
+            "type": "string",
+            "description": "The java full class name"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the host"
+          },
+          "ipAddr": {
+            "type": "string",
+            "format": "ipv4",
+            "description": "The host IP4 address"
+          },
+          "ram": {
+            "type": "number",
+            "format": "int32",
+            "description": "Host's total RAM in GBs"
+          },
+          "os": {
+            "type": "object",
+            "description": "The hosts' operating system"
+          },
+          "sourceFileDir": {
+            "type": "string",
+            "format": "path",
+            "description": "Host's base location for dataset files"
+          },
+          "reposBaseDir": {
+            "type": "string",
+            "format": "path",
+            "description": "Host's base location for RDF store repositories"
+          },
+          "reportsBaseDir": {
+            "type": "string",
+            "format": "path",
+            "description": "Host's base location for experiment reports"
+          }
+        },
+        "example": {
+          "classname": "gr.uoa.di.rdf.geordfbench.runtime.hosts.impl.SimpleHost",
+          "name": "NUC8i7BEH",
+          "ipAddr": "192.168.1.44",
+          "ram": 32,
+          "os": {
+            "classname": "gr.uoa.di.rdf.geordfbench.runtime.os.impl.UbuntuJammyOS",
+            "name": "Ubuntu-jammy",
+            "shell_cmd": "/bin/sh",
+            "sync_cmd": "sync",
+            "clearcache_cmd": "sudo /sbin/sysctl vm.drop_caches=3"
+          },
+          "sourceFileDir": "/data/Geographica2_Datasets",
+          "reposBaseDir": "/data",
+          "reportsBaseDir": "/data/Results_Store"
+        }
+      },
+      "ExecutionSpec": {
+        "type": "object",
+        "required": [
+          "classname",
+          "execTypeReps",
+          "maxDurationSecsPerQueryRep",
+          "maxDurationSecs",
+          "action",
+          "avgFunc",
+          "onColdFailure",
+          "clearCacheDelaymSecs"
+        ],
+        "properties": {
+          "classname": {
+            "type": "string",
+            "description": "The java full class name"
+          },
+          "execTypeReps": {
+            "type": "array",
+            "description": "The repetitions per execution type"
+          },
+          "maxDurationSecsPerQueryRep": {
+            "type": "number",
+            "format": "int32",
+            "description": "The max duration (secs) per query execution"
+          },
+          "maxDurationSecs": {
+            "type": "number",
+            "format": "int32",
+            "description": "The max duration (secs) for the queryset execution"
+          },
+          "action": {
+            "type": "string",
+            "enum": ["RUN", "PRINT"],
+            "description": "The action that experiment should perform"
+          },
+          "avgFunc": {
+            "type": "string",
+            "enum": ["QUERY_MEDIAN", "QUERY_MEAN", "QUERYSET_MEAN"],
+            "description": "The average function and the scope of its use"
+          },
+          "onColdFailure": {
+            "type": "string",
+            "enum": [
+              "SKIP_REMAINING_ALL_QUERY_EXECUTIONS",
+              "SKIP_REMAINING_COLD_EXECUTIONS",
+              "EXCLUDE_AND_PROCEED"
+            ],
+            "description": "Desired behaviour upon COLD execution failure"
+          },
+          "clearCacheDelaymSecs": {
+            "type": "number",
+            "format": "int32",
+            "description": "The delay (msecs) waiting for clearing caches and garbage collection"
+          }
+        },
+        "example": {
+          "classname": "gr.uoa.di.rdf.geordfbench.runtime.executionspecs.impl.SimpleES",
+          "execTypeReps": {
+            "COLD": 3,
+            "WARM": 3
+          },
+          "maxDurationSecsPerQueryRep": 86400,
+          "maxDurationSecs": 604800,
+          "action": "RUN",
+          "avgFunc": "QUERY_MEDIAN",
+          "onColdFailure": "SKIP_REMAINING_ALL_QUERY_EXECUTIONS",
+          "clearCacheDelaymSecs": 5000
+        }
+      },
+      "Workload": {
+        "type": "object",
+        "required": [
+          "classname",
+          "name",
+          "relativeBaseDir",
+          "geospatialDataset",
+          "geospatialQueryset"
+        ],
+        "properties": {
+          "classname": {
+            "type": "string",
+            "description": "The java full class name"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the workload"
+          },
+          "relativeBaseDir": {
+            "type": "string",
+            "format": "path",
+            "description": "The workload's path relative to the host's sourceFileDir"
+          },
+          "geospatialDataset": {
+            "type": "object",
+            "description": "The dataset specification"
+          },
+          "geospatialQueryset": {
+            "type": "object",
+            "description": "The queryset specification encapsulating the execution specification"
+          }
+        },
+        "example": {
+          "classname": "gr.uoa.di.rdf.geordfbench.runtime.workloadspecs.impl.SimpleGeospatialWL",
+          "name": "ScalabilityFunc",
+          "relativeBaseDir": "",
+          "geospatialDataset": {
+            "name": "scalability_10K",
+            "relativeBaseDir": "Scalability/10K",
+            "simpleGeospatialDataSetList": [
+              {
+                "name": "scalability_10K",
+                "relativeBaseDir": "Scalability/10K",
+                "dataFile": "scalability_10K.nt",
+                "rdfFormat": "N-TRIPLES",
+                "mapUsefulNamespacePrefixes": {
+                  "geo": "<http://www.opengis.net/ont/geosparql#>",
+                  "rdf": "<http://www.w3.org/1999/02/22-rdf-syntax-ns#>",
+                  "owl": "<http://www.w3.org/2002/07/owl#>",
+                  "geof": "<http://www.opengis.net/def/function/geosparql/>",
+                  "lgo": "<http://data.linkedeodata.eu/ontology#>",
+                  "xsd": "<http://www.w3.org/2001/XMLSchema#>",
+                  "rdfs": "<http://www.w3.org/2000/01/rdf-schema#>",
+                  "geo-sf": "<http://www.opengis.net/ont/sf#>"
+                },
+                "mapAsWKT": {
+                  "scalabilityAsWKT": "<http://www.opengis.net/ont/geosparql#asWKT>"
+                },
+                "mapHasGeometry": {
+                  "scalabilityHasGeometry": "<http://www.opengis.net/ont/geosparql#hasGeometry>"
+                }
+              }
+            ],
+            "mapDataSetContexts": {
+              "scalability_10K": ""
+            },
+            "n": 0
+          },
+          "geospatialQueryset": {
+            "classname": "gr.uoa.di.rdf.geordfbench.runtime.querysets.partofworkload.impl.StaticTempParamQS",
+            "name": "scalabilityFunc",
+            "relativeBaseDir": "",
+            "hasPredicateQueriesAlso": false,
+            "mapQueries": {
+              "0": {
+                "label": "SC1_Geometries_Intersects_GivenPolygon",
+                "text": "SELECT ?s1 ?o1 WHERE { \n ?s1 geo:asWKT ?o1 . \n  FILTER(geof:sfIntersects(?o1, \"POLYGON((23.708496093749996 37.95719224376526,22.906494140625 40.659805938378526,11.524658203125002 48.16425348854739,-0.1181030273437499 51.49506473014367,-3.2189941406250004 55.92766341247031,-5.940856933593749 54.59116279530599,-3.1668090820312504 51.47967237816337,23.708496093749996 37.95719224376526))\"^^<http://www.opengis.net/ont/geosparql#wktLiteral>)). \n} \n",
+                "usePredicate": false,
+                "expectedResults": -1
+              },
+              "1": {
+                "label": "SC2_Intensive_Geometries_Intersect_Geometries",
+                "text": "SELECT ?s1 ?s2 \nWHERE { \n ?s1 geo:hasGeometry [ geo:asWKT ?o1 ] ;\n    lgo:has_code \"1001\"^^xsd:integer . \n ?s2 geo:hasGeometry [ geo:asWKT ?o2 ] ;\n    lgo:has_code ?code2 .  \n FILTER(?code2>5000 && ?code2<6000 && ?code2 != 5260) .\n FILTER(geof:sfIntersects(?o1, ?o2)). \n} \n",
+                "usePredicate": false,
+                "expectedResults": -1
+              },
+              "2": {
+                "label": "SC3_Relaxed_Geometries_Intersect_Geometries",
+                "text": "SELECT ?s1 ?s2\nWHERE {\n ?s1 geo:hasGeometry [ geo:asWKT ?o1 ] ;\n    lgo:has_code \"1001\"^^xsd:integer .\n ?s2 geo:hasGeometry [ geo:asWKT ?o2 ] ;\n    lgo:has_code ?code2 .\n FILTER(?code2 IN (5622, 5601, 5641, 5621, 5661)) .\n FILTER(geof:sfIntersects(?o1, ?o2)).\n} \n",
+                "usePredicate": false,
+                "expectedResults": -1
+              }
+            },
+            "mapUsefulNamespacePrefixes": {},
+            "executionSpec": {
+              "execTypeReps": {
+                "COLD": 3,
+                "WARM": 3
+              },
+              "maxDurationSecsPerQueryRep": 86400,
+              "maxDurationSecs": 604800,
+              "action": "RUN",
+              "avgFunc": "QUERY_MEDIAN",
+              "onColdFailure": "SKIP_REMAINING_ALL_QUERY_EXECUTIONS",
+              "clearCacheDelaymSecs": 5000
+            },
+            "mapTemplateParams": {
+              "GIVEN_SPATIAL_LITERAL": "\"POLYGON((23.708496093749996 37.95719224376526,22.906494140625 40.659805938378526,11.524658203125002 48.16425348854739,-0.1181030273437499 51.49506473014367,-3.2189941406250004 55.92766341247031,-5.940856933593749 54.59116279530599,-3.1668090820312504 51.47967237816337,23.708496093749996 37.95719224376526))\"^^<http://www.opengis.net/ont/geosparql#wktLiteral>",
+              "FUNCTION": "sfIntersects"
+            },
+            "mapGraphPrefixes": {}
+          }
+        }
+      },
+      "Config": {
+        "type": "array",
+        "required": ["PORT", "JSON_LIB_PATH", "HOSTNAME", "PLATFORM"],
+        "properties": {
+          "PORT": {
+            "type": "number",
+            "format": "int32",
+            "description": "The port number on which the endpoint is listening"
+          },
+          "JSON_LIB_PATH": {
+            "type": "string",
+            "format": "path",
+            "description": "The JSON library path where the endpoint is serving specifications from"
+          },
+          "HOSTNAME": {
+            "type": "string",
+            "description": "The hostname of the endpoint server"
+          },
+          "PLATFORM": {
+            "type": "string",
+            "description": "The endpoint server's operating system type, version and architecture"
+          }
+        },
+        "example": {
+          "PORT": "5000",
+          "JSON_LIB_PATH": "F:\\VM_Shared\\PHD\\NetBeansProjects\\PhD_2\\geordfbench\\json_defs",
+          "HOSTNAME": "NUC8i7BEH",
+          "PLATFORM": "#153-Ubuntu SMP Fri Jun 13 19:10:45 UTC 2025 v5.15.0-143-generic, x86_64"
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Specification Categories",
+      "description": "The specification categories managing API"
+    },
+    {
+      "name": "Hosts",
+      "description": "The host specifications managing API"
+    },
+    {
+      "name": "Execution Specifications",
+      "description": "The execution specifications API"
+    },
+    {
+      "name": "Datasets",
+      "description": "The dataset specifications API"
+    },
+    {
+      "name": "Querysets",
+      "description": "The queryset specifications API"
+    },
+    {
+      "name": "Report Sources",
+      "description": "The report source specifications API"
+    },
+    {
+      "name": "Report (Logging) Specifications",
+      "description": "The report (logging) specifications API"
+    },
+    {
+      "name": "Workloads",
+      "description": "The workload specifications API"
+    },
+    {
+      "name": "Config",
+      "description": "The endpoint's configuration"
+    }
+  ]
+}

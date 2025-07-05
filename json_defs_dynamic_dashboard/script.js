@@ -31,20 +31,21 @@ const Web3Animation = function() {
   React.useEffect(function() {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
-    canvas.width = 500;
-    canvas.height = 400;
+    canvas.width = 400;
+    canvas.height = 300;
 
     const nodes = [
-      { id: 'Ontology', x: 150, y: 100, label: 'Ontology', metrics: 'Schema Definition', glow: 0 },
-      { id: 'RDF Store', x: 300, y: 120, label: 'RDF Store', metrics: 'Geographica2: Query Perf.', glow: 0 },
-      { id: 'Spatial Fn', x: 350, y: 250, label: 'Spatial Fn', metrics: 'GeoSPARQL Support', glow: 0 },
-      { id: 'Geobenchmark', x: 200, y: 300, label: 'Geobenchmark', metrics: 'Scalability Metrics', glow: 0 },
+      { id: 'SPARQL', x: 50, y: 50, label: 'SPARQL', metrics: 'Query language for RDF', glow: 0 },
+      { id: 'RDF Store', x: 175, y: 50, label: 'RDF Store', metrics: '', glow: 0 },
+      { id: 'GeoSPARQL', x: 300, y: 50, label: 'GeoSPARQL', metrics: 'Query geospatial linked data', glow: 0 },
+      { id: 'Benchmarking', x: 175, y: 100, label: 'Benchmarking', metrics: 'Query, Ingestion, Indexing measurement', glow: 0 },
+      { id: 'GeoRDFBench', x: 175, y: 150, label: 'GeoRDFBench', metrics: 'Scalability Metrics', glow: 0 },
     ];
     const edges = [
-      { from: 'Ontology', to: 'RDF Store' },
-      { from: 'RDF Store', to: 'Spatial Fn' },
-      { from: 'Spatial Fn', to: 'Geobenchmark' },
-      { from: 'Geobenchmark', to: 'Ontology' },
+      { from: 'Benchmarking', to: 'SPARQL' },
+      { from: 'Benchmarking', to: 'RDF Store' },
+      { from: 'Benchmarking', to: 'GeoRDFBench' },
+      { from: 'Benchmarking', to: 'GeoSPARQL' },
     ];
 
     let time = 0;
@@ -53,9 +54,9 @@ const Web3Animation = function() {
     function drawGlow(x, y, radius, intensity) {
       ctx.beginPath();
       const gradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
-      gradient.addColorStop(0, `rgba(59, 130, 246, ${intensity})`);
-      gradient.addColorStop(1, 'rgba(59, 130, 246, 0)');
-      ctx.arc(x, y, radius, 0, 2 * Math.PI);
+      gradient.addColorStop(0, `rgba(197, 196, 216, ${intensity})`);
+      gradient.addColorStop(1, 'rgba(197, 196, 216, 0)');
+      ctx.arc(x, y, radius, 0, 2* Math.PI);
       ctx.fillStyle = gradient;
       ctx.fill();
     }
