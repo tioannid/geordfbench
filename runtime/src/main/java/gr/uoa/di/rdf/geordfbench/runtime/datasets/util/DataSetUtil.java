@@ -134,6 +134,27 @@ public class DataSetUtil {
         // ds.initializeAfterDeserialization();
         return ds;
     }
+    
+        /**
+     * Deserialize from JSON file
+     *
+     * @param fileName
+     * @return GeographicaDataSet object
+     */
+    public static IGeospatialDataSet deserializeFromJSONString(String jsonSpec) {
+        // create the mapper
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+        GeographicaDS ds = null;
+        try {
+            ds = mapper.readValue(jsonSpec, new TypeReference<GeographicaDS>() {
+            });
+        } catch (IOException ex) {
+            logger.info(ex.getMessage());
+        }
+        // ds.initializeAfterDeserialization();
+        return ds;
+    }
 
     public static void main(String[] args) {
         // RealWorld Workload

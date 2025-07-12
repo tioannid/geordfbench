@@ -34,7 +34,7 @@ public class HostUtil {
     static final String TIOA_PAVILIONDV7JSONDEF_FILE = HOSTJSONDEFS_DIR + "tioa-paviliondv7HOSToriginal.json";
     static final String NUC8i7BEHJSONDEF_FILE = HOSTJSONDEFS_DIR + "nuc8i7behHOSToriginal.json";
     static final String WIN10_WORKJSONDEF_FILE = HOSTJSONDEFS_DIR + "win10_workHOSToriginal.json";
-
+    
     // --- Methods -----------------------------------
     // A) -- Methods that can re-create the JSON definition files
     //       for GeoRDFBench standard hosts
@@ -204,7 +204,7 @@ public class HostUtil {
 
     // B) -- Methods that can the create GeoRDFBench IHost from
     /**
-     * Creates a geographica host from a customized JSON definition file which
+     * Creates a geordfbench host from a customized JSON definition file which
      * contains the serialized host details.
      *
      * @param fileName the file path of the JSON definition file
@@ -228,7 +228,7 @@ public class HostUtil {
     }
 
     /**
-     * Creates a geographica host from a customized JSON definition file which
+     * Creates a geordfbench host from a customized JSON definition file which
      * contains the serialized host details.
      *
      * @param fileName the file path of the JSON definition file

@@ -55,7 +55,29 @@ public class ReportSpecUtil {
         }
         // rs.initializeAfterDeserialization();
         return rs;
-    }    
+    }
+
+    /**
+     * Deserialize from JSON file
+     *
+     * @param jsonSpec
+     * @return IReportSpec object
+     */
+    public static IReportSpec deserializeFromJSONString(String jsonSpec) {
+        // create the mapper
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+        SimpleReportSpec rs = null;
+        try {
+            rs = mapper.readValue(jsonSpec, new TypeReference<SimpleReportSpec>() {
+            });
+        } catch (IOException ex) {
+            logger.info(ex.getMessage());
+        }
+        // rs.initializeAfterDeserialization();
+        return rs;
+    }
+
     public static void main(String[] args) {
         // Simple report spec
         ReportSpecUtil.createSIMPLE_REPORT_SPEC_OriginalJSONDefFile();

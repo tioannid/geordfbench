@@ -21,6 +21,12 @@ import gr.uoa.di.rdf.geordfbench.runtime.sut.ISUT;
 import gr.uoa.di.rdf.geordfbench.runtime.sys.interfaces.IGeographicaSystem;
 import gr.uoa.di.rdf.geordfbench.runtime.workloadspecs.IGeospatialWorkLoadSpec;
 import gr.uoa.di.rdf.geordfbench.runtime.workloadspecs.util.WorkLoadSpecUtil;
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
 
 public abstract class RunSUTExperimentWorkload {
 
@@ -51,20 +57,23 @@ public abstract class RunSUTExperimentWorkload {
         options.addOption("expdesc", "expdescription", true, "Experiment description");
 
         // -- workload related options
-        options.addOption("wl", "workloadspec", true, "Workload specs configuration JSON file");
+        options.addOption("wl", "workloadspec", true, "Workload specs JSON configuration uri");
+        options.addOption("rwl", "remoteworkloadspec", true, "Remote Workload specs configuration JSON file");
         options.addOption("qif", "queryincludefilter", true, "List of queries to include in the run");
         options.addOption("qef", "queryexcludefilter", true, "List of queries to exclude from the run");
 
         // -- host related options
         //    TODO: check if <logpath> option is necessary or if it means only the relative part of the logpath
         options.addOption("h", "hostconffile", true, "Host configuration JSON file");
-        options.addOption("rh", "remotehostconffile", true, "Remote Host configuration JSON file");
+        options.addOption("rh", "remotehostconffile", true, "Remote Host JSON configuration uri");
 
         // -- report related options
         options.addOption("rs", "reportspec", true, "Report specs configuration JSON file");
+        options.addOption("rrs", "remotereportspec", true, "Remote Report specs JSON configuration uri");
 
         // -- report source related options
         options.addOption("rpsr", "reportsource", true, "Report source specs configuration JSON file");
+        options.addOption("rrpsr", "remotereportsource", true, "Remote Report source specs JSON configuration uri");
     }
 
     // print all flat arguments
@@ -76,12 +85,15 @@ public abstract class RunSUTExperimentWorkload {
 
     // log options
     protected void logOptions() {
-        // -- experiment related options
-        logger.info("|==> Experiment related options");
         logger.info("Experiment description:\t" + cmd.getOptionValue("expdescription"));
 
-        logger.info("|==> Workload, Host, Report related options");
-        logger.info("Workload specs configuration JSON file:\t" + cmd.getOptionValue("workloadspec"));
+        logger.info("|==> Benchmark related experiment options");
+        // -- workload option (dataset, queryset, execution spec)
+        if (cmd.hasOption("workloadspec")) {
+            logger.info("Workload specs configuration JSON file:\t" + cmd.getOptionValue("workloadspec"));
+        } else {
+            logger.info("Remote Workload specs JSON configuration uri:\t" + cmd.getOptionValue("remoteworkloadspec"));
+        }
         logger.info("List of queries "
                 + (cmd.hasOption("queryincludefilter")
                 ? "to include in the run:\t" + cmd.getOptionValue("queryincludefilter") // inclusion filter overrules exclusion filter
@@ -89,20 +101,53 @@ public abstract class RunSUTExperimentWorkload {
                 ? "to exclude from the run:\t" + cmd.getOptionValue("queryexcludefilter") // exclusion filter works only by itself
                 : "to include in the run:\t" + "all"));
 
+        logger.info("|==> Environment related experiment options");
         // -- host related options
-        logger.info("Host configuration JSON file:\t" + cmd.getOptionValue("hostconffile"));
-        logger.info("Remote Host configuration JSON file:\t" + cmd.getOptionValue("remotehostconffile"));
+        if (cmd.hasOption("hostconffile")) {
+            logger.info("Host configuration JSON file:\t" + cmd.getOptionValue("hostconffile"));
+        } else {
+            logger.info("Remote Host JSON configuration uri:\t" + cmd.getOptionValue("remotehostconffile"));
+        }
         // -- report related options
-        logger.info("Report specs configuration JSON file:\t" + cmd.getOptionValue("reportspec"));
+        if (cmd.hasOption("reportspec")) {
+            logger.info("Report specs configuration JSON file:\t" + cmd.getOptionValue("reportspec"));
+        } else {
+            logger.info("Remote Report specs JSON configuration uri:\t" + cmd.getOptionValue("remotereportspec"));
+        }
         // -- report source related options
-        logger.info("Report source specs configuration JSON file:\t" + cmd.getOptionValue("reportsource"));
+        if (cmd.hasOption("reportsource")) {
+            logger.info("Report source specs configuration JSON file:\t" + cmd.getOptionValue("reportsource"));
+        } else {
+            logger.info("Remote Report source specs JSON configuration uri:\t" + cmd.getOptionValue("remotereportsource"));
+        }
     }
 
     protected void initSystemUnderTest() {
+        // create a common HTTP client for all probable remote requests
+        HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.ALWAYS).build();
         // -- experiment related options
         expdescription = cmd.getOptionValue("expdescription");
-        // -- workload related options
-        workLoadSpec = WorkLoadSpecUtil.deserializeFromJSON(cmd.getOptionValue("workloadspec"));
+        // BEWARE: local spec takes precedence over remote HTTP spec
+        // -- workload option
+
+        if (cmd.hasOption("workloadspec")) {
+            workLoadSpec = WorkLoadSpecUtil.deserializeFromJSON(cmd.getOptionValue("workloadspec"));
+        } else if (cmd.hasOption("remoteworkloadspec")) {
+            HttpRequest request = new RunSUTExperiment.JsonSpecHttpRequest(cmd.getOptionValue("remoteworkloadspec")).build();
+            HttpResponse<String> response = null;
+            try {
+                response = client.send(request, BodyHandlers.ofString());
+            } catch (IOException ex) {
+                logger.error(ex.getMessage());
+            } catch (InterruptedException ex) {
+                logger.error(ex.getMessage());
+                // Restore interrupted state...
+                Thread.currentThread().interrupt();
+            }
+            if (response != null) {
+                workLoadSpec = WorkLoadSpecUtil.deserializeFromJSONString(response.body());
+            }
+        }
         // -- queryset query include filter
         // apply filter
         IQuerySetPartOfWorkload querySet = workLoadSpec.getGeospatialQueryset();
@@ -149,16 +194,63 @@ public abstract class RunSUTExperimentWorkload {
             }
         }
         logger.info(workLoadSpec.toString());
-        // read host related options - BEWARE: local spec takes precedence over remote HTTP spec
+        // -- host option
         if (cmd.hasOption("hostconffile")) {
             host = HostUtil.deserializeFromJSON(cmd.getOptionValue("hostconffile"));
         } else if (cmd.hasOption("remotehostconffile")) {
-            host = HostUtil.deserializeFromJSON(cmd.getOptionValue("remotehostconffile"));
+            HttpRequest request = new RunSUTExperiment.JsonSpecHttpRequest(cmd.getOptionValue("remotehostconffile")).build();
+            HttpResponse<String> response = null;
+            try {
+                response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            } catch (IOException ex) {
+                logger.error(ex.getMessage());
+            } catch (InterruptedException ex) {
+                logger.error(ex.getMessage());
+                // Restore interrupted state...
+                Thread.currentThread().interrupt();
+            }
+            if (response != null) {
+                host = HostUtil.deserializeFromJSONString(response.body());
+            }
         }
-        // -- report related options
-        rptSpec = ReportSpecUtil.deserializeFromJSON(cmd.getOptionValue("reportspec"));
-        // -- report source related options
-        rptSrcSpec = ReportSourceUtil.deserializeFromJSON(cmd.getOptionValue("reportsource"));
+        // -- report option
+        if (cmd.hasOption("reportspec")) {
+            rptSpec = ReportSpecUtil.deserializeFromJSON(cmd.getOptionValue("reportspec"));
+        } else if (cmd.hasOption("remotereportspec")) {
+            HttpRequest request = new RunSUTExperiment.JsonSpecHttpRequest(cmd.getOptionValue("remotereportspec")).build();
+            HttpResponse<String> response = null;
+            try {
+                response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            } catch (IOException ex) {
+                logger.error(ex.getMessage());
+            } catch (InterruptedException ex) {
+                logger.error(ex.getMessage());
+                // Restore interrupted state...
+                Thread.currentThread().interrupt();
+            }
+            if (response != null) {
+                rptSpec = ReportSpecUtil.deserializeFromJSONString(response.body());
+            }
+        }
+        // -- report source option
+        if (cmd.hasOption("reportsource")) {
+            rptSrcSpec = ReportSourceUtil.deserializeFromJSON(cmd.getOptionValue("reportsource"));
+        } else if (cmd.hasOption("remotereportsource")) {
+            HttpRequest request = new RunSUTExperiment.JsonSpecHttpRequest(cmd.getOptionValue("remotereportsource")).build();
+            HttpResponse<String> response = null;
+            try {
+                response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            } catch (IOException ex) {
+                logger.error(ex.getMessage());
+            } catch (InterruptedException ex) {
+                logger.error(ex.getMessage());
+                // Restore interrupted state...
+                Thread.currentThread().interrupt();
+            }
+            if (response != null) {
+                rptSrcSpec = ReportSourceUtil.deserializeFromJSONString(response.body());
+            }
+        }
     }
 
     private String[] parseArguments(String[] args) {

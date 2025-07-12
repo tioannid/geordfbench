@@ -41,7 +41,6 @@ public class WorkLoadSpecUtil {
     // --- Methods -----------------------------------
     // A) -- Methods that can re-create the JSON definition files
     //       for GeoRDFBench workloads
-
     /**
      * Creates the JSON definition file for the RealWorld Micro geographica
      * workload in
@@ -57,7 +56,7 @@ public class WorkLoadSpecUtil {
             logger.error(ex.getMessage());
         }
     }
-    
+
     /**
      * Creates the JSON definition file for the Geocoding Census geographica
      * workload in
@@ -121,7 +120,7 @@ public class WorkLoadSpecUtil {
             logger.error(ex.getMessage());
         }
     }
-    
+
     /**
      * Creates the JSON definition file for the RealWorld Macro Rapid Mapping
      * geographica workload in
@@ -137,7 +136,7 @@ public class WorkLoadSpecUtil {
             logger.error(ex.getMessage());
         }
     }
-    
+
     /**
      * Creates the JSON definition file for the Scalability N {function and
      * predicate} geographica workload in
@@ -171,14 +170,14 @@ public class WorkLoadSpecUtil {
             logger.error(ex.getMessage());
         }
     }
-    
+
     // B) -- Methods that can the create GeoRDFBench datasets from
     //       custom JSON definition files    
     /**
      * Deserialize from JSON file
      *
      * @param fileName
-     * @return GeographicaDataSet object
+     * @return IGeospatialWorkLoadSpec object
      */
     public static IGeospatialWorkLoadSpec deserializeFromJSON(String fileName) {
         File serObjFile = new File(fileName);
@@ -194,7 +193,34 @@ public class WorkLoadSpecUtil {
         } catch (IOException ex) {
             logger.info(ex.getMessage());
         }
-        wls.getGeospatialQueryset().initializeAfterDeserialization();
+        if (wls.getGeospatialQueryset() != null) {
+            wls.getGeospatialQueryset().initializeAfterDeserialization();
+        }
+        return wls;
+    }
+
+    /**
+     * Deserialize from JSON file
+     *
+     * @param jsonSpec
+     * @return IGeospatialWorkLoadSpec object
+     */
+    public static IGeospatialWorkLoadSpec deserializeFromJSONString(String jsonSpec) {
+        // create the mapper
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+        SimpleGeospatialWL wls = null;
+        try {
+            wls = mapper
+                    //.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                    .readValue(jsonSpec, new TypeReference<SimpleGeospatialWL>() {
+                    });
+        } catch (IOException ex) {
+            logger.info(ex.getMessage());
+        }
+        if (wls.getGeospatialQueryset() != null) {
+            wls.getGeospatialQueryset().initializeAfterDeserialization();
+        }
         return wls;
     }
 
@@ -219,12 +245,11 @@ public class WorkLoadSpecUtil {
         WorkLoadSpecUtil.createMacroMapSearchWL_OriginalJSONDefFile();
         IGeospatialWorkLoadSpec macmapsrcWLS
                 = WorkLoadSpecUtil.deserializeFromJSON(RWMACROMAPSEARCH_JSONDEF_FILE);
-        logger.info(macmapsrcWLS.serializeToJSON());        
+        logger.info(macmapsrcWLS.serializeToJSON());
         WorkLoadSpecUtil.createMacroRapidMappingWL_OriginalJSONDefFile();
         IGeospatialWorkLoadSpec macrapmapWLS
                 = WorkLoadSpecUtil.deserializeFromJSON(RWMACRORAPIDMAPPING_JSONDEF_FILE);
-        logger.info(macrapmapWLS.serializeToJSON());        
-
+        logger.info(macrapmapWLS.serializeToJSON());
 
         // Scalability Workload
         IGeospatialWorkLoadSpec scalWLS;

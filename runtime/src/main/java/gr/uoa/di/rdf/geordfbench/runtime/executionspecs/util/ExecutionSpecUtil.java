@@ -48,7 +48,7 @@ public class ExecutionSpecUtil {
      *
      */
     public static void createMacroES_OriginalJSONDefFile() {
-    SimpleES mases = SimpleES.newMacroES();
+        SimpleES mases = SimpleES.newMacroES();
         try {
             mases.serializeToJSON(new File(MACROEXECUTIONSPECJSONDEF_FILE));
         } catch (JsonMappingException ex) {
@@ -81,7 +81,7 @@ public class ExecutionSpecUtil {
      * Deserialize from JSON file
      *
      * @param fileName
-     * @return GeographicaDataSet object
+     * @return IExecutionSpec object
      */
     public static IExecutionSpec deserializeFromJSON(String fileName) {
         File serObjFile = new File(fileName);
@@ -91,6 +91,26 @@ public class ExecutionSpecUtil {
         SimpleES es = null;
         try {
             es = mapper.readValue(serObjFile, new TypeReference<SimpleES>() {
+            });
+        } catch (IOException ex) {
+            logger.info(ex.getMessage());
+        }
+        return es;
+    }
+
+    /**
+     * Deserialize from JSON file
+     *
+     * @param jsonSpec
+     * @return IExecutionSpec object
+     */
+    public static IExecutionSpec deserializeFromJSONString(String jsonSpec) {
+        // create the mapper
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+        SimpleES es = null;
+        try {
+            es = mapper.readValue(jsonSpec, new TypeReference<SimpleES>() {
             });
         } catch (IOException ex) {
             logger.info(ex.getMessage());

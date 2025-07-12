@@ -928,13 +928,12 @@ public class QuerySetUtil {
 //            logger.error(ex.getMessage());
 //        }
 //    }
-
     // B) -- Methods that can re-create querysets from the JSON definition files
     /**
      * Deserialize from JSON file
      *
      * @param fileName
-     * @return GeographicaDataSet object
+     * @return IQuerySet object
      */
     public static IQuerySet deserializeFromJSON(String fileName) {
         File serObjFile = new File(fileName);
@@ -948,7 +947,32 @@ public class QuerySetUtil {
         } catch (IOException ex) {
             logger.info(ex.getMessage());
         }
-        qs.initializeAfterDeserialization();
+        if (qs != null) {
+            qs.initializeAfterDeserialization();
+        }
+        return qs;
+    }
+
+    /**
+     * Deserialize from JSON file
+     *
+     * @param jsonSpec
+     * @return IQuerySet object
+     */
+    public static IQuerySet deserializeFromJSONString(String jsonSpec) {
+        // create the mapper
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+        SimpleQS qs = null;
+        try {
+            qs = mapper.readValue(jsonSpec, new TypeReference<SimpleQS>() {
+            });
+        } catch (IOException ex) {
+            logger.info(ex.getMessage());
+        }
+        if (qs != null) {
+            qs.initializeAfterDeserialization();
+        }
         return qs;
     }
 

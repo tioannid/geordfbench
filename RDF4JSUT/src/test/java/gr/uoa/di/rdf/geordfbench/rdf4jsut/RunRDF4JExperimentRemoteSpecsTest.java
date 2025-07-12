@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import static gr.uoa.di.rdf.geordfbench.runtime.hosts.IHost.*;
 import gr.uoa.di.rdf.geordfbench.runtime.hosts.util.HostUtil;
+import gr.uoa.di.rdf.geordfbench.runtime.runsut.RunSUTExperiment;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -31,7 +32,7 @@ import org.apache.commons.io.file.PathUtils;
  *
  * @author Theofilos Ioannidis <tioannid@di.uoa.gr>
  * @creationdate 26/08/2024
- * @updatedate 03/09/2024
+ * @updatedate 04/06/2025
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DisplayName("Test Experiment Query Filtering with Detailed Benchmark Specification")
@@ -44,7 +45,7 @@ public class RunRDF4JExperimentRemoteSpecsTest {
     String TEST_RESOURCES_DIR,
             JSON_DEFS_DIR,
             HOST_SPEC_FILE,
-            REMOTE_HOST_SPEC,
+            REMOTE_JSON_DEFS_DIR,
             RDF4J_REPOS_DIR,
             CREATEMAN_ARGS_LIST,
             DIRLOADMAN_ARGS_LIST;
@@ -68,32 +69,24 @@ public class RunRDF4JExperimentRemoteSpecsTest {
         p = new File("src/test/resources/json_defs".replace("/", SEP));
         JSON_DEFS_DIR = p.getAbsolutePath();
 
+        REMOTE_JSON_DEFS_DIR = "http://geordfbench.di.uoa.gr/jsonapi/";
+
         String argLineNoQueryFilter
                 = // No Query Filter is specified - 3 queries (0,1,2) expected in output
                 "-rbd " + RDF4J_Repos_server + " "
                 + "-expdesc RDF4JSUT_RunRDF4JExperimentTest "
-                + "-ds " + JSON_DEFS_DIR + "/datasets/scalability_10Koriginal.json".replace("/", SEP) + " "
-                + "-qs " + JSON_DEFS_DIR + "/querysets/scalabilityFuncQSoriginal.json".replace("/", SEP) + " "
-                + "-es " + JSON_DEFS_DIR + "/executionspecs/scalabilityESoriginal_PRINT.json".replace("/", SEP) + " "
-                + "-rs " + JSON_DEFS_DIR + "/reportspecs/simplereportspec_original.json".replace("/", SEP) + " "
-                + "-rpsr " + JSON_DEFS_DIR + "/reportsources/ubuntu_vma_tioaRepSrcoriginal.json".replace("/", SEP) + " ";
+                + "-rds " + REMOTE_JSON_DEFS_DIR + "datasets/scalability_10Koriginal.json" + " "
+                + "-rqs " + REMOTE_JSON_DEFS_DIR + "querysets/scalabilityFuncQSoriginal.json" + " "
+                + "-res " + REMOTE_JSON_DEFS_DIR + "executionspecs/scalabilityESoriginal_PRINT.json" + " "
+                + "-rrs " + REMOTE_JSON_DEFS_DIR + "reportspecs/simplereportspec_original.json" + " "
+                + "-rrpsr " + REMOTE_JSON_DEFS_DIR + "reportsources/ubuntu_vma_tioaRepSrcoriginal.json" + " ";
         // create a current test HOST
+        HOST_SPEC_FILE = JSON_DEFS_DIR + "/hosts/current_testHOST.json".replace("/", SEP);
+        HostUtil.createCurrent_TestHost_JSONDefFile(new File(HOST_SPEC_FILE));
+        currentTestHost = HostUtil.deserializeFromJSON(HOST_SPEC_FILE);
 
-        REMOTE_HOST_SPEC = "http://localhost:5000/hosts/win10_workHOSToriginal";
-        argLineNoQueryFilter += "-rh " + REMOTE_HOST_SPEC;
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(REMOTE_HOST_SPEC))
-                .setHeader("Content-type", "application/json")
-                .build();
-        HttpResponse<String> response = null;
-        try {
-            response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            currentTestHost = HostUtil.deserializeFromJSONString(response.body());
-        } catch (IOException | InterruptedException ex) {
-            System.out.println(ex.getMessage());
-        }
-        
+        argLineNoQueryFilter += "-h " + HOST_SPEC_FILE;
+
         argsNoQueryFilter = argLineNoQueryFilter.split(" ");
         String argLineWithQueryInclusionFilter = argLineNoQueryFilter // Query InclusionFilter specified - 2 queries (0,_,2) expected in output
                 + " -qif \"0,2\"";

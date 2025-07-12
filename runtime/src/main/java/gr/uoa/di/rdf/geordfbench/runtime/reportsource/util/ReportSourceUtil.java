@@ -87,7 +87,37 @@ public class ReportSourceUtil {
                 logger.info(ex.getMessage() + "\n" + e.getMessage());
             }
         }
-        rs.initializeAfterDeserialization();
+        if (rs != null) {
+            rs.initializeAfterDeserialization();
+        }
+        return rs;
+    }
+
+    /**
+     * Deserialize from JSON file
+     *
+     * @param jsonSpec
+     * @return IReportSource object
+     */
+    public static IReportSource deserializeFromJSONString(String jsonSpec) {
+        // create the mapper
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+        IReportSource rs = null;
+        try {
+            rs = mapper.readValue(jsonSpec, new TypeReference<PostgreSQLRepSrc>() {
+            });
+        } catch (IOException ex) {
+            try {
+                rs = mapper.readValue(jsonSpec, new TypeReference<H2EmbeddedRepSrc>() {
+                });
+            } catch (IOException e) {
+                logger.info(ex.getMessage() + "\n" + e.getMessage());
+            }
+        }
+        if (rs != null) {
+            rs.initializeAfterDeserialization();
+        }
         return rs;
     }
 
