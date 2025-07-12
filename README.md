@@ -36,22 +36,19 @@ There is a new [JSON Specification Library Endpoint](https://geordfbench.di.uoa.
 ## Next Steps
 
 * New capabilities:
-
-        * a __user interface module__ to be used as a front-end with the new JSON Specs Endpoint which will further assist the interactive generation and modification of JSON specifications,
-        * implement the remaining Create, Update, Delete **endpoint module's** operations on JSON specification libraries,
-        * support for the **Hadoop file system**,
-        * a **fourth Spark-based framework API**, so that Spark-based distributed GeoSPARQL solutions, 
-            such as [Strabo 2](http://cgi.di.uoa.gr/~koubarak/publications/2022/strabo2.pdf) can be tested, and
-        * **inference** support for RDF modules
+    * a __user interface module__ to be used as a front-end with the new JSON Specs Endpoint which will further assist the interactive generation and modification of JSON specifications,
+    * implement the remaining Create, Update, Delete **endpoint module's** operations on JSON specification libraries,
+    * support for the **Hadoop file system**,
+    * a **fourth Spark-based framework API**, so that Spark-based distributed GeoSPARQL solutions, 
+        such as [Strabo 2](http://cgi.di.uoa.gr/~koubarak/publications/2022/strabo2.pdf) can be tested, and
+    * **inference** support for RDF modules
 
 * New RDF Modules for SPARQL/GeoSPARQL:
-
-        * [Anzo Graph](https://docs.cambridgesemantics.com/anzo/v5.4/userdoc/Home.htm) by Cambridge Semantics (now Altair),
-        * [Neo4J](https://neo4j.com/) with [neosemantics (n10s)](https://neo4j.com/labs/neosemantics/) plugin
+    * [Anzo Graph](https://docs.cambridgesemantics.com/anzo/v5.4/userdoc/Home.htm) by Cambridge Semantics (now Altair),
+    * [Neo4J](https://neo4j.com/) with [neosemantics (n10s)](https://neo4j.com/labs/neosemantics/) plugin
 
 * New Semantic Languages:
-
-        * [Graph Query Language (GQL)](https://www.gqlstandards.org/) for running benchmarks on native LPGs
+    * [Graph Query Language (GQL)](https://www.gqlstandards.org/) for running benchmarks on native LPGs
 
 
 ## Sustainability plan and limitations
