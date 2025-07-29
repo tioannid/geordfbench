@@ -25,6 +25,7 @@ import java.util.logging.Logger;
 import gr.uoa.di.rdf.geordfbench.runtime.querysets.complex.IQuerySet;
 import gr.uoa.di.rdf.geordfbench.runtime.querysets.complex.impl.MacroComputeStatisticsQS;
 import gr.uoa.di.rdf.geordfbench.runtime.querysets.complex.impl.MacroGeocodingQS;
+import gr.uoa.di.rdf.geordfbench.runtime.querysets.complex.impl.MacroQS;
 import gr.uoa.di.rdf.geordfbench.runtime.querysets.complex.impl.MacroRapidMappingQS;
 import gr.uoa.di.rdf.geordfbench.runtime.querysets.simple.IQuery;
 
@@ -44,6 +45,7 @@ public class QuerySetUtil {
     public static String WKT_LITERAL = "<http://www.opengis.net/ont/geosparql#wktLiteral>";
     public static final String SYNTHETICJSONDEF_FILE = QUERYSETJSONDEFS_DIR + "syntheticQSoriginal.json";
     public static final String RWMICROJSONDEF_FILE = QUERYSETJSONDEFS_DIR + "rwmicroQSoriginal.json";
+    public static final String RWMICRODEMOJSONDEF_FILE = QUERYSETJSONDEFS_DIR + "rwmicroQSDemo.json";
     public static final String RWMICRO_SELECTIONS_POLYGON_FILE = "givenPolygon.txt";
     public static final String RWMICRO_SELECTIONS_LINES_FILE = "givenLine.txt";
     public static final String RWMACROREVERSEGEOCODING_JSONDEF_FILE = QUERYSETJSONDEFS_DIR + "rwmacroreversegeocodingQSoriginal.json";
@@ -467,6 +469,93 @@ public class QuerySetUtil {
         // them multiple times in ground query text.
         try {
             rwmicroQS.serializeToJSON(new File(RWMICROJSONDEF_FILE));
+        } catch (JsonMappingException ex) {
+            logger.error(ex.getMessage());
+        } catch (IOException ex) {
+            logger.error(ex.getMessage());
+        }
+    }
+
+    public static void createRWMicroQS_demoJSONDefFile() {
+        // Some constant literals to use
+        String givenPoint = "\"POINT(23.71622 37.97945)\"^^" + WKT_LITERAL;
+        String givenRadius = "3000";
+
+        // populate Literal Values map
+        Map<String, String> mapLiteralValues = new HashMap<>();
+        // populate Useful namespace prefixes map
+        Map<String, String> mapUsefulNamespacePrefixes = new HashMap<>();
+        mapUsefulNamespacePrefixes.put("strdf", "<http://strdf.di.uoa.gr/ontology#>");
+        mapUsefulNamespacePrefixes.put("uom", "<http://www.opengis.net/def/uom/OGC/1.0/>");
+        // populate IQuery Templates
+        Map<String, String> mapQueryTemplates = new HashMap<>();
+        mapQueryTemplates.put("NONTOP_BUFFER", "SELECT (geof:<FUNCTION1>(?o1, 4, uom:metre) AS ?ret) \nWHERE {\n\tGRAPH <GRAPH1> {\n\t\t?s1 <ASWKT1> ?o1\n\t}\n}");
+        mapQueryTemplates.put("JOIN_2", "SELECT ?s1 ?s2 \nWHERE { \n\tGRAPH <GRAPH1> {\n\t\t?s1 <ASWKT1> ?o1\n\t}\n\tGRAPH <GRAPH2> {\n\t\t?s2 <ASWKT2> ?o2\n\t}\nFILTER(?s1 != ?s2).\nFILTER(geof:<FUNCTION1>(?o1, ?o2)).\n}");
+        mapQueryTemplates.put("SELECT_BUFFER", "SELECT ?s1 \nWHERE {\n\tGRAPH <GRAPH1> {\n\t\t?s1 <ASWKT1> ?o1\n\t}\nFILTER(geof:<FUNCTION1>(?o1, geof:<FUNCTION2>("
+                + givenPoint + ", " + givenRadius + ", uom:metre))).\n}");
+        // populate Graph prefixes map
+        mapLiteralValues.put("LL_geonames", "<http://geographica.di.uoa.gr/dataset/geonames>");
+        mapLiteralValues.put("LL_lgd", "<http://geographica.di.uoa.gr/dataset/lgd>");
+        mapLiteralValues.put("LL_clc", "<http://geographica.di.uoa.gr/dataset/clc>");
+        mapLiteralValues.put("LL_gadm", "<http://geographica.di.uoa.gr/dataset/gag>");
+
+        // populate asWKT prefixes map
+        mapLiteralValues.put("LL_geonames_asWKT", "<http://www.geonames.org/ontology#asWKT>");
+        mapLiteralValues.put("LL_lgd_asWKT", "<http://linkedgeodata.org/ontology/asWKT>");
+        mapLiteralValues.put("LL_clc_asWKT", "<http://geo.linkedopendata.gr/corine/ontology#asWKT>");
+        mapLiteralValues.put("LL_gadm_asWKT", "<http://geo.linkedopendata.gr/gag/ontology/asWKT>");
+
+        // populate with GeoSPARQL functions
+        mapLiteralValues.put("LL_fn_buffer", "buffer");
+        mapLiteralValues.put("LL_fn_area", "area");
+        mapLiteralValues.put("LL_sfWithin", "sfWithin");
+        mapLiteralValues.put("LL_sfTouches", "sfTouches");
+
+        // populate queries map (query number, query label, query template name)
+        Map<Integer, IQuery> mapQry = new HashMap<>();
+        // --- Non Topological Function Queries
+        mapQry.put(0, new SimpleQuery("Buffer_GeoNames", "NONTOP_BUFFER", false, 21990));
+        mapQry.put(1, new SimpleQuery("Buffer_LGD", "NONTOP_BUFFER", false, 12097));
+        mapQry.put(2, new SimpleQuery("Within_GeoNames_Point_Buffer", "SELECT_BUFFER", false, 152));
+        mapQry.put(3, new SimpleQuery("Touches_GAG_GAG", "JOIN_2", false, 1022));
+
+        List<String> templateDynamicParamNameList = new ArrayList<>();
+        templateDynamicParamNameList.add("<FUNCTION1>");
+        templateDynamicParamNameList.add("<FUNCTION2>");
+        templateDynamicParamNameList.add("<ASWKT1>");
+        templateDynamicParamNameList.add("<ASWKT2>");
+        templateDynamicParamNameList.add("<GRAPH1>");
+        templateDynamicParamNameList.add("<GRAPH2>");
+        DynamicTempParamQS rwmicroQS
+                = new DynamicTempParamQS("rwmicro", "", false,
+                        mapQry, mapUsefulNamespacePrefixes,
+                        mapQueryTemplates,
+                        mapLiteralValues,
+                        templateDynamicParamNameList);
+        // populate the correspondence matrix to query template param replacement
+        // --- Non Topological Function Queries
+        rwmicroQS.getTemplateParamValueMatrix().put(0, "<GRAPH1>", "LL_geonames");
+        rwmicroQS.getTemplateParamValueMatrix().put(0, "<ASWKT1>", "LL_geonames_asWKT");
+        rwmicroQS.getTemplateParamValueMatrix().put(0, "<FUNCTION1>", "LL_fn_buffer");
+        rwmicroQS.getTemplateParamValueMatrix().put(1, "<GRAPH1>", "LL_lgd");
+        rwmicroQS.getTemplateParamValueMatrix().put(1, "<ASWKT1>", "LL_lgd_asWKT");
+        rwmicroQS.getTemplateParamValueMatrix().put(1, "<FUNCTION1>", "LL_fn_buffer");
+        // --- Spatial Selection Queries
+        rwmicroQS.getTemplateParamValueMatrix().put(2, "<GRAPH1>", "LL_geonames");
+        rwmicroQS.getTemplateParamValueMatrix().put(2, "<ASWKT1>", "LL_geonames_asWKT");
+        rwmicroQS.getTemplateParamValueMatrix().put(2, "<FUNCTION1>", "LL_sfWithin");
+        rwmicroQS.getTemplateParamValueMatrix().put(2, "<FUNCTION2>", "LL_fn_buffer");
+        // --- Spatial Join Queries
+        rwmicroQS.getTemplateParamValueMatrix().put(3, "<GRAPH1>", "LL_gadm");
+        rwmicroQS.getTemplateParamValueMatrix().put(3, "<ASWKT1>", "LL_gadm_asWKT");
+        rwmicroQS.getTemplateParamValueMatrix().put(3, "<GRAPH2>", "LL_gadm");
+        rwmicroQS.getTemplateParamValueMatrix().put(3, "<ASWKT2>", "LL_gadm_asWKT");
+        rwmicroQS.getTemplateParamValueMatrix().put(3, "<FUNCTION1>", "LL_sfTouches");
+        // intentionally not using rwmicroQS.translateAllQueries() in order
+        // to store large literals only once in template params and avoid storing
+        // them multiple times in ground query text.
+        try {
+            rwmicroQS.serializeToJSON(new File(RWMICRODEMOJSONDEF_FILE));
         } catch (JsonMappingException ex) {
             logger.error(ex.getMessage());
         } catch (IOException ex) {
@@ -940,17 +1029,57 @@ public class QuerySetUtil {
         // create the mapper
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
-        SimpleQS qs = null;
+        IQuerySet iqs = null;
         try {
-            qs = mapper.readValue(serObjFile, new TypeReference<SimpleQS>() {
+            iqs = mapper.readValue(serObjFile, new TypeReference<StaticTempParamQS>() {
             });
-        } catch (IOException ex) {
-            logger.info(ex.getMessage());
+        } catch (IOException e) {
+            try {
+                iqs = mapper.readValue(serObjFile, new TypeReference<DynamicTempParamQS>() {
+                });
+            } catch (IOException e1) {
+                try {
+                    iqs = mapper.readValue(serObjFile, new TypeReference<MacroRapidMappingQS>() {
+                    });
+                } catch (IOException e2) {
+                    try {
+                        iqs = mapper.readValue(serObjFile, new TypeReference<MacroMapSearchQS>() {
+                        });
+                    } catch (IOException e3) {
+                        try {
+                            iqs = mapper.readValue(serObjFile, new TypeReference<MacroGeocodingQS>() {
+                            });
+                        } catch (IOException e4) {
+                            try {
+                                iqs = mapper.readValue(serObjFile, new TypeReference<MacroReverseGeocodingQS>() {
+                                });
+                            } catch (IOException e5) {
+                                try {
+                                    iqs = mapper.readValue(serObjFile, new TypeReference<MacroComputeStatisticsQS>() {
+                                    });
+                                } catch (IOException e6) {
+                                    try {
+                                        iqs = mapper.readValue(serObjFile, new TypeReference<MacroQS>() {
+                                        });
+                                    } catch (IOException e7) {
+                                        try {
+                                            iqs = mapper.readValue(serObjFile, new TypeReference<SimpleQS>() {
+                                            });
+                                        } catch (IOException ex) {
+                                            logger.info(e.getMessage() + "\n" + ex.getMessage());
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
-        if (qs != null) {
-            qs.initializeAfterDeserialization();
+        if (iqs != null) {
+            iqs.initializeAfterDeserialization();
         }
-        return qs;
+        return iqs;
     }
 
     /**
@@ -963,24 +1092,68 @@ public class QuerySetUtil {
         // create the mapper
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
-        SimpleQS qs = null;
+        IQuerySet iqs = null;
         try {
-            qs = mapper.readValue(jsonSpec, new TypeReference<SimpleQS>() {
+            iqs = mapper.readValue(jsonSpec, new TypeReference<SimpleQS>() {
             });
-        } catch (IOException ex) {
-            logger.info(ex.getMessage());
+        } catch (IOException e) {
+            try {
+                iqs = mapper.readValue(jsonSpec, new TypeReference<StaticTempParamQS>() {
+                });
+            } catch (IOException e1) {
+                try {
+                    iqs = mapper.readValue(jsonSpec, new TypeReference<DynamicTempParamQS>() {
+                    });
+                } catch (IOException e2) {
+                    try {
+                        iqs = mapper.readValue(jsonSpec, new TypeReference<MacroQS>() {
+                        });
+                    } catch (IOException e3) {
+                        try {
+                            iqs = mapper.readValue(jsonSpec, new TypeReference<MacroRapidMappingQS>() {
+                            });
+                        } catch (IOException e4) {
+                            try {
+                                iqs = mapper.readValue(jsonSpec, new TypeReference<MacroMapSearchQS>() {
+                                });
+                            } catch (IOException e5) {
+                                try {
+                                    iqs = mapper.readValue(jsonSpec, new TypeReference<MacroGeocodingQS>() {
+                                    });
+                                } catch (IOException e6) {
+                                    try {
+                                        iqs = mapper.readValue(jsonSpec, new TypeReference<MacroReverseGeocodingQS>() {
+                                        });
+                                    } catch (IOException e7) {
+                                        try {
+                                            iqs = mapper.readValue(jsonSpec, new TypeReference<MacroComputeStatisticsQS>() {
+                                            });
+                                        } catch (IOException ex) {
+                                            logger.info(e.getMessage() + "\n" + ex.getMessage());
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
-        if (qs != null) {
-            qs.initializeAfterDeserialization();
+        if (iqs != null) {
+            iqs.initializeAfterDeserialization();
         }
-        return qs;
+        return iqs;
     }
 
     public static void main(String[] args) throws JsonProcessingException, IOException {
+        // Realworld Micro Queryset (DEMO short version) - dynamic template
+        QuerySetUtil.createRWMicroQS_demoJSONDefFile();
+        IQuerySet qs
+                = QuerySetUtil.deserializeFromJSON(QuerySetUtil.RWMICRODEMOJSONDEF_FILE);
+        logger.info(qs.serializeToJSON());
         // Realworld Micro Queryset - dynamic template
         QuerySetUtil.createRWMicroQS_OriginalJSONDefFile();
-        IQuerySet qs
-                = QuerySetUtil.deserializeFromJSON(QuerySetUtil.RWMICROJSONDEF_FILE);
+        qs = QuerySetUtil.deserializeFromJSON(QuerySetUtil.RWMICROJSONDEF_FILE);
         logger.info(qs.serializeToJSON());
         // Realworld Macro Reverse Geocoding Queryset
         QuerySetUtil.createMacroReverseGeocodingQS_OriginalJSONDefFile();

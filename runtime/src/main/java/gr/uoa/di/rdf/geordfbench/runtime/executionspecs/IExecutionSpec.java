@@ -18,7 +18,8 @@ public interface IExecutionSpec {
     public static enum Action {
         TRANSLATE,
         RUN,
-        PRINT
+        PRINT,
+        NONE
     }
 
     public static enum AverageFunction {

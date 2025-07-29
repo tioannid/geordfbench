@@ -41,6 +41,8 @@ public class SimpleQSPartOfWorkload implements IQuerySetPartOfWorkload {
     }
 
     // --- Data members ------------------------------
+    @JsonIgnore
+    Action action;
     String name;
     String relativeBaseDir;
     boolean hasPredicateQueriesAlso;
@@ -75,24 +77,22 @@ public class SimpleQSPartOfWorkload implements IQuerySetPartOfWorkload {
     }
 
     // --- Data Accessors ----------------------------
+    @Override
+    public Action getAction() {
+        return action;
+    }
+
+    @Override
+    public void setAction(Action action) {
+        this.action = action;
+    }
+
     public IExecutionSpec getExecutionSpec() {
         return executionSpec;
     }
 
     public void setExecutionSpec(IExecutionSpec executionSpec) {
         this.executionSpec = executionSpec;
-    }
-
-    @JsonIgnore
-    @Override
-    public Action getAction() {
-        return executionSpec.getAction();
-    }
-
-    @JsonIgnore
-    @Override
-    public void setAction(Action action) {
-        executionSpec.setAction(action);
     }
 
     @Override
@@ -310,6 +310,7 @@ public class SimpleQSPartOfWorkload implements IQuerySetPartOfWorkload {
 
     @Override
     public void initializeAfterDeserialization() {
+        this.action = Action.TRANSLATE;
     }
 
     public void setExpectedResults(SimpleQuery.QueryAccuracyValidation queryAccuracyValidation) {

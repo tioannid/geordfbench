@@ -9,6 +9,7 @@ router.get("/", (req, res) => {
     JSON_LIB_PATH: process.env.JSON_LIB_PATH,
     HOSTNAME: os.hostname(),
     PLATFORM: os.version().concat(" v", os.release(), ", ", os.machine()),
+    CRUD_MAP: JSON.parse(process.env.CRUD_MAP),
   };
   return res.json(endpointConfig);
 });

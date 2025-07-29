@@ -5,6 +5,7 @@ package gr.uoa.di.rdf.geordfbench.runtime.querysets.partofworkload.impl;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import gr.uoa.di.rdf.geordfbench.runtime.executionspecs.IExecutionSpec;
+import gr.uoa.di.rdf.geordfbench.runtime.executionspecs.IExecutionSpec.Action;
 import gr.uoa.di.rdf.geordfbench.runtime.executionspecs.impl.SimpleES;
 import java.util.List;
 import java.util.Map;
@@ -139,7 +140,7 @@ public class DynamicTempParamQS extends SimpleQSPartOfWorkload {
         mapQry.put(0, new SimpleQuery("Boundary_CLC", "NONTOP_GeoSPARQL", false, 44834));
         mapQry.put(1, new SimpleQuery("Envelope_CLC", "NONTOP_GeoSPARQL", false, 44834));
         mapQry.put(2, new SimpleQuery("ConvexHull_CLC", "NONTOP_GeoSPARQL", false, 44834));
-        mapQry.put(3, new SimpleQuery("Buffer_GeoNames", "NONTOP_BUFFER", false,21990));
+        mapQry.put(3, new SimpleQuery("Buffer_GeoNames", "NONTOP_BUFFER", false, 21990));
         mapQry.put(4, new SimpleQuery("Buffer_LGD", "NONTOP_BUFFER", false, 12097));
         mapQry.put(5, new SimpleQuery("Area_CLC", "NONTOP_STSPARQL", false, 44834));
         // --- Spatial Selection Queries
@@ -328,6 +329,10 @@ public class DynamicTempParamQS extends SimpleQSPartOfWorkload {
             List<String> templateDynamicParamNameList) {
         super(executionSpec, name, relativeBaseDir, hasPredicateQueriesAlso,
                 mapQueries, mapUsefulNamespacePrefixes);
+        // dynamic templates should not be automatically translated
+        // because the templateParamValueMatrix has to be initialized first!
+        this.isTranslated = false; // it is not translated
+        action = IExecutionSpec.Action.NONE; // we do not want it to be translated now!      
         this.mapQueryTemplates = mapQueryTemplates;
         this.mapLiteralValues = mapLiteralValues;
         this.templateDynamicParamNameList = templateDynamicParamNameList;
@@ -339,57 +344,20 @@ public class DynamicTempParamQS extends SimpleQSPartOfWorkload {
                     + " does not have sane values for initialization");
         }
         this.templateParamValueMatrix = new DynamicQryTempParamMatrix(this);
-        this.isTranslated = false;
-    }
-
-    // 1. Partial constructor:
-    //      The query list is deserialized from a JSON file placed
-    //      in the resources folder or the classpath in general
-    //      Queries are placed on a map property
-    //      then only one set of queries (spatial predicate or functions) is kept
-    //      and static template params are replaced
-    /**
-     * Used mainly to deserializeFromJSON a
-     * GeographicaDynamicTemplateParamQuerySet from a JSON file, where queries
-     * can be translated or not yet. This allows the end-user to modify the JSON
-     * file and produce variations of the dynamic queryset.
-     *
-     * @param executionSpec
-     * @param name
-     * @param relativeBaseDir
-     * @param hasPredicateQueriesAlso
-     * @param mapQueries
-     * @param mapUsefulNamespacePrefixes
-     * @param mapQueryTemplates
-     * @param mapLiteralValues
-     * @param templateDynamicParamNameList
-     * @param templateParamValueMatrix
-     * @param isTranslated
-     */
-    public DynamicTempParamQS(IExecutionSpec executionSpec, String name,
-            String relativeBaseDir, boolean hasPredicateQueriesAlso,
-            Map<Integer, IQuery> mapQueries,
-            Map<String, String> mapUsefulNamespacePrefixes,
-            Map<String, String> mapQueryTemplates,
-            Map<String, String> mapLiteralValues,
-            List<String> templateDynamicParamNameList,
-            DynamicQryTempParamMatrix templateParamValueMatrix,
-            boolean isTranslated) {
-        super(executionSpec, name, relativeBaseDir, hasPredicateQueriesAlso, mapQueries,
-                mapUsefulNamespacePrefixes);
-        this.mapQueryTemplates = mapQueryTemplates;
-        this.mapLiteralValues = mapLiteralValues;
-        this.templateDynamicParamNameList = templateDynamicParamNameList;
-        templateParamValueMatrix.setParent(this);
-        this.templateParamValueMatrix = templateParamValueMatrix;
-        this.isTranslated = isTranslated;
-        this.translateAllQueries();
     }
 
     public DynamicTempParamQS() {
     }
 
     // --- Data Accessors ----------------------------
+    @Override
+    public void setAction(IExecutionSpec.Action action) {
+        super.setAction(action);
+        if (action.equals(IExecutionSpec.Action.TRANSLATE)) {
+            translateAllQueries();
+        }
+    }
+
     public Map<String, String> getMapQueryTemplates() {
         return mapQueryTemplates;
     }
@@ -439,7 +407,8 @@ public class DynamicTempParamQS extends SimpleQSPartOfWorkload {
      */
     @JsonIgnore
     public void translateAllQueries() {
-        if (!isTranslated) {
+        // if it is not translated yet but it is required to then translate
+        if (!isTranslated && action.equals(IExecutionSpec.Action.TRANSLATE)) {
             IQuery q;
             int qryNo;
             for (Entry<Integer, IQuery> e : this.mapQueries.entrySet()) {
@@ -453,13 +422,16 @@ public class DynamicTempParamQS extends SimpleQSPartOfWorkload {
 
     @Override
     public IQuery getQuery(int position) {
-        translateAllQueries();
         return super.getQuery(position);
     }
 
     @Override
     public Map<Integer, IQuery> getMapQueries() {
-        translateAllQueries();
         return super.getMapQueries();
+    }
+
+    @Override
+    public void initializeAfterDeserialization() {
+        this.setAction(Action.TRANSLATE);
     }
 }

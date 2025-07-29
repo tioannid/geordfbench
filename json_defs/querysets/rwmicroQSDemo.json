@@ -1,0 +1,76 @@
+{
+  "classname" : "gr.uoa.di.rdf.geordfbench.runtime.querysets.complex.impl.DynamicTempParamQS",
+  "name" : "rwmicro",
+  "relativeBaseDir" : "",
+  "hasPredicateQueriesAlso" : false,
+  "mapQueries" : {
+    "0" : {
+      "label" : "Buffer_GeoNames",
+      "text" : "NONTOP_BUFFER",
+      "usePredicate" : false,
+      "expectedResults" : 21990
+    },
+    "1" : {
+      "label" : "Buffer_LGD",
+      "text" : "NONTOP_BUFFER",
+      "usePredicate" : false,
+      "expectedResults" : 12097
+    },
+    "2" : {
+      "label" : "Within_GeoNames_Point_Buffer",
+      "text" : "SELECT_BUFFER",
+      "usePredicate" : false,
+      "expectedResults" : 152
+    },
+    "3" : {
+      "label" : "Touches_GAG_GAG",
+      "text" : "JOIN_2",
+      "usePredicate" : false,
+      "expectedResults" : 1022
+    }
+  },
+  "mapUsefulNamespacePrefixes" : {
+    "uom" : "<http://www.opengis.net/def/uom/OGC/1.0/>",
+    "strdf" : "<http://strdf.di.uoa.gr/ontology#>"
+  },
+  "mapQueryTemplates" : {
+    "SELECT_BUFFER" : "SELECT ?s1 \nWHERE {\n\tGRAPH <GRAPH1> {\n\t\t?s1 <ASWKT1> ?o1\n\t}\nFILTER(geof:<FUNCTION1>(?o1, geof:<FUNCTION2>(\"POINT(23.71622 37.97945)\"^^<http://www.opengis.net/ont/geosparql#wktLiteral>, 3000, uom:metre))).\n}",
+    "NONTOP_BUFFER" : "SELECT (geof:<FUNCTION1>(?o1, 4, uom:metre) AS ?ret) \nWHERE {\n\tGRAPH <GRAPH1> {\n\t\t?s1 <ASWKT1> ?o1\n\t}\n}",
+    "JOIN_2" : "SELECT ?s1 ?s2 \nWHERE { \n\tGRAPH <GRAPH1> {\n\t\t?s1 <ASWKT1> ?o1\n\t}\n\tGRAPH <GRAPH2> {\n\t\t?s2 <ASWKT2> ?o2\n\t}\nFILTER(?s1 != ?s2).\nFILTER(geof:<FUNCTION1>(?o1, ?o2)).\n}"
+  },
+  "mapLiteralValues" : {
+    "LL_clc" : "<http://geographica.di.uoa.gr/dataset/clc>",
+    "LL_clc_asWKT" : "<http://geo.linkedopendata.gr/corine/ontology#asWKT>",
+    "LL_gadm_asWKT" : "<http://geo.linkedopendata.gr/gag/ontology/asWKT>",
+    "LL_geonames_asWKT" : "<http://www.geonames.org/ontology#asWKT>",
+    "LL_fn_area" : "area",
+    "LL_sfWithin" : "sfWithin",
+    "LL_lgd" : "<http://geographica.di.uoa.gr/dataset/lgd>",
+    "LL_gadm" : "<http://geographica.di.uoa.gr/dataset/gag>",
+    "LL_sfTouches" : "sfTouches",
+    "LL_geonames" : "<http://geographica.di.uoa.gr/dataset/geonames>",
+    "LL_lgd_asWKT" : "<http://linkedgeodata.org/ontology/asWKT>",
+    "LL_fn_buffer" : "buffer"
+  },
+  "templateDynamicParamNameList" : [ "<FUNCTION1>", "<FUNCTION2>", "<ASWKT1>", "<ASWKT2>", "<GRAPH1>", "<GRAPH2>" ],
+  "templateParamValueMatrix" : {
+    "mapTemplateParamValues" : {
+      "0##<GRAPH1>" : "LL_geonames",
+      "1##<GRAPH1>" : "LL_lgd",
+      "2##<FUNCTION2>" : "LL_fn_buffer",
+      "2##<FUNCTION1>" : "LL_sfWithin",
+      "1##<ASWKT1>" : "LL_lgd_asWKT",
+      "3##<FUNCTION1>" : "LL_sfTouches",
+      "2##<GRAPH1>" : "LL_geonames",
+      "2##<ASWKT1>" : "LL_geonames_asWKT",
+      "3##<GRAPH2>" : "LL_gadm",
+      "3##<GRAPH1>" : "LL_gadm",
+      "3##<ASWKT2>" : "LL_gadm_asWKT",
+      "3##<ASWKT1>" : "LL_gadm_asWKT",
+      "1##<FUNCTION1>" : "LL_fn_buffer",
+      "0##<ASWKT1>" : "LL_geonames_asWKT",
+      "0##<FUNCTION1>" : "LL_fn_buffer"
+    }
+  },
+  "isTranslated" : false
+}

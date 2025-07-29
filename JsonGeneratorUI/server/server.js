@@ -1,13 +1,13 @@
 const express = require("express");
 const cors = require("cors");
-const bodyParser = require("body-parser");
+//const bodyParser = require("body-parser");
 const path = require("path");
 const package = require("./package.json");
 const createError = require("http-errors");
 const logger = require("morgan");
-const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 const fs = require("fs");
+const YAML = require("yaml");
 
 // run dotenv
 require("dotenv").config();
@@ -15,16 +15,21 @@ require("dotenv").config();
 // get the JSON Library path
 global.json_lib_path = process.env.JSON_LIB_PATH;
 
+// get the Allowed Operations Per Specification Class
+global.crud_map = JSON.parse(process.env.CRUD_MAP);
+
 const app = express();
 // configure app
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.json());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 const corsOptions = {
   origin: [`http://localhost/`],
 };
 app.use(cors(corsOptions));
-//app.use(cors({ origin: /http:\/\/localhost/ }));
-//app.options("*", cors());
+// app.use(cors({ origin: /http:\/\/localhost/ }));
+// app.options("*", cors());
 app.use(express.static("public"));
 
 // view engine setup
@@ -86,13 +91,16 @@ for (rootPair of mapRouters) {
 // };
 // app.use(err_hanlder);
 
-
 // Initialize swagger-jsdoc -> returns validated swagger spec in json format
-const swaggerInitSpecification = require("./swaggerInit.json");
+const swaggerInitSpecification = fs.readFileSync(
+  "./openapi/swaggerInit.yaml",
+  "utf8"
+);
+const swaggerDocument = YAML.parse(swaggerInitSpecification);
 app.use(
   "/api-docs",
   swaggerUi.serve,
-  swaggerUi.setup(swaggerInitSpecification, { explorer: true })
+  swaggerUi.setup(swaggerDocument, { explorer: true })
 );
 
 const port = process.env.PORT || 5000;
