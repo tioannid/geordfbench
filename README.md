@@ -4,7 +4,7 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16598753.svg)](https://doi.org/10.5281/zenodo.16598753)
 [![Website](https://img.shields.io/badge/website-GeoRDFBench_Framework-yellow)](https://geordfbench.di.uoa.gr/)
 [![JSON Specs Endpoint](https://img.shields.io/badge/docs-JSON_Specs_Endpoint-red)](https://geordfbench.di.uoa.gr/jsonapi/api-docs/)
-[![Paper](https://img.shields.io/badge/preprint-GeoRDFBench_FrameWork_Paper-pink)](https://doi.org/10.5281/zenodo.7906349)
+[![Paper](https://img.shields.io/badge/preprint-GeoRDFBench_Framework_Paper-pink)](https://doi.org/10.5281/zenodo.7906349)
 
 **GeoRDFBench** can be used by researchers and practitioners interested in Semantic Benchmarking with SPARQL language. The framework however provides unique features for the geospatial aspects of RDF stores that support the GeoSPARQL standard. Documentation for the project is maintained at our [GeoRDFBench web site](https://geordfbench.di.uoa.gr/).
 
