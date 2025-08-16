@@ -183,6 +183,57 @@ router.post("/:newspec", (req, res) => {
   }
 });
 
+// 🔥 BEAST MODE: Update an existing report source specification by name
+router.put("/:existingspec", (req, res) => {
+  if (res.app.locals.canUpdate) {
+    const spec = req.params.existingspec;
+    const specFullPathName =
+      path.extname(spec) !== ".json"
+        ? path.join(targetDir, spec + ".json")
+        : path.join(targetDir, spec);
+
+    console.log(
+      `Will be updating a report source specification file in the path ${specFullPathName}`
+    );
+
+    if (!fs.existsSync(specFullPathName)) {
+      return res.status(404).json({ error: `${specFullPathName} does not exist!` });
+    }
+
+    const body = req.body;
+    
+    // Basic validation for report source specs
+    if (!body.hasOwnProperty("classname") || !body.hasOwnProperty("driver") || 
+        !body.hasOwnProperty("database") || !body.hasOwnProperty("user")) {
+      return res.status(400).json({ 
+        error: "Required report source specification fields are missing! Must include 'classname', 'driver', 'database', and 'user'." 
+      });
+    }
+
+    // Validate driver type
+    const validDrivers = ['h2', 'mysql', 'postgresql'];
+    if (!validDrivers.includes(body.driver)) {
+      return res.status(400).json({ 
+        error: `Invalid driver type '${body.driver}'. Must be one of: ${validDrivers.join(', ')}` 
+      });
+    }
+
+    try {
+      fs.writeFileSync(specFullPathName, JSON.stringify(body, null, 2));
+      const result = JSON.parse(fs.readFileSync(specFullPathName));
+      return res.status(200).json(result);
+    } catch (error) {
+      return res.status(500).json({ 
+        error: `Failed to update report source specification: ${error.message}` 
+      });
+    }
+  } else {
+    return res.status(404).json(
+      `${specEntity} update functionality is disabled by the endpoint's configuration!`
+    );
+  }
+});
+
 // Delete an existing report source specification by name
 router.delete("/:existingspec", (req, res) => {
   if (res.app.locals.canDelete) {

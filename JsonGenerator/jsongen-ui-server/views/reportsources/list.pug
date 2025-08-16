@@ -1,23 +1,304 @@
 extends ../layout
 
 block content
+    .container-fluid
+        // 🔥 BEAST MODE Enhanced Header
+        .row.mb-4
+            .col-12
+                .card.border-0.shadow-sm.bg-gradient.bg-danger.text-white
+                    .card-body.py-3
+                        .d-flex.justify-content-between.align-items-center
+                            .d-flex.align-items-center
+                                i.bi.bi-file-earmark-text.fs-2.me-3
+                                div
+                                    h2.mb-0= locals.title || 'Report Source Specifications'
+                                    p.mb-0.opacity-75 Manage database report sources for benchmark results
+                            a(href="/reportsources/new").btn.btn-light.btn-lg
+                                i.bi.bi-plus-circle.me-2
+                                | New Report Source
 
-    .row 
-        .col-md-12
-            .d-flex.justify-content-between.align-items-center.mb-3
-                h2= locals.title || 'Please pass a title property'
-                a(href="/reportsources/new").btn.btn-primary New Report Source Specification
-            .table-responsive
-                table.table.table-light.table-striped.table-hover.table-bordered
-                    thead.thead-dark 
-                        tr
-                            th Report Source Specification Name
-                            th Actions
-                    tbody.table-group-divider
-                        each record in records
-                            tr 
-                                td= record
-                                td
-                                    .btn-group(role="group")
-                                        a(href=`/reportsources/edit/${record.replace('.json', '')}`).btn.btn-sm.btn-outline-primary Edit
-                                        a(href=`/reportsources/delete/${record.replace('.json', '')}`).btn.btn-sm.btn-outline-danger Delete
+        // 🔥 Advanced Search Controls
+        .row.mb-4
+            .col-md-8
+                .input-group.input-group-lg
+                    span.input-group-text
+                        i.bi.bi-search
+                    input(type="text" class="form-control" placeholder="Search report sources..." id="searchInput" oninput="filterTable()")
+            .col-md-4
+                select(class="form-select form-select-lg" id="typeFilter" onchange="filterTable()")
+                    option(value="") All Database Types
+                    option(value="h2") H2 Database
+                    option(value="mysql") MySQL
+                    option(value="postgresql") PostgreSQL
+
+        // 🔥 Enhanced Data Table
+        .row
+            .col-12
+                .card.border-0.shadow-sm
+                    .card-header.bg-light.d-flex.justify-content-between.align-items-center
+                        h5.mb-0
+                            i.bi.bi-table.me-2
+                            | Report Source Specifications
+                            span.badge.bg-primary.ms-2#totalCount= records ? records.length : 0
+                        .btn-group
+                            button(type="button" class="btn btn-outline-primary btn-sm" onclick="refreshData()")
+                                i.bi.bi-arrow-clockwise.me-1
+                                | Refresh
+                            button(type="button" class="btn btn-outline-success btn-sm" onclick="exportData()")
+                                i.bi.bi-download.me-1
+                                | Export
+                    
+                    .card-body.p-0
+                        .table-responsive
+                            table.table.table-hover.mb-0#dataTable
+                                thead.table-dark
+                                    tr
+                                        th(style="cursor: pointer;" onclick="sortTable(0)")
+                                            | Name 
+                                            i.bi.bi-arrow-down-up.ms-1
+                                        th(style="cursor: pointer;" onclick="sortTable(1)")
+                                            | Type
+                                            i.bi.bi-arrow-down-up.ms-1
+                                        th Database
+                                        th Status
+                                        th.text-center Actions
+                                tbody#tableBody
+                                    if records && records.length > 0
+                                        each record, index in records
+                                            tr(data-name=record.replace('.json', ''))
+                                                td
+                                                    .d-flex.align-items-center
+                                                        i.bi.bi-file-earmark-text.text-primary.me-2
+                                                        div
+                                                            strong= record.replace('.json', '')
+                                                            br
+                                                            small.text-muted= record
+                                                td
+                                                    - const type = record.includes('h2') ? 'H2' : record.includes('mysql') ? 'MySQL' : record.includes('postgresql') ? 'PostgreSQL' : 'Unknown'
+                                                    span(class=`badge ${type === 'H2' ? 'bg-success' : type === 'MySQL' ? 'bg-info' : type === 'PostgreSQL' ? 'bg-primary' : 'bg-secondary'}`)= type
+                                                td
+                                                    - const dbName = record.includes('geordfbench') ? 'geordfbench' : 'custom'
+                                                    code.small= dbName
+                                                td
+                                                    span.badge.bg-success
+                                                        i.bi.bi-check-circle.me-1
+                                                        | Active
+                                                td.text-center
+                                                    .btn-group(role="group")
+                                                        button(type="button" class="btn btn-sm btn-outline-info" onclick=`viewSpec('${record.replace('.json', '')}')` title="View Details")
+                                                            i.bi.bi-eye
+                                                        a(href=`/reportsources/edit/${record.replace('.json', '')}` class="btn btn-sm btn-outline-primary" title="Edit")
+                                                            i.bi.bi-pencil
+                                                        button(type="button" class="btn btn-sm btn-outline-danger" onclick=`confirmDelete('${record.replace('.json', '')}')` title="Delete")
+                                                            i.bi.bi-trash
+                                    else
+                                        tr
+                                            td(colspan="5" class="text-center py-5")
+                                                i.bi.bi-inbox.fs-1.text-muted.mb-3
+                                                br
+                                                | No report source specifications found
+                                                br
+                                                a(href="/reportsources/new" class="btn btn-primary mt-3")
+                                                    i.bi.bi-plus-circle.me-2
+                                                    | Create Your First Report Source
+
+    // 🔥 View Modal
+    .modal.fade#viewModal(tabindex="-1")
+        .modal-dialog.modal-lg
+            .modal-content
+                .modal-header.bg-info.text-white
+                    h5.modal-title
+                        i.bi.bi-eye.me-2
+                        | Report Source Details
+                    button(type="button" class="btn-close btn-close-white" data-bs-dismiss="modal")
+                .modal-body
+                    .row
+                        .col-md-6
+                            h6.text-info Specification Info
+                            table.table.table-sm
+                                tr
+                                    td Name:
+                                    td#modalName -
+                                tr
+                                    td Type:
+                                    td#modalType -
+                                tr
+                                    td Database:
+                                    td#modalDatabase -
+                        .col-md-6
+                            h6.text-info Configuration
+                            table.table.table-sm
+                                tr
+                                    td Class:
+                                    td#modalClass -
+                                tr
+                                    td Directory:
+                                    td#modalDir -
+                                tr
+                                    td User:
+                                    td#modalUser -
+                    .mt-3
+                        h6.text-info JSON Preview
+                        pre.bg-light.p-3.rounded#jsonPreview Loading...
+
+    // Delete Confirmation Modal
+    .modal.fade#deleteModal(tabindex="-1")
+        .modal-dialog
+            .modal-content
+                .modal-header.bg-danger.text-white
+                    h5.modal-title
+                        i.bi.bi-exclamation-triangle.me-2
+                        | Confirm Deletion
+                    button(type="button" class="btn-close btn-close-white" data-bs-dismiss="modal")
+                .modal-body
+                    p Are you sure you want to delete the report source specification:
+                    p.fw-bold.text-danger#deleteSpecName
+                    p.text-muted This action cannot be undone.
+                .modal-footer
+                    button(type="button" class="btn btn-secondary" data-bs-dismiss="modal") Cancel
+                    button(type="button" class="btn btn-danger" onclick="executeDelete()" id="confirmDeleteBtn")
+                        i.bi.bi-trash.me-2
+                        | Delete Specification
+
+    script.
+        // 🔥 BEAST MODE JavaScript
+        let currentDeleteSpec = null;
+        let sortDirection = {};
+
+        function filterTable() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const typeFilter = document.getElementById('typeFilter').value.toLowerCase();
+            const rows = document.querySelectorAll('#tableBody tr[data-name]');
+
+            let visibleCount = 0;
+            rows.forEach(row => {
+                const name = row.dataset.name.toLowerCase();
+                const matchesSearch = name.includes(searchTerm);
+                const matchesType = !typeFilter || name.includes(typeFilter);
+                
+                if (matchesSearch && matchesType) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            document.getElementById('totalCount').textContent = visibleCount;
+        }
+
+        function sortTable(columnIndex) {
+            const table = document.getElementById('dataTable');
+            const tbody = table.querySelector('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr[data-name]'));
+            
+            const isAscending = sortDirection[columnIndex] !== 'asc';
+            sortDirection[columnIndex] = isAscending ? 'asc' : 'desc';
+
+            rows.sort((a, b) => {
+                const aText = a.cells[columnIndex].textContent.trim().toLowerCase();
+                const bText = b.cells[columnIndex].textContent.trim().toLowerCase();
+                return isAscending ? aText.localeCompare(bText) : bText.localeCompare(aText);
+            });
+
+            tbody.innerHTML = '';
+            rows.forEach(row => tbody.appendChild(row));
+
+            // Update sort indicators
+            const headers = document.querySelectorAll('th[onclick]');
+            headers.forEach((header, index) => {
+                const icon = header.querySelector('i');
+                if (index === columnIndex) {
+                    icon.className = isAscending ? 'bi bi-arrow-up ms-1' : 'bi bi-arrow-down ms-1';
+                } else {
+                    icon.className = 'bi bi-arrow-down-up ms-1';
+                }
+            });
+        }
+
+        async function viewSpec(specName) {
+            try {
+                const response = await fetch(`#{locals.endpointUrl || 'http://localhost:5000'}/reportsources/${specName}`);
+                const data = await response.json();
+                
+                document.getElementById('modalName').textContent = specName;
+                document.getElementById('modalType').textContent = data.driver || 'Unknown';
+                document.getElementById('modalDatabase').textContent = data.database || 'N/A';
+                document.getElementById('modalClass').textContent = data.classname || 'N/A';
+                document.getElementById('modalDir').textContent = data.relativeBaseDir || 'N/A';
+                document.getElementById('modalUser').textContent = data.user || 'N/A';
+                document.getElementById('jsonPreview').textContent = JSON.stringify(data, null, 2);
+                
+                new bootstrap.Modal(document.getElementById('viewModal')).show();
+            } catch (error) {
+                showToast('❌ Error loading specification details', 'error');
+            }
+        }
+
+        function confirmDelete(specName) {
+            currentDeleteSpec = specName;
+            document.getElementById('deleteSpecName').textContent = specName;
+            new bootstrap.Modal(document.getElementById('deleteModal')).show();
+        }
+
+        async function executeDelete() {
+            if (!currentDeleteSpec) return;
+            
+            const confirmBtn = document.getElementById('confirmDeleteBtn');
+            confirmBtn.disabled = true;
+            confirmBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Deleting...';
+            
+            try {
+                const response = await fetch(`#{locals.endpointUrl || 'http://localhost:5000'}/reportsources/${currentDeleteSpec}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    showToast('🗑️ Report source deleted successfully', 'success');
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    throw new Error('Failed to delete');
+                }
+            } catch (error) {
+                showToast('❌ Error deleting specification', 'error');
+                confirmBtn.disabled = false;
+                confirmBtn.innerHTML = '<i class="bi bi-trash me-2"></i>Delete Specification';
+            }
+        }
+
+        function exportData() {
+            const data = Array.from(document.querySelectorAll('#tableBody tr[data-name]')).map(row => ({
+                name: row.dataset.name,
+                type: row.cells[1].textContent.trim(),
+                database: row.cells[2].textContent.trim()
+            }));
+            
+            const csv = 'Name,Type,Database\n' + data.map(row => `${row.name},${row.type},${row.database}`).join('\n');
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'report-sources.csv';
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showToast('📊 Data exported successfully', 'success');
+        }
+
+        function refreshData() {
+            showToast('🔄 Refreshing data...', 'info');
+            setTimeout(() => location.reload(), 500);
+        }
+
+        function showToast(message, type) {
+            const toast = document.createElement('div');
+            toast.className = `alert alert-${type === 'success' ? 'success' : type === 'error' ? 'danger' : 'info'} alert-dismissible fade show position-fixed`;
+            toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            toast.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 5000);
+        }

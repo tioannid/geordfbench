@@ -296,6 +296,65 @@ router.post("/:newspec", (req, res) => {
   }
 });
 
+// 🔥 BEAST MODE: Update an existing queryset specification by name
+router.put("/:existingspec", (req, res) => {
+  if (res.app.locals.canUpdate) {
+    const spec = req.params.existingspec;
+    const specFullPathName =
+      path.extname(spec) !== ".json"
+        ? path.join(targetDir, spec + ".json")
+        : path.join(targetDir, spec);
+
+    console.log(
+      `Will be updating a queryset specification file in the path ${specFullPathName}`
+    );
+
+    if (!fs.existsSync(specFullPathName)) {
+      return res.status(404).json({ error: `${specFullPathName} does not exist!` });
+    }
+
+    const body = req.body;
+    
+    // Basic validation for queryset specs
+    if (!body.hasOwnProperty("classname") || !body.hasOwnProperty("queries")) {
+      return res.status(400).json({ 
+        error: "Required queryset specification fields are missing! Must include 'classname' and 'queries'." 
+      });
+    }
+
+    // Validate queries array
+    if (!Array.isArray(body.queries)) {
+      return res.status(400).json({ 
+        error: "Queries must be an array!" 
+      });
+    }
+
+    // Validate each query in the array
+    for (let i = 0; i < body.queries.length; i++) {
+      const query = body.queries[i];
+      if (!query.hasOwnProperty("id") || !query.hasOwnProperty("text")) {
+        return res.status(400).json({ 
+          error: `Query at index ${i} is missing required fields 'id' or 'text'!` 
+        });
+      }
+    }
+
+    try {
+      fs.writeFileSync(specFullPathName, JSON.stringify(body, null, 2));
+      const result = JSON.parse(fs.readFileSync(specFullPathName));
+      return res.status(200).json(result);
+    } catch (error) {
+      return res.status(500).json({ 
+        error: `Failed to update queryset specification: ${error.message}` 
+      });
+    }
+  } else {
+    return res.status(404).json(
+      `${specEntity} update functionality is disabled by the endpoint's configuration!`
+    );
+  }
+});
+
 // Delete an existing queryset specification by name
 router.delete("/:existingspec", (req, res) => {
   if (res.app.locals.canDelete) {
