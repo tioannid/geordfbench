@@ -1,0 +1,110 @@
+extends ../layout
+
+block content
+
+    .container 
+
+        form(name="executionspecform" method='POST' onsubmit='createExecutionSpec(event)').col-8
+            h1.h3.mb-3.fw-normal Please enter execution specification details:
+            
+            .row.mt-2
+                .col-md-6
+                    .form-floating
+                        input(type="text" name="classname" id="classname" placeholder="classname" aria-label="classname" value="gr.uoa.di.rdf.geordfbench.runtime.executionspecs.impl.SimpleES" ).form-control 
+                        label(for="classname") Class Name
+                .col-md-6
+                    .form-floating
+                        select(name="action" id="action").form-select
+                            option(value="RUN") RUN
+                            option(value="SKIP") SKIP
+                        label(for="action") Action
+            
+            .row.mt-2
+                .col-md-6
+                    .form-floating
+                        input(type="number" name="coldReps" id="coldReps" placeholder="coldReps" aria-label="coldReps" value="3" ).form-control 
+                        label(for="coldReps") Cold Repetitions
+                .col-md-6
+                    .form-floating
+                        input(type="number" name="warmReps" id="warmReps" placeholder="warmReps" aria-label="warmReps" value="3" ).form-control 
+                        label(for="warmReps") Warm Repetitions
+            
+            .row.mt-2
+                .col-md-6
+                    .form-floating
+                        input(type="number" name="maxDurationSecsPerQueryRep" id="maxDurationSecsPerQueryRep" placeholder="maxDurationSecsPerQueryRep" aria-label="maxDurationSecsPerQueryRep" value="1800" ).form-control 
+                        label(for="maxDurationSecsPerQueryRep") Max Duration Per Query Rep (seconds)
+                .col-md-6
+                    .form-floating
+                        input(type="number" name="maxDurationSecs" id="maxDurationSecs" placeholder="maxDurationSecs" aria-label="maxDurationSecs" value="3600" ).form-control 
+                        label(for="maxDurationSecs") Max Duration Total (seconds)
+            
+            .row.mt-2
+                .col-md-6
+                    .form-floating
+                        select(name="avgFunc" id="avgFunc").form-select
+                            option(value="QUERY_MEDIAN") QUERY_MEDIAN
+                            option(value="QUERY_AVERAGE") QUERY_AVERAGE
+                        label(for="avgFunc") Average Function
+                .col-md-6
+                    .form-floating
+                        select(name="onColdFailure" id="onColdFailure").form-select
+                            option(value="SKIP_REMAINING_ALL_QUERY_EXECUTIONS") SKIP_REMAINING_ALL_QUERY_EXECUTIONS
+                            option(value="CONTINUE") CONTINUE
+                        label(for="onColdFailure") On Cold Failure
+            
+            .row.mt-2
+                .col-md-6
+                    .form-floating
+                        input(type="number" name="clearCacheDelaymSecs" id="clearCacheDelaymSecs" placeholder="clearCacheDelaymSecs" aria-label="clearCacheDelaymSecs" value="5000" ).form-control 
+                        label(for="clearCacheDelaymSecs") Clear Cache Delay (milliseconds)
+            
+            .row.mt-3.justify-content-center
+                .col-2
+                    button(type="submit").btn.btn-primary Create
+                .col-2
+                    a(href="/executionspecs").btn.btn-secondary Cancel
+
+    script.
+        async function createExecutionSpec(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            
+            const data = {
+                classname: formData.get('classname'),
+                execTypeReps: {
+                    COLD: parseInt(formData.get('coldReps')),
+                    WARM: parseInt(formData.get('warmReps'))
+                },
+                maxDurationSecsPerQueryRep: parseInt(formData.get('maxDurationSecsPerQueryRep')),
+                maxDurationSecs: parseInt(formData.get('maxDurationSecs')),
+                action: formData.get('action'),
+                avgFunc: formData.get('avgFunc'),
+                onColdFailure: formData.get('onColdFailure'),
+                clearCacheDelaymSecs: parseInt(formData.get('clearCacheDelaymSecs'))
+            };
+            
+            const specName = prompt('Enter specification name:');
+            if (!specName) return;
+            
+            try {
+                const response = await fetch(`#{locals.postBaseUrl}/${specName}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    alert('Execution specification created successfully!');
+                    window.location.href = '/executionspecs';
+                } else {
+                    const error = await response.json();
+                    alert('Error creating execution specification: ' + JSON.stringify(error));
+                }
+            } catch (error) {
+                alert('Error creating execution specification: ' + error.message);
+            }
+        }

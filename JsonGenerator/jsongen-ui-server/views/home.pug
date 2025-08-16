@@ -1,0 +1,134 @@
+extends layout
+
+block content
+    .container.mt-4
+        .row
+            .col-md-12
+                .jumbotron.bg-primary.text-white.p-5.rounded.mb-4
+                    h1.display-4 Welcome to GeoRDFBench Framework
+                    p.lead JSON Specification Management Interface
+                    hr.my-4
+                    p This web interface provides comprehensive CRUD operations for all GeoRDFBench specification categories, making it easy to create, modify, and manage benchmark configurations.
+                    if locals.error
+                        .alert.alert-warning
+                            strong Warning: 
+                            | #{locals.error}
+        
+        .row.mb-4
+            .col-md-12
+                h2.mb-3 Specification Categories Overview
+                .row
+                    .col-md-6.col-lg-3.mb-3
+                        .card.h-100
+                            .card-body.text-center
+                                i.bi.bi-database.fs-1.text-primary
+                                h5.card-title.mt-2 Datasets
+                                p.card-text Define RDF data sources and their characteristics
+                                .badge.bg-secondary.mb-2= `${locals.counts.datasets || 0} specifications`
+                                br
+                                a(href="/datasets").btn.btn-primary.btn-sm Manage Datasets
+                    
+                    .col-md-6.col-lg-3.mb-3
+                        .card.h-100
+                            .card-body.text-center
+                                i.bi.bi-gear.fs-1.text-success
+                                h5.card-title.mt-2 Execution Specs
+                                p.card-text Configure experiment execution parameters
+                                .badge.bg-secondary.mb-2= `${locals.counts.executionspecs || 0} specifications`
+                                br
+                                a(href="/executionspecs").btn.btn-success.btn-sm Manage Execution Specs
+                    
+                    .col-md-6.col-lg-3.mb-3
+                        .card.h-100
+                            .card-body.text-center
+                                i.bi.bi-server.fs-1.text-info
+                                h5.card-title.mt-2 Hosts
+                                p.card-text Specify target execution environments
+                                .badge.bg-secondary.mb-2= `${locals.counts.hosts || 0} specifications`
+                                br
+                                a(href="/hosts").btn.btn-info.btn-sm Manage Hosts
+                    
+                    .col-md-6.col-lg-3.mb-3
+                        .card.h-100
+                            .card-body.text-center
+                                i.bi.bi-search.fs-1.text-warning
+                                h5.card-title.mt-2 Query Sets
+                                p.card-text Define collections of SPARQL/GeoSPARQL queries
+                                .badge.bg-secondary.mb-2= `${locals.counts.querysets || 0} specifications`
+                                br
+                                a(href="/querysets").btn.btn-warning.btn-sm Manage Query Sets
+                
+                .row
+                    .col-md-6.col-lg-4.mb-3
+                        .card.h-100
+                            .card-body.text-center
+                                i.bi.bi-file-earmark-text.fs-1.text-danger
+                                h5.card-title.mt-2 Report Sources
+                                p.card-text Configure result reporting mechanisms
+                                .badge.bg-secondary.mb-2= `${locals.counts.reportsources || 0} specifications`
+                                br
+                                a(href="/reportsources").btn.btn-danger.btn-sm Manage Report Sources
+                    
+                    .col-md-6.col-lg-4.mb-3
+                        .card.h-100
+                            .card-body.text-center
+                                i.bi.bi-file-text.fs-1.text-secondary
+                                h5.card-title.mt-2 Report Specs
+                                p.card-text Define logging and output parameters
+                                .badge.bg-secondary.mb-2= `${locals.counts.reportspecs || 0} specifications`
+                                br
+                                a(href="/reportspecs").btn.btn-secondary.btn-sm Manage Report Specs
+                    
+                    .col-md-6.col-lg-4.mb-3
+                        .card.h-100
+                            .card-body.text-center
+                                i.bi.bi-layers.fs-1.text-dark
+                                h5.card-title.mt-2 Workloads
+                                p.card-text Combine datasets, query sets, and execution specs
+                                .badge.bg-secondary.mb-2= `${locals.counts.workloads || 0} specifications`
+                                br
+                                a(href="/workloads").btn.btn-dark.btn-sm Manage Workloads
+        
+        .row.mb-4
+            .col-md-6
+                .card
+                    .card-header
+                        h5.mb-0 System Information
+                    .card-body
+                        table.table.table-sm
+                            tr
+                                td
+                                    strong Version:
+                                td= locals.version
+                            tr
+                                td
+                                    strong Endpoint URL:
+                                td
+                                    a(href=locals.endpointUrl target="_blank")= locals.endpointUrl
+                            tr
+                                td
+                                    strong Total Specifications:
+                                td= Object.values(locals.counts || {}).reduce((a, b) => a + b, 0)
+            
+            .col-md-6
+                .card
+                    .card-header
+                        h5.mb-0 Quick Actions
+                    .card-body
+                        .d-grid.gap-2
+                            a(href="/categories").btn.btn-outline-primary View All Categories
+                            a(href=`${locals.endpointUrl}/api-docs/` target="_blank").btn.btn-outline-secondary API Documentation
+                            button(type="button" onclick="refreshCounts()").btn.btn-outline-success Refresh Counts
+        
+        .row
+            .col-md-12
+                .alert.alert-info
+                    h6.alert-heading About GeoRDFBench Framework
+                    p.mb-0 
+                        | GeoRDFBench is a comprehensive geospatial semantic benchmarking framework designed for testing SPARQL/GeoSPARQL capabilities of RDF stores. 
+                        | This web interface simplifies the management of benchmark specifications, making it easier for researchers and practitioners to configure and run geospatial semantic benchmarks.
+
+    script.
+        function refreshCounts() {
+            window.location.reload();
+        }

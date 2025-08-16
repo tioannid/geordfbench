@@ -1,0 +1,50 @@
+extends ../layout
+
+block content
+
+    .container 
+
+        .col-6
+            h1.h3.mb-3.fw-normal Delete Report Specification: #{locals.spec}
+            .alert.alert-warning
+                strong Warning! 
+                | This action cannot be undone. Are you sure you want to delete this report specification?
+            
+            .card.mb-3
+                .card-header Current Specification Details
+                .card-body
+                    .row
+                        .col-sm-4
+                            strong Name:
+                        .col-sm-8= locals.spec
+                    .row
+                        .col-sm-4
+                            strong noQueryResultToReport:
+                        .col-sm-8= locals.data.noQueryResultToReport
+            
+            .row.mt-3.justify-content-center
+                .col-2
+                    button(type="button" onclick="deleteReportSpec()").btn.btn-danger Delete
+                .col-2
+                    a(href="/reportspecs").btn.btn-secondary Cancel
+
+    script.
+        async function deleteReportSpec() {
+            if (confirm('Are you absolutely sure you want to delete this report specification?')) {
+                try {
+                    const response = await fetch(`#{locals.deleteBaseUrl}/#{locals.spec}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    if (response.ok || response.status === 204) {
+                        alert('Report specification deleted successfully!');
+                        window.location.href = '/reportspecs';
+                    } else {
+                        const error = await response.json();
+                        alert('Error deleting report specification: ' + JSON.stringify(error));
+                    }
+                } catch (error) {
+                    alert('Error deleting report specification: ' + error.message);
+                }
+            }
+        }

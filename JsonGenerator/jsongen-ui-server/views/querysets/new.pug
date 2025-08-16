@@ -1,0 +1,212 @@
+extends ../layout
+
+block content
+
+    .container-fluid
+
+        form(name="querysetform" method='POST' onsubmit='createQuerySet(event)').col-12
+            h1.h3.mb-3.fw-normal Please enter query set specification details:
+            
+            .row.mt-2
+                .col-md-4
+                    .form-floating
+                        input(type="text" name="name" id="name" placeholder="name" aria-label="name" value=`${locals.name || "queryset-name"}` ).form-control 
+                        label(for="name") Query Set Name
+                .col-md-4
+                    .form-floating
+                        input(type="text" name="classname" id="classname" placeholder="classname" aria-label="classname" value="gr.uoa.di.rdf.geordfbench.runtime.querysets.complex.impl.StaticTempParamQS" ).form-control 
+                        label(for="classname") Class Name
+                .col-md-4
+                    .form-floating
+                        input(type="text" name="relativeBaseDir" id="relativeBaseDir" placeholder="relativeBaseDir" aria-label="relativeBaseDir" ).form-control 
+                        label(for="relativeBaseDir") Relative Base Directory
+            
+            .row.mt-2
+                .col-md-6
+                    .form-check.form-switch
+                        input(type="checkbox" name="hasPredicateQueriesAlso" id="hasPredicateQueriesAlso").form-check-input
+                        label(for="hasPredicateQueriesAlso").form-check-label Has Predicate Queries Also
+            
+            h4.mt-4 Queries
+            .row.mt-2
+                .col-md-12
+                    button(type="button" onclick="addQuery()").btn.btn-success.mb-3 Add Query
+                    #queries-container
+                        .query-item.border.p-3.mb-3(data-query-index="0")
+                            .row
+                                .col-md-6
+                                    .form-floating
+                                        input(type="text" name="query_0_label" placeholder="Query Label" ).form-control
+                                        label Query Label
+                                .col-md-3
+                                    .form-floating
+                                        input(type="number" name="query_0_expectedResults" placeholder="Expected Results" value="-1" ).form-control
+                                        label Expected Results
+                                .col-md-3
+                                    .form-check.form-switch.mt-3
+                                        input(type="checkbox" name="query_0_usePredicate").form-check-input
+                                        label.form-check-label Use Predicate
+                            .row.mt-2
+                                .col-md-12
+                                    .form-floating
+                                        textarea(name="query_0_text" rows="6" placeholder="SPARQL Query Text").form-control
+                                        label SPARQL Query Text
+                            .row.mt-2
+                                .col-md-12
+                                    button(type="button" onclick="removeQuery(0)").btn.btn-danger.btn-sm Remove Query
+            
+            h4.mt-4 Namespace Prefixes
+            .row.mt-2
+                .col-md-12
+                    .form-floating
+                        textarea(name="namespacePrefixes" id="namespacePrefixes" rows="4" placeholder="Enter namespace prefixes as JSON").form-control
+                        label(for="namespacePrefixes") Namespace Prefixes (JSON format)
+            
+            h4.mt-4 Template Parameters
+            .row.mt-2
+                .col-md-12
+                    .form-floating
+                        textarea(name="templateParams" id="templateParams" rows="4" placeholder="Enter template parameters as JSON").form-control
+                        label(for="templateParams") Template Parameters (JSON format)
+            
+            h4.mt-4 Graph Prefixes
+            .row.mt-2
+                .col-md-12
+                    .form-floating
+                        textarea(name="graphPrefixes" id="graphPrefixes" rows="4" placeholder="Enter graph prefixes as JSON").form-control
+                        label(for="graphPrefixes") Graph Prefixes (JSON format)
+            
+            .row.mt-3.justify-content-center
+                .col-2
+                    button(type="submit").btn.btn-primary Create
+                .col-2
+                    a(href="/querysets").btn.btn-secondary Cancel
+
+    script.
+        let queryIndex = 1;
+        
+        // Set default values
+        document.getElementById('namespacePrefixes').value = JSON.stringify({}, null, 2);
+        document.getElementById('templateParams').value = JSON.stringify({}, null, 2);
+        document.getElementById('graphPrefixes').value = JSON.stringify({}, null, 2);
+
+        function addQuery() {
+            const container = document.getElementById('queries-container');
+            const queryItem = document.createElement('div');
+            queryItem.className = 'query-item border p-3 mb-3';
+            queryItem.setAttribute('data-query-index', queryIndex);
+            
+            queryItem.innerHTML = `
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input type="text" name="query_${queryIndex}_label" placeholder="Query Label" class="form-control">
+                            <label>Query Label</label>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-floating">
+                            <input type="number" name="query_${queryIndex}_expectedResults" placeholder="Expected Results" value="-1" class="form-control">
+                            <label>Expected Results</label>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-check form-switch mt-3">
+                            <input type="checkbox" name="query_${queryIndex}_usePredicate" class="form-check-input">
+                            <label class="form-check-label">Use Predicate</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-12">
+                        <div class="form-floating">
+                            <textarea name="query_${queryIndex}_text" rows="6" placeholder="SPARQL Query Text" class="form-control"></textarea>
+                            <label>SPARQL Query Text</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-12">
+                        <button type="button" onclick="removeQuery(${queryIndex})" class="btn btn-danger btn-sm">Remove Query</button>
+                    </div>
+                </div>
+            `;
+            
+            container.appendChild(queryItem);
+            queryIndex++;
+        }
+        
+        function removeQuery(index) {
+            const queryItem = document.querySelector(`[data-query-index="${index}"]`);
+            if (queryItem) {
+                queryItem.remove();
+            }
+        }
+
+        async function createQuerySet(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            
+            // Parse JSON fields
+            let namespacePrefixes, templateParams, graphPrefixes;
+            try {
+                namespacePrefixes = JSON.parse(formData.get('namespacePrefixes'));
+                templateParams = JSON.parse(formData.get('templateParams'));
+                graphPrefixes = JSON.parse(formData.get('graphPrefixes'));
+            } catch (e) {
+                alert('Invalid JSON format in one of the JSON fields');
+                return;
+            }
+            
+            // Build queries object
+            const mapQueries = {};
+            const queryItems = document.querySelectorAll('.query-item');
+            queryItems.forEach((item, index) => {
+                const queryIndex = item.getAttribute('data-query-index');
+                const label = formData.get(`query_${queryIndex}_label`);
+                const text = formData.get(`query_${queryIndex}_text`);
+                const expectedResults = parseInt(formData.get(`query_${queryIndex}_expectedResults`));
+                const usePredicate = formData.get(`query_${queryIndex}_usePredicate`) === 'on';
+                
+                if (label && text) {
+                    mapQueries[index.toString()] = {
+                        label: label,
+                        text: text,
+                        usePredicate: usePredicate,
+                        expectedResults: expectedResults
+                    };
+                }
+            });
+            
+            const data = {
+                classname: formData.get('classname'),
+                name: formData.get('name'),
+                relativeBaseDir: formData.get('relativeBaseDir'),
+                hasPredicateQueriesAlso: formData.get('hasPredicateQueriesAlso') === 'on',
+                mapQueries: mapQueries,
+                mapUsefulNamespacePrefixes: namespacePrefixes,
+                mapTemplateParams: templateParams,
+                mapGraphPrefixes: graphPrefixes
+            };
+            
+            try {
+                const response = await fetch(`#{locals.postBaseUrl}/${data.name}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    alert('Query set specification created successfully!');
+                    window.location.href = '/querysets';
+                } else {
+                    const error = await response.json();
+                    alert('Error creating query set specification: ' + JSON.stringify(error));
+                }
+            } catch (error) {
+                alert('Error creating query set specification: ' + error.message);
+            }
+        }

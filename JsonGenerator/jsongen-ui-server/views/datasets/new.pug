@@ -1,0 +1,131 @@
+extends ../layout
+
+block content
+
+    .container 
+
+        form(name="datasetform" method='POST' onsubmit='createDataset(event)').col-8
+            h1.h3.mb-3.fw-normal Please enter dataset details:
+            
+            .row.mt-2
+                .col-md-6
+                    .form-floating
+                        input(type="text" name="name" id="name" placeholder="name" aria-label="name" value=`${locals.name || "dataset-name"}` ).form-control 
+                        label(for="name") Name
+                .col-md-6
+                    .form-floating
+                        input(type="text" name="classname" id="classname" placeholder="classname" aria-label="classname" value="gr.uoa.di.rdf.geordfbench.runtime.datasets.complex.impl.GeographicaDS" ).form-control 
+                        label(for="classname") Class Name
+            
+            .row.mt-2
+                .col-md-6
+                    .form-floating
+                        input(type="text" name="relativeBaseDir" id="relativeBaseDir" placeholder="relativeBaseDir" aria-label="relativeBaseDir" value=`${locals.relativeBaseDir || ""}` ).form-control 
+                        label(for="relativeBaseDir") Relative Base Directory
+                .col-md-6
+                    .form-floating
+                        input(type="number" name="n" id="n" placeholder="n" aria-label="n" value=`${locals.n || "0"}` ).form-control 
+                        label(for="n") N Value
+            
+            h4.mt-4 Simple Geospatial Dataset
+            .row.mt-2
+                .col-md-6
+                    .form-floating
+                        input(type="text" name="simpleDatasetName" id="simpleDatasetName" placeholder="simpleDatasetName" aria-label="simpleDatasetName" ).form-control 
+                        label(for="simpleDatasetName") Simple Dataset Name
+                .col-md-6
+                    .form-floating
+                        input(type="text" name="simpleRelativeBaseDir" id="simpleRelativeBaseDir" placeholder="simpleRelativeBaseDir" aria-label="simpleRelativeBaseDir" ).form-control 
+                        label(for="simpleRelativeBaseDir") Simple Relative Base Dir
+            
+            .row.mt-2
+                .col-md-6
+                    .form-floating
+                        input(type="text" name="dataFile" id="dataFile" placeholder="dataFile" aria-label="dataFile" ).form-control 
+                        label(for="dataFile") Data File
+                .col-md-6
+                    .form-floating
+                        select(name="rdfFormat" id="rdfFormat").form-select
+                            option(value="N-TRIPLES") N-TRIPLES
+                            option(value="TURTLE") TURTLE
+                            option(value="RDF/XML") RDF/XML
+                            option(value="JSON-LD") JSON-LD
+                        label(for="rdfFormat") RDF Format
+            
+            h5.mt-3 Namespace Prefixes
+            .row.mt-2
+                .col-md-12
+                    .form-floating
+                        textarea(name="namespacePrefixes" id="namespacePrefixes" rows="6" placeholder="Enter namespace prefixes as JSON").form-control
+                        label(for="namespacePrefixes") Namespace Prefixes (JSON format)
+            
+            .row.mt-3.justify-content-center
+                .col-2
+                    button(type="submit").btn.btn-primary Create
+                .col-2
+                    a(href="/datasets").btn.btn-secondary Cancel
+
+    script.
+        // Set default namespace prefixes
+        document.getElementById('namespacePrefixes').value = JSON.stringify({
+            "geo": "<http://www.opengis.net/ont/geosparql#>",
+            "rdf": "<http://www.w3.org/1999/02/22-rdf-syntax-ns#>",
+            "owl": "<http://www.w3.org/2002/07/owl#>",
+            "geof": "<http://www.opengis.net/def/function/geosparql/>",
+            "xsd": "<http://www.w3.org/2001/XMLSchema#>",
+            "rdfs": "<http://www.w3.org/2000/01/rdf-schema#>",
+            "geo-sf": "<http://www.opengis.net/ont/sf#>"
+        }, null, 2);
+
+        async function createDataset(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            
+            // Parse namespace prefixes
+            let namespacePrefixes;
+            try {
+                namespacePrefixes = JSON.parse(formData.get('namespacePrefixes'));
+            } catch (e) {
+                alert('Invalid JSON format for namespace prefixes');
+                return;
+            }
+            
+            const data = {
+                classname: formData.get('classname'),
+                name: formData.get('name'),
+                relativeBaseDir: formData.get('relativeBaseDir'),
+                simpleGeospatialDataSetList: [{
+                    name: formData.get('simpleDatasetName'),
+                    relativeBaseDir: formData.get('simpleRelativeBaseDir'),
+                    dataFile: formData.get('dataFile'),
+                    rdfFormat: formData.get('rdfFormat'),
+                    mapUsefulNamespacePrefixes: namespacePrefixes
+                }],
+                mapDataSetContexts: {},
+                n: parseInt(formData.get('n'))
+            };
+            
+            // Set context mapping
+            data.mapDataSetContexts[data.simpleGeospatialDataSetList[0].name] = "";
+            
+            try {
+                const response = await fetch(`#{locals.postBaseUrl}/${data.name}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    alert('Dataset created successfully!');
+                    window.location.href = '/datasets';
+                } else {
+                    const error = await response.json();
+                    alert('Error creating dataset: ' + JSON.stringify(error));
+                }
+            } catch (error) {
+                alert('Error creating dataset: ' + error.message);
+            }
+        }

@@ -1,0 +1,23 @@
+extends ../layout
+
+block content
+
+    .row 
+        .col-md-12
+            .d-flex.justify-content-between.align-items-center.mb-3
+                h2= locals.title || 'Please pass a title property'
+                a(href="/executionspecs/new").btn.btn-primary New Execution Specification
+            .table-responsive
+                table.table.table-light.table-striped.table-hover.table-bordered
+                    thead.thead-dark 
+                        tr
+                            th Execution Specification Name
+                            th Actions
+                    tbody.table-group-divider
+                        each record in records
+                            tr 
+                                td= record
+                                td
+                                    .btn-group(role="group")
+                                        a(href=`/executionspecs/edit/${record.replace('.json', '')}`).btn.btn-sm.btn-outline-primary Edit
+                                        a(href=`/executionspecs/delete/${record.replace('.json', '')}`).btn.btn-sm.btn-outline-danger Delete

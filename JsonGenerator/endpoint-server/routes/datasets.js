@@ -153,6 +153,89 @@ router.post("/:newspec", (req, res) => {
   }
 });
 
+// Update an existing dataset specification by name
+router.put("/:existingspec", (req, res) => {
+  if (res.app.locals.canUpdate) {
+    const spec = req.params.existingspec;
+    // check if spec is a filename with .json file type
+    const specFullPathName =
+      path.extname(spec) !== ".json"
+        ? path.join(targetDir, spec + ".json")
+        : path.join(targetDir, spec);
+    console.log(
+      `Will be updating a dataset specification file in the path ${specFullPathName}`
+    );
+    if (!fs.existsSync(specFullPathName)) {
+      return res
+        .status(404)
+        .json({ error: `${specFullPathName} does not exist!` });
+    }
+
+    // grab the PUT body
+    const body = req.body;
+    // declare an example in order to augment error messages when necessary
+    let exampleDatasetJSON = JSON.parse(
+      `{
+  "classname": "gr.uoa.di.rdf.geordfbench.runtime.datasets.complex.impl.GeographicaDS",
+  "name": "lubm-1_0",
+  "relativeBaseDir": "LUBM",
+  "simpleGeospatialDataSetList": [
+    {
+      "name": "lubm-1_0",
+      "relativeBaseDir": "1_0",
+      "dataFile": "lubm-1_0.nt",
+      "rdfFormat": "N-TRIPLES",
+      "mapUsefulNamespacePrefixes": {
+        "geo": "<http://www.opengis.net/ont/geosparql#>",
+        "rdf": "<http://www.w3.org/1999/02/22-rdf-syntax-ns#>",
+        "owl": "<http://www.w3.org/2002/07/owl#>",
+        "geof": "<http://www.opengis.net/def/function/geosparql/>",
+        "xsd": "<http://www.w3.org/2001/XMLSchema#>",
+        "rdfs": "<http://www.w3.org/2000/01/rdf-schema#>",
+        "geo-sf": "<http://www.opengis.net/ont/sf#>"
+      }
+    }
+  ],
+  "mapDataSetContexts": {
+    "lubm-1_0": ""
+  },
+  "n": 1
+}`
+    );
+    if (
+      !(
+        body.hasOwnProperty("classname") &&
+        body.hasOwnProperty("name") &&
+        body.hasOwnProperty("relativeBaseDir") &&
+        body.hasOwnProperty("simpleGeospatialDataSetList") &&
+        body.hasOwnProperty("mapDataSetContexts") &&
+        body.hasOwnProperty("n")
+      )
+    ) {
+      return res.status(400).json({
+        error:
+          "Dataset fields are missing! Please check the following example:",
+        example: exampleDatasetJSON,
+      });
+    }
+    // check if n is integer
+    let n = body.n;
+    if (!Number.isInteger(n)) {
+      return res.status(400).json({ error: "n value is not integer!" });
+    }
+
+    fs.writeFileSync(specFullPathName, JSON.stringify(body, null, 2));
+    const result = JSON.parse(fs.readFileSync(specFullPathName));
+    return res.status(200).json(result);
+  } else {
+    return res
+      .status(404)
+      .json(
+        `${specEntity} update functionality is disabled by the endpoint's configuration!`
+      );
+  }
+});
+
 // Delete an existing dataset specification by name
 router.delete("/:existingspec", (req, res) => {
   if (res.app.locals.canDelete) {

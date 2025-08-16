@@ -16,23 +16,28 @@ html
           .d-flex.flex-wrap.align-items-center.justify-content-center.justify-content-lg-start
             a(href="/").d-flex.align-items-center.mb-2.mb-lg-0.text-white.text-decoration-none
               img.mt-2.mb-2(src="/static/geordfbench_image_favicon.png" alt="" width="40" height="40")
+              span.ms-2.fs-4 GeoRDFBench UI
             ul.nav.col-12.col-lg-auto.me-lg-auto.mb-2.justify-content-center.mb-md-0
               li 
-                a(href="#" class="nav-link px-2 text-secondary") Home
+                a(href="/" class="nav-link px-2 text-white") Home
+              li.dropdown
+                a(href="#" class="nav-link px-2 text-white dropdown-toggle" data-bs-toggle="dropdown") Specifications
+                ul.dropdown-menu
+                  li: a(href="/datasets" class="dropdown-item") Datasets
+                  li: a(href="/executionspecs" class="dropdown-item") Execution Specs
+                  li: a(href="/hosts" class="dropdown-item") Hosts
+                  li: a(href="/querysets" class="dropdown-item") Query Sets
+                  li: a(href="/reportsources" class="dropdown-item") Report Sources
+                  li: a(href="/reportspecs" class="dropdown-item") Report Specs
+                  li: a(href="/workloads" class="dropdown-item") Workloads
               li 
-                a(href=`http://${locals.endpointConfig.HOSTNAME}:${locals.endpointConfig.PORT}/endpointui/` class="nav-link px-2 text-white") Endpoint-UI
+                a(href="/categories" class="nav-link px-2 text-white") Categories
               li 
-                a(href=`http://${locals.endpointConfig.HOSTNAME}:${locals.endpointConfig.PORT}/api-docs/` class="nav-link px-2 text-white") OpenAPI Docs
-              li 
-                a(href="#" class="nav-link px-2 text-white") FAQs
-              li 
-                a(href="#" class="nav-link px-2 text-white") About
+                a(href=`http://${locals.endpointConfig.HOSTNAME}:${locals.endpointConfig.PORT}/api-docs/` class="nav-link px-2 text-white") API Docs
 
-            form.col-12.col-lg-auto.mb-3.mb-lg-0.me-lg-3(role="search")
-              input(type="search" class="form-control form-control-dark text-bg-dark" placeholder="Search..." aria-label="Search")
             .text-end
-              button(type="button" class="btn btn-outline-light me-2") Login
-              button(type="button" class="btn btn-warning") Sign-up
+              .btn-group(role="group")
+                a(href=`http://${locals.endpointConfig.HOSTNAME}:${locals.endpointConfig.PORT}/` class="btn btn-outline-light btn-sm") Endpoint Server
 
     block content
       .container-fluid

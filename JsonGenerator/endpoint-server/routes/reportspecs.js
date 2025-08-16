@@ -113,6 +113,51 @@ router.post("/:newspec", (req, res) => {
   }
 });
 
+// Update an existing report specification by name
+router.put("/:existingspec", (req, res) => {
+  if (res.app.locals.canUpdate) {
+    const spec = req.params.existingspec;
+    // check if spec is a filename with .json file type
+    const specFullPathName =
+      path.extname(spec) !== ".json"
+        ? path.join(targetDir, spec + ".json")
+        : path.join(targetDir, spec);
+    console.log(
+      `Will be updating a report specification file in the path ${specFullPathName}`
+    );
+    if (!fs.existsSync(specFullPathName)) {
+      return res
+        .status(404)
+        .json({ error: `${specFullPathName} does not exist!` });
+    }
+
+    // grab the PUT body
+    const body = req.body;
+    // validate required values
+    if (!body.hasOwnProperty("noQueryResultToReport")) {
+      return res
+        .status(400)
+        .json({ error: "noQueryResultToReport is missing!" });
+    }
+    // check if noQueryResultToReport is integer
+    let noQueryResultToReport = body.noQueryResultToReport;
+    if (!Number.isInteger(noQueryResultToReport)) {
+      return res
+        .status(400)
+        .json({ error: "noQueryResultToReport value is not integer!" });
+    }
+    fs.writeFileSync(specFullPathName, JSON.stringify(body, null, 2));
+    const result = JSON.parse(fs.readFileSync(specFullPathName));
+    return res.status(200).json(result);
+  } else {
+    return res
+      .status(404)
+      .json(
+        `${specEntity} update functionality is disabled by the endpoint's configuration!`
+      );
+  }
+});
+
 // Delete an existing report specification by name
 router.delete("/:existingspec", (req, res) => {
   if (res.app.locals.canDelete) {

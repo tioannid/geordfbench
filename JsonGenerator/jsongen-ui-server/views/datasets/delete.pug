@@ -1,0 +1,75 @@
+extends ../layout
+
+block content
+
+    .container 
+
+        .col-8
+            h1.h3.mb-3.fw-normal Delete Dataset: #{locals.spec}
+            .alert.alert-warning
+                strong Warning! 
+                | This action cannot be undone. Are you sure you want to delete this dataset?
+            
+            .card.mb-3
+                .card-header Current Dataset Details
+                .card-body
+                    .row.mb-2
+                        .col-sm-4
+                            strong Name:
+                        .col-sm-8= locals.data.name
+                    .row.mb-2
+                        .col-sm-4
+                            strong Class Name:
+                        .col-sm-8= locals.data.classname
+                    .row.mb-2
+                        .col-sm-4
+                            strong Relative Base Dir:
+                        .col-sm-8= locals.data.relativeBaseDir
+                    .row.mb-2
+                        .col-sm-4
+                            strong N Value:
+                        .col-sm-8= locals.data.n
+                    
+                    if locals.data.simpleGeospatialDataSetList && locals.data.simpleGeospatialDataSetList.length > 0
+                        - var simpleDataset = locals.data.simpleGeospatialDataSetList[0]
+                        hr
+                        h6 Simple Geospatial Dataset
+                        .row.mb-2
+                            .col-sm-4
+                                strong Simple Dataset Name:
+                            .col-sm-8= simpleDataset.name
+                        .row.mb-2
+                            .col-sm-4
+                                strong Data File:
+                            .col-sm-8= simpleDataset.dataFile
+                        .row.mb-2
+                            .col-sm-4
+                                strong RDF Format:
+                            .col-sm-8= simpleDataset.rdfFormat
+            
+            .row.mt-3.justify-content-center
+                .col-2
+                    button(type="button" onclick="deleteDataset()").btn.btn-danger Delete
+                .col-2
+                    a(href="/datasets").btn.btn-secondary Cancel
+
+    script.
+        async function deleteDataset() {
+            if (confirm('Are you absolutely sure you want to delete this dataset?')) {
+                try {
+                    const response = await fetch(`#{locals.deleteBaseUrl}/#{locals.spec}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    if (response.ok || response.status === 204) {
+                        alert('Dataset deleted successfully!');
+                        window.location.href = '/datasets';
+                    } else {
+                        const error = await response.json();
+                        alert('Error deleting dataset: ' + JSON.stringify(error));
+                    }
+                } catch (error) {
+                    alert('Error deleting dataset: ' + error.message);
+                }
+            }
+        }
