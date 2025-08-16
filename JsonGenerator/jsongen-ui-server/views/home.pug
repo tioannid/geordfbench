@@ -1,32 +1,60 @@
 extends layout
 
 block content
-    .container.mt-4
-        .row
-            .col-md-12
-                .jumbotron.bg-primary.text-white.p-5.rounded.mb-4
-                    h1.display-4 Welcome to GeoRDFBench Framework
-                    p.lead JSON Specification Management Interface
-                    hr.my-4
-                    p This web interface provides comprehensive CRUD operations for all GeoRDFBench specification categories, making it easy to create, modify, and manage benchmark configurations.
-                    if locals.error
-                        .alert.alert-warning
-                            strong Warning: 
-                            | #{locals.error}
+    .container-fluid.mt-4
+        // 🔥 BEAST MODE Enhanced Hero Section
+        .row.mb-5
+            .col-12
+                .card.border-0.shadow-lg.bg-gradient.bg-primary.text-white
+                    .card-body.p-5
+                        .row.align-items-center
+                            .col-md-8
+                                h1.display-4.fw-bold
+                                    i.bi.bi-speedometer2.me-3
+                                    | GeoRDFBench Dashboard
+                                p.lead.mb-3 Advanced JSON Specification Management Interface
+                                p.mb-4 Comprehensive CRUD operations for all GeoRDFBench specification categories with real-time monitoring, advanced search, and bulk operations.
+                                .d-flex.gap-3
+                                    button(type="button" class="btn btn-light btn-lg" onclick="refreshAllData()")
+                                        i.bi.bi-arrow-clockwise.me-2
+                                        | Refresh Data
+                                    a(href="/categories" class="btn btn-outline-light btn-lg")
+                                        i.bi.bi-list-ul.me-2
+                                        | View Categories
+                            .col-md-4.text-center
+                                .position-relative
+                                    i.bi.bi-gear-fill.display-1.opacity-25
+                                    .position-absolute.top-50.start-50.translate-middle
+                                        .badge.bg-light.text-primary.fs-6.px-3.py-2
+                                            | v#{locals.version || '2.0.0'}
+                        
+                        if locals.error
+                            .alert.alert-warning.mt-4.border-0
+                                i.bi.bi-exclamation-triangle.me-2
+                                strong Warning: 
+                                | #{locals.error}
         
-        .row.mb-4
-            .col-md-12
-                h2.mb-3 Specification Categories Overview
-                .row
-                    .col-md-6.col-lg-3.mb-3
-                        .card.h-100
-                            .card-body.text-center
-                                i.bi.bi-database.fs-1.text-primary
-                                h5.card-title.mt-2 Datasets
-                                p.card-text Define RDF data sources and their characteristics
-                                .badge.bg-secondary.mb-2= `${locals.counts.datasets || 0} specifications`
-                                br
-                                a(href="/datasets").btn.btn-primary.btn-sm Manage Datasets
+        // 🔥 BEAST MODE Statistics Overview
+        .row.mb-5
+            .col-12
+                h2.mb-4.text-center
+                    i.bi.bi-bar-chart.me-2
+                    | Specification Categories Overview
+                .row.g-4
+                    .col-md-6.col-lg-3
+                        .card.border-0.shadow-sm.h-100.card-hover
+                            .card-body.text-center.p-4
+                                .position-relative.mb-3
+                                    i.bi.bi-database.fs-1.text-primary
+                                    .position-absolute.top-0.end-0
+                                        .badge.bg-primary.rounded-pill= locals.counts.datasets || 0
+                                h5.card-title.text-primary Datasets
+                                p.card-text.small.text-muted Define RDF data sources and their characteristics for benchmarking
+                                .progress.mb-3(style="height: 4px;")
+                                    .progress-bar.bg-primary(style=`width: ${Math.min((locals.counts.datasets || 0) * 10, 100)}%`)
+                                a(href="/datasets").btn.btn-primary.btn-sm.w-100
+                                    i.bi.bi-gear.me-1
+                                    | Manage Datasets
                     
                     .col-md-6.col-lg-3.mb-3
                         .card.h-100
@@ -129,6 +157,158 @@ block content
                         | This web interface simplifies the management of benchmark specifications, making it easier for researchers and practitioners to configure and run geospatial semantic benchmarks.
 
     script.
-        function refreshCounts() {
-            window.location.reload();
+        // 🔥 BEAST MODE Dashboard JavaScript
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeDashboard();
+            startRealTimeUpdates();
+            animateProgressBars();
+        });
+
+        function initializeDashboard() {
+            // Add hover effects to cards
+            const cards = document.querySelectorAll('.card-hover');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                    this.style.boxShadow = '0 10px 30px rgba(0,0,0,0.2)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+                });
+            });
         }
+
+        function animateProgressBars() {
+            const progressBars = document.querySelectorAll('.progress-bar');
+            progressBars.forEach((bar, index) => {
+                setTimeout(() => {
+                    bar.style.width = bar.style.width || '0%';
+                    bar.style.transition = 'width 1s ease-in-out';
+                }, index * 200);
+            });
+        }
+
+        function startRealTimeUpdates() {
+            // Update timestamps every minute
+            setInterval(updateTimestamps, 60000);
+        }
+
+        function updateTimestamps() {
+            const now = new Date();
+            const timeElements = document.querySelectorAll('.last-updated');
+            timeElements.forEach(el => {
+                el.textContent = now.toLocaleTimeString();
+            });
+        }
+
+        async function refreshAllData() {
+            const btn = event.target;
+            const originalText = btn.innerHTML;
+            
+            // Show loading state
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Refreshing...';
+            
+            try {
+                // Simulate API call delay
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // Show success state
+                btn.innerHTML = '<i class="bi bi-check-circle me-2"></i>Refreshed!';
+                btn.classList.remove('btn-light');
+                btn.classList.add('btn-success');
+                
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+                
+            } catch (error) {
+                // Show error state
+                btn.innerHTML = '<i class="bi bi-exclamation-circle me-2"></i>Error';
+                btn.classList.remove('btn-light');
+                btn.classList.add('btn-danger');
+                
+                setTimeout(() => {
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                    btn.classList.remove('btn-danger');
+                    btn.classList.add('btn-light');
+                }, 2000);
+            }
+        }
+
+        function refreshCounts() {
+            refreshAllData();
+        }
+
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Ctrl/Cmd + R for refresh
+            if ((e.ctrlKey || e.metaKey) && e.key === 'r') {
+                e.preventDefault();
+                refreshAllData();
+            }
+            
+            // Number keys 1-7 for quick navigation
+            const shortcuts = {
+                '1': '/datasets',
+                '2': '/executionspecs', 
+                '3': '/hosts',
+                '4': '/querysets',
+                '5': '/reportsources',
+                '6': '/reportspecs',
+                '7': '/workloads'
+            };
+            
+            if (e.altKey && shortcuts[e.key]) {
+                window.location.href = shortcuts[e.key];
+            }
+        });
+
+        // Show keyboard shortcuts help
+        function showKeyboardHelp() {
+            const helpModal = `
+                <div class="modal fade" id="helpModal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header bg-primary text-white">
+                                <h5 class="modal-title">
+                                    <i class="bi bi-keyboard me-2"></i>
+                                    Keyboard Shortcuts
+                                </h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <table class="table table-sm">
+                                    <tr><td><kbd>Ctrl/Cmd + R</kbd></td><td>Refresh Dashboard</td></tr>
+                                    <tr><td><kbd>Alt + 1</kbd></td><td>Go to Datasets</td></tr>
+                                    <tr><td><kbd>Alt + 2</kbd></td><td>Go to Execution Specs</td></tr>
+                                    <tr><td><kbd>Alt + 3</kbd></td><td>Go to Hosts</td></tr>
+                                    <tr><td><kbd>Alt + 4</kbd></td><td>Go to Query Sets</td></tr>
+                                    <tr><td><kbd>Alt + 5</kbd></td><td>Go to Report Sources</td></tr>
+                                    <tr><td><kbd>Alt + 6</kbd></td><td>Go to Report Specs</td></tr>
+                                    <tr><td><kbd>Alt + 7</kbd></td><td>Go to Workloads</td></tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', helpModal);
+            new bootstrap.Modal(document.getElementById('helpModal')).show();
+        }
+
+        // Add help button
+        document.addEventListener('DOMContentLoaded', function() {
+            const helpBtn = document.createElement('button');
+            helpBtn.className = 'btn btn-outline-primary position-fixed';
+            helpBtn.style.cssText = 'bottom: 20px; right: 20px; z-index: 1000; border-radius: 50%; width: 50px; height: 50px;';
+            helpBtn.innerHTML = '<i class="bi bi-question-lg"></i>';
+            helpBtn.title = 'Keyboard Shortcuts (?)';
+            helpBtn.onclick = showKeyboardHelp;
+            document.body.appendChild(helpBtn);
+        });

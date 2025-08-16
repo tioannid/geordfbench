@@ -5,10 +5,73 @@ html
     meta(name="viewport" content="width=device-width, initial-scale=1.0")
     title= locals.title || 'Please pass a title property'
 
+    // 🔥 BEAST MODE Enhanced Styling
     style 
       include ./assets/css/bootstrap.min.css
+    link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css")
     script  
       include ./assets/js/bootstrap.min.js
+    
+    // Custom BEAST MODE styles
+    style.
+      .section-header hr {
+        height: 2px;
+        opacity: 0.3;
+      }
+      .card {
+        transition: all 0.3s ease;
+      }
+      .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+      }
+      .btn {
+        transition: all 0.2s ease;
+      }
+      .btn:hover {
+        transform: translateY(-1px);
+      }
+      .progress-bar {
+        transition: width 0.3s ease;
+      }
+      .table-hover tbody tr:hover {
+        background-color: rgba(0,123,255,0.1);
+      }
+      .badge {
+        font-size: 0.75em;
+      }
+      .form-control:focus, .form-select:focus {
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+        border-color: #86b7fe;
+      }
+      .navbar-brand {
+        font-weight: 600;
+      }
+      .dropdown-menu {
+        border: none;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      }
+      .alert {
+        border: none;
+        border-radius: 8px;
+      }
+      .modal-content {
+        border: none;
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .bg-gradient {
+        background: linear-gradient(135deg, var(--bs-primary) 0%, var(--bs-primary-dark, #0056b3) 100%) !important;
+      }
+      .bg-gradient.bg-danger {
+        background: linear-gradient(135deg, var(--bs-danger) 0%, #c82333 100%) !important;
+      }
+      .bg-gradient.bg-success {
+        background: linear-gradient(135deg, var(--bs-success) 0%, #1e7e34 100%) !important;
+      }
+      .bg-gradient.bg-info {
+        background: linear-gradient(135deg, var(--bs-info) 0%, #138496 100%) !important;
+      }
   body
     block menu
       .header.p-3.text-bg-dark
@@ -20,16 +83,32 @@ html
             ul.nav.col-12.col-lg-auto.me-lg-auto.mb-2.justify-content-center.mb-md-0
               li 
                 a(href="/" class="nav-link px-2 text-white") Home
-              li.dropdown
-                a(href="#" class="nav-link px-2 text-white dropdown-toggle" data-bs-toggle="dropdown") Specifications
-                ul.dropdown-menu
-                  li: a(href="/datasets" class="dropdown-item") Datasets
-                  li: a(href="/executionspecs" class="dropdown-item") Execution Specs
-                  li: a(href="/hosts" class="dropdown-item") Hosts
-                  li: a(href="/querysets" class="dropdown-item") Query Sets
-                  li: a(href="/reportsources" class="dropdown-item") Report Sources
-                  li: a(href="/reportspecs" class="dropdown-item") Report Specs
-                  li: a(href="/workloads" class="dropdown-item") Workloads
+              li.nav-item.dropdown
+                a(href="#" class="nav-link px-2 text-white dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" role="button") 
+                  i.bi.bi-gear.me-1
+                  | Specifications
+                ul.dropdown-menu.dropdown-menu-dark
+                  li: a(href="/datasets" class="dropdown-item")
+                    i.bi.bi-database.me-2
+                    | Datasets
+                  li: a(href="/executionspecs" class="dropdown-item")
+                    i.bi.bi-gear.me-2
+                    | Execution Specs
+                  li: a(href="/hosts" class="dropdown-item")
+                    i.bi.bi-server.me-2
+                    | Hosts
+                  li: a(href="/querysets" class="dropdown-item")
+                    i.bi.bi-search.me-2
+                    | Query Sets
+                  li: a(href="/reportsources" class="dropdown-item")
+                    i.bi.bi-file-earmark-text.me-2
+                    | Report Sources
+                  li: a(href="/reportspecs" class="dropdown-item")
+                    i.bi.bi-clipboard-data.me-2
+                    | Report Specs
+                  li: a(href="/workloads" class="dropdown-item")
+                    i.bi.bi-cpu.me-2
+                    | Workloads
               li 
                 a(href="/categories" class="nav-link px-2 text-white") Categories
               li 

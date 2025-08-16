@@ -2,30 +2,87 @@ extends ../layout
 
 block content
 
-    .container 
+    .container-fluid
+        .row.justify-content-center
+            .col-lg-10.col-xl-8
+                .card.shadow-lg.border-0
+                    .card-header.bg-gradient.bg-primary.text-white
+                        .d-flex.align-items-center
+                            i.bi.bi-server.fs-4.me-2
+                            h3.mb-0 Create New Host Specification
+                    .card-body.p-4
 
-        form(name="hostform" method='POST' onsubmit='createHost(event)').col-8
-            h1.h3.mb-3.fw-normal Please enter host specification details:
+                        // Progress indicator
+                        .progress.mb-4(style="height: 4px;")
+                            .progress-bar.bg-primary(role="progressbar" style="width: 0%" id="progressBar")
+
+                        form(name="hostform" method='POST' onsubmit='createHost(event)' novalidate)
+                            
+                            // Specification Name Section
+                            .section-header.mb-3
+                                h5.text-primary.mb-2
+                                    i.bi.bi-tag.me-2
+                                    | Host Identity
+                                hr.text-primary
+                            
+                            .row.mb-3
+                                .col-md-6
+                                    .form-floating
+                                        input(type="text" name="specName" id="specName" placeholder="Specification Name" required pattern="[a-zA-Z0-9_-]+" title="Only letters, numbers, underscores, and hyphens allowed").form-control.border-primary
+                                        label(for="specName") 
+                                            i.bi.bi-file-text.me-1
+                                            | Specification Name *
+                                        .invalid-feedback Please provide a valid specification name
+                                        .form-text.text-muted This will be used as the filename (without .json extension)
+                                .col-md-6
+                                    .form-floating
+                                        input(type="text" name="description" id="description" placeholder="Description").form-control.border-primary
+                                        label(for="description")
+                                            i.bi.bi-info-circle.me-1
+                                            | Description
+                                        .form-text.text-muted Optional description for this host
+
+                            // Host Configuration Section
+                            .section-header.mb-3.mt-4
+                                h5.text-primary.mb-2
+                                    i.bi.bi-server.me-2
+                                    | Host Configuration
+                                hr.text-primary
             
-            .row.mt-2
+            .row.mb-3
                 .col-md-6
                     .form-floating
-                        input(type="text" name="name" id="name" placeholder="name" aria-label="name" value=`${locals.name || "host-name"}` ).form-control 
-                        label(for="name") Host Name
+                        input(type="text" name="name" id="name" placeholder="Host Name" required pattern="[a-zA-Z0-9_-]+" title="Only letters, numbers, underscores, and hyphens allowed").form-control.border-primary
+                        label(for="name")
+                            i.bi.bi-pc-display.me-1
+                            | Host Name *
+                        .invalid-feedback Please provide a valid host name
+                        .form-text.text-muted Unique identifier for this host
                 .col-md-6
                     .form-floating
-                        input(type="text" name="classname" id="classname" placeholder="classname" aria-label="classname" value="gr.uoa.di.rdf.geordfbench.runtime.hosts.impl.SimpleHost" ).form-control 
-                        label(for="classname") Class Name
+                        input(type="text" name="classname" id="classname" placeholder="Class Name" value="gr.uoa.di.rdf.geordfbench.runtime.hosts.impl.SimpleHost" required readonly).form-control.border-primary
+                        label(for="classname")
+                            i.bi.bi-code-square.me-1
+                            | Class Name *
+                        .form-text.text-muted Java class for host implementation
             
-            .row.mt-2
+            .row.mb-3
                 .col-md-6
                     .form-floating
-                        input(type="text" name="ipAddr" id="ipAddr" placeholder="ipAddr" aria-label="ipAddr" pattern="^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$" ).form-control 
-                        label(for="ipAddr") IP Address
+                        input(type="text" name="ipAddr" id="ipAddr" placeholder="IP Address" required pattern="^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$" title="Please enter a valid IP address").form-control.border-primary
+                        label(for="ipAddr")
+                            i.bi.bi-router.me-1
+                            | IP Address *
+                        .invalid-feedback Please provide a valid IP address (e.g., 192.168.1.100)
+                        .form-text.text-muted Network address of the host
                 .col-md-6
                     .form-floating
-                        input(type="number" name="ram" id="ram" placeholder="ram" aria-label="ram" value="16" min="1" max="1024" ).form-control 
-                        label(for="ram") RAM (GB)
+                        input(type="number" name="ram" id="ram" placeholder="RAM" value="16" min="1" max="1024" required).form-control.border-primary
+                        label(for="ram")
+                            i.bi.bi-memory.me-1
+                            | RAM (GB) *
+                        .invalid-feedback Please provide RAM between 1-1024 GB
+                        .form-text.text-muted Available system memory
             
             h4.mt-4 Operating System Configuration
             .row.mt-2

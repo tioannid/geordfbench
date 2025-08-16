@@ -2,55 +2,339 @@ extends ../layout
 
 block content
 
-    .container 
+    .container-fluid
+        .row.justify-content-center
+            .col-lg-8.col-xl-6
+                .card.shadow-lg.border-0
+                    .card-header.bg-gradient.bg-danger.text-white
+                        .d-flex.align-items-center
+                            i.bi.bi-file-earmark-text.fs-4.me-2
+                            h3.mb-0 Create New Report Source Specification
+                    .card-body.p-4
 
-        form(name="reportsourceform" method='POST' onsubmit='createReportSource(event)').col-6
-            h1.h3.mb-3.fw-normal Please enter report source specification details:
-            
-            .row.mt-2
-                .col-md-6
-                    .form-floating
-                        input(type="text" name="classname" id="classname" placeholder="classname" aria-label="classname" value="gr.uoa.di.rdf.geordfbench.runtime.reportsource.impl.H2EmbeddedRepSrc" ).form-control 
-                        label(for="classname") Class Name
-                .col-md-6
-                    .form-floating
-                        select(name="driver" id="driver").form-select
-                            option(value="h2") H2 Database
-                            option(value="mysql") MySQL
-                            option(value="postgresql") PostgreSQL
-                        label(for="driver") Database Driver
-            
-            .row.mt-2
-                .col-md-6
-                    .form-floating
-                        input(type="text" name="relativeBaseDir" id="relativeBaseDir" placeholder="relativeBaseDir" aria-label="relativeBaseDir" value="../scripts/h2embeddedreportsource" ).form-control 
-                        label(for="relativeBaseDir") Relative Base Directory
-                .col-md-6
-                    .form-floating
-                        input(type="text" name="database" id="database" placeholder="database" aria-label="database" value="geordfbench" ).form-control 
-                        label(for="database") Database Name
-            
-            .row.mt-2
-                .col-md-6
-                    .form-floating
-                        input(type="text" name="user" id="user" placeholder="user" aria-label="user" value="sa" ).form-control 
-                        label(for="user") Database User
-                .col-md-6
-                    .form-floating
-                        input(type="password" name="password" id="password" placeholder="password" aria-label="password" ).form-control 
-                        label(for="password") Database Password
-            
-            .row.mt-3.justify-content-center
-                .col-2
-                    button(type="submit").btn.btn-primary Create
-                .col-2
-                    a(href="/reportsources").btn.btn-secondary Cancel
+                        // Progress indicator
+                        .progress.mb-4(style="height: 4px;")
+                            .progress-bar.bg-danger(role="progressbar" style="width: 0%" id="progressBar")
+
+                        form(name="reportsourceform" method='POST' onsubmit='createReportSource(event)' novalidate)
+                            
+                            // Specification Name Section
+                            .section-header.mb-3
+                                h5.text-danger.mb-2
+                                    i.bi.bi-tag.me-2
+                                    | Specification Identity
+                                hr.text-danger
+                            
+                            .row.mb-3
+                                .col-md-6
+                                    .form-floating
+                                        input(type="text" name="specName" id="specName" placeholder="Specification Name" aria-label="specName" required pattern="[a-zA-Z0-9_-]+" title="Only letters, numbers, underscores, and hyphens allowed").form-control.border-danger
+                                        label(for="specName") 
+                                            i.bi.bi-file-text.me-1
+                                            | Specification Name *
+                                        .invalid-feedback Please provide a valid specification name (letters, numbers, _, - only)
+                                        .form-text.text-muted This will be used as the filename (without .json extension)
+                                .col-md-6
+                                    .form-floating
+                                        input(type="text" name="description" id="description" placeholder="Description" aria-label="description").form-control.border-danger
+                                        label(for="description")
+                                            i.bi.bi-info-circle.me-1
+                                            | Description
+                                        .form-text.text-muted Optional description for this report source
+
+                            // Database Configuration Section
+                            .section-header.mb-3.mt-4
+                                h5.text-danger.mb-2
+                                    i.bi.bi-database.me-2
+                                    | Database Configuration
+                                hr.text-danger
+                            
+                            .row.mb-3
+                                .col-md-6
+                                    .form-floating
+                                        select(name="driver" id="driver" required onchange="updateClassname()").form-select.border-danger
+                                            option(value="") Select Database Type
+                                            option(value="h2" selected) H2 Database
+                                            option(value="mysql") MySQL
+                                            option(value="postgresql") PostgreSQL
+                                        label(for="driver")
+                                            i.bi.bi-server.me-1
+                                            | Database Type *
+                                        .invalid-feedback Please select a database type
+                                .col-md-6
+                                    .form-floating
+                                        input(type="text" name="classname" id="classname" placeholder="classname" aria-label="classname" value="gr.uoa.di.rdf.geordfbench.runtime.reportsource.impl.H2EmbeddedRepSrc" required readonly).form-control.border-danger
+                                        label(for="classname")
+                                            i.bi.bi-code-square.me-1
+                                            | Class Name *
+                                        .form-text.text-muted Auto-updated based on database type
+                            
+                            .row.mb-3
+                                .col-md-6
+                                    .form-floating
+                                        input(type="text" name="database" id="database" placeholder="database" aria-label="database" value="geordfbench" required pattern="[a-zA-Z0-9_-]+" title="Only letters, numbers, underscores, and hyphens allowed").form-control.border-danger
+                                        label(for="database")
+                                            i.bi.bi-database-fill.me-1
+                                            | Database Name *
+                                        .invalid-feedback Please provide a valid database name
+                                .col-md-6
+                                    .form-floating
+                                        input(type="text" name="relativeBaseDir" id="relativeBaseDir" placeholder="relativeBaseDir" aria-label="relativeBaseDir" value="../scripts/h2embeddedreportsource" required).form-control.border-danger
+                                        label(for="relativeBaseDir")
+                                            i.bi.bi-folder.me-1
+                                            | Base Directory *
+                                        .invalid-feedback Please provide a base directory path
+
+                            // Authentication Section
+                            .section-header.mb-3.mt-4
+                                h5.text-danger.mb-2
+                                    i.bi.bi-shield-lock.me-2
+                                    | Authentication
+                                hr.text-danger
+                            
+                            .row.mb-3
+                                .col-md-6
+                                    .form-floating
+                                        input(type="text" name="user" id="user" placeholder="user" aria-label="user" value="sa" required).form-control.border-danger
+                                        label(for="user")
+                                            i.bi.bi-person.me-1
+                                            | Database User *
+                                        .invalid-feedback Please provide a database user
+                                .col-md-6
+                                    .form-floating
+                                        .input-group
+                                            input(type="password" name="password" id="password" placeholder="password" aria-label="password").form-control.border-danger
+                                            button(type="button" class="btn btn-outline-danger" onclick="togglePassword()" id="passwordToggle")
+                                                i.bi.bi-eye#passwordIcon
+                                        label(for="password")
+                                            i.bi.bi-key.me-1
+                                            | Database Password
+                                        .form-text.text-muted Leave empty if no password required
+
+                            // Advanced Options (Collapsible)
+                            .section-header.mb-3.mt-4
+                                h5.text-danger.mb-2
+                                    i.bi.bi-gear.me-2
+                                    | Advanced Options
+                                    button(type="button" class="btn btn-sm btn-outline-danger ms-2" data-bs-toggle="collapse" data-bs-target="#advancedOptions")
+                                        i.bi.bi-chevron-down
+                                hr.text-danger
+
+                            .collapse#advancedOptions
+                                .row.mb-3
+                                    .col-md-6
+                                        .form-floating
+                                            input(type="number" name="connectionTimeout" id="connectionTimeout" placeholder="Connection Timeout" value="30" min="1" max="300").form-control.border-danger
+                                            label(for="connectionTimeout")
+                                                i.bi.bi-clock.me-1
+                                                | Connection Timeout (seconds)
+                                    .col-md-6
+                                        .form-floating
+                                            select(name="autoCommit" id="autoCommit").form-select.border-danger
+                                                option(value="true" selected) Enabled
+                                                option(value="false") Disabled
+                                            label(for="autoCommit")
+                                                i.bi.bi-check-circle.me-1
+                                                | Auto Commit
+
+                            // Action Buttons
+                            .row.mt-4
+                                .col-12
+                                    .d-flex.justify-content-between.align-items-center
+                                        a(href="/reportsources").btn.btn-outline-secondary.btn-lg
+                                            i.bi.bi-arrow-left.me-2
+                                            | Cancel
+                                        .btn-group
+                                            button(type="button" onclick="validateForm()" class="btn btn-outline-danger btn-lg")
+                                                i.bi.bi-check-circle.me-2
+                                                | Validate
+                                            button(type="submit" class="btn btn-danger btn-lg" id="submitBtn" disabled)
+                                                span.spinner-border.spinner-border-sm.me-2.d-none#submitSpinner
+                                                i.bi.bi-plus-circle.me-2#submitIcon
+                                                | Create Specification
+
+                        // Help Section
+                        .mt-4.p-3.bg-light.rounded
+                            h6.text-danger
+                                i.bi.bi-lightbulb.me-2
+                                | Quick Tips
+                            ul.mb-0.small
+                                li Specification name will be used as the JSON filename
+                                li H2 databases are embedded and don't require external setup
+                                li PostgreSQL and MySQL require running database servers
+                                li Use descriptive names for easy identification
 
     script.
+        // 🔥 BEAST MODE JavaScript with Advanced Features
+        
+        // Database class mappings
+        const classMappings = {
+            'h2': 'gr.uoa.di.rdf.geordfbench.runtime.reportsource.impl.H2EmbeddedRepSrc',
+            'mysql': 'gr.uoa.di.rdf.geordfbench.runtime.reportsource.impl.MySQLRepSrc',
+            'postgresql': 'gr.uoa.di.rdf.geordfbench.runtime.reportsource.impl.PostgreSQLRepSrc'
+        };
+
+        // Initialize form on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeForm();
+            setupRealTimeValidation();
+            setupProgressTracking();
+        });
+
+        function initializeForm() {
+            // Auto-generate spec name based on database type and name
+            const driverSelect = document.getElementById('driver');
+            const databaseInput = document.getElementById('database');
+            const specNameInput = document.getElementById('specName');
+            
+            function updateSpecName() {
+                const driver = driverSelect.value;
+                const database = databaseInput.value;
+                if (driver && database) {
+                    const suggestedName = `${database}_${driver}_RepSrc`;
+                    if (!specNameInput.value || specNameInput.value.includes('_RepSrc')) {
+                        specNameInput.value = suggestedName;
+                        validateField(specNameInput);
+                    }
+                }
+            }
+            
+            driverSelect.addEventListener('change', updateSpecName);
+            databaseInput.addEventListener('input', updateSpecName);
+        }
+
+        function updateClassname() {
+            const driver = document.getElementById('driver').value;
+            const classnameInput = document.getElementById('classname');
+            
+            if (classMappings[driver]) {
+                classnameInput.value = classMappings[driver];
+                classnameInput.classList.remove('is-invalid');
+                classnameInput.classList.add('is-valid');
+            }
+            
+            updateProgress();
+        }
+
+        function setupRealTimeValidation() {
+            const form = document.querySelector('form');
+            const inputs = form.querySelectorAll('input[required], select[required]');
+            
+            inputs.forEach(input => {
+                input.addEventListener('input', () => validateField(input));
+                input.addEventListener('blur', () => validateField(input));
+            });
+        }
+
+        function validateField(field) {
+            const isValid = field.checkValidity();
+            field.classList.remove('is-valid', 'is-invalid');
+            field.classList.add(isValid ? 'is-valid' : 'is-invalid');
+            
+            updateProgress();
+            updateSubmitButton();
+            return isValid;
+        }
+
+        function setupProgressTracking() {
+            const form = document.querySelector('form');
+            const inputs = form.querySelectorAll('input[required], select[required]');
+            
+            inputs.forEach(input => {
+                input.addEventListener('input', updateProgress);
+            });
+        }
+
+        function updateProgress() {
+            const form = document.querySelector('form');
+            const requiredFields = form.querySelectorAll('input[required], select[required]');
+            const validFields = Array.from(requiredFields).filter(field => field.checkValidity());
+            
+            const progress = (validFields.length / requiredFields.length) * 100;
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = progress + '%';
+            progressBar.setAttribute('aria-valuenow', progress);
+            
+            // Color coding
+            if (progress < 30) {
+                progressBar.className = 'progress-bar bg-danger';
+            } else if (progress < 70) {
+                progressBar.className = 'progress-bar bg-warning';
+            } else {
+                progressBar.className = 'progress-bar bg-success';
+            }
+        }
+
+        function updateSubmitButton() {
+            const form = document.querySelector('form');
+            const submitBtn = document.getElementById('submitBtn');
+            const isFormValid = form.checkValidity();
+            
+            submitBtn.disabled = !isFormValid;
+            
+            if (isFormValid) {
+                submitBtn.classList.remove('btn-secondary');
+                submitBtn.classList.add('btn-danger');
+            } else {
+                submitBtn.classList.remove('btn-danger');
+                submitBtn.classList.add('btn-secondary');
+            }
+        }
+
+        function validateForm() {
+            const form = document.querySelector('form');
+            const inputs = form.querySelectorAll('input, select');
+            let isValid = true;
+            
+            inputs.forEach(input => {
+                if (!validateField(input) && input.hasAttribute('required')) {
+                    isValid = false;
+                }
+            });
+            
+            if (isValid) {
+                showToast('✅ Form validation passed!', 'success');
+                document.getElementById('submitBtn').disabled = false;
+            } else {
+                showToast('❌ Please fix validation errors', 'error');
+            }
+            
+            return isValid;
+        }
+
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const passwordIcon = document.getElementById('passwordIcon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                passwordIcon.className = 'bi bi-eye-slash';
+            } else {
+                passwordInput.type = 'password';
+                passwordIcon.className = 'bi bi-eye';
+            }
+        }
+
         async function createReportSource(event) {
             event.preventDefault();
+            
+            if (!validateForm()) {
+                return;
+            }
+            
             const form = event.target;
             const formData = new FormData(form);
+            const submitBtn = document.getElementById('submitBtn');
+            const submitSpinner = document.getElementById('submitSpinner');
+            const submitIcon = document.getElementById('submitIcon');
+            
+            // Show loading state
+            submitBtn.disabled = true;
+            submitSpinner.classList.remove('d-none');
+            submitIcon.classList.add('d-none');
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Creating...';
+            
+            const specName = formData.get('specName');
             
             const data = {
                 classname: formData.get('classname'),
@@ -58,11 +342,15 @@ block content
                 relativeBaseDir: formData.get('relativeBaseDir'),
                 database: formData.get('database'),
                 user: formData.get('user'),
-                password: formData.get('password')
+                password: formData.get('password') || null,
+                connectionTimeout: parseInt(formData.get('connectionTimeout')) || 30,
+                autoCommit: formData.get('autoCommit') === 'true'
             };
             
-            const specName = prompt('Enter specification name:');
-            if (!specName) return;
+            // Add description if provided
+            if (formData.get('description')) {
+                data.description = formData.get('description');
+            }
             
             try {
                 const response = await fetch(`#{locals.postBaseUrl}/${specName}`, {
@@ -74,13 +362,66 @@ block content
                 });
                 
                 if (response.ok) {
-                    alert('Report source specification created successfully!');
-                    window.location.href = '/reportsources';
+                    showToast('🎉 Report source specification created successfully!', 'success');
+                    
+                    // Animate success
+                    submitBtn.classList.remove('btn-danger');
+                    submitBtn.classList.add('btn-success');
+                    submitBtn.innerHTML = '<i class="bi bi-check-circle me-2"></i>Created Successfully!';
+                    
+                    setTimeout(() => {
+                        window.location.href = '/reportsources';
+                    }, 1500);
                 } else {
                     const error = await response.json();
-                    alert('Error creating report source specification: ' + JSON.stringify(error));
+                    throw new Error(JSON.stringify(error));
                 }
             } catch (error) {
-                alert('Error creating report source specification: ' + error.message);
+                console.error('Error creating report source:', error);
+                showToast('❌ Error creating report source: ' + error.message, 'error');
+                
+                // Reset button state
+                submitBtn.disabled = false;
+                submitSpinner.classList.add('d-none');
+                submitIcon.classList.remove('d-none');
+                submitBtn.innerHTML = '<i class="bi bi-plus-circle me-2"></i>Create Specification';
+                submitBtn.classList.remove('btn-success');
+                submitBtn.classList.add('btn-danger');
             }
         }
+
+        function showToast(message, type) {
+            // Create toast element
+            const toast = document.createElement('div');
+            toast.className = `alert alert-${type === 'success' ? 'success' : 'danger'} alert-dismissible fade show position-fixed`;
+            toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            toast.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.remove();
+                }
+            }, 5000);
+        }
+
+        // Advanced keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Ctrl/Cmd + Enter to submit
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                if (!document.getElementById('submitBtn').disabled) {
+                    document.querySelector('form').dispatchEvent(new Event('submit'));
+                }
+            }
+            
+            // Escape to cancel
+            if (e.key === 'Escape') {
+                window.location.href = '/reportsources';
+            }
+        });
