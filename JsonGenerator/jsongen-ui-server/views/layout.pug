@@ -33,11 +33,11 @@ html
               li 
                 a(href="/categories" class="nav-link px-2 text-white") Categories
               li 
-                a(href=`http://${locals.endpointConfig.HOSTNAME}:${locals.endpointConfig.PORT}/api-docs/` class="nav-link px-2 text-white") API Docs
+                a(href=`http://${locals.endpointConfig ? locals.endpointConfig.ENDPOINT_HOST : 'localhost'}:${locals.endpointConfig ? locals.endpointConfig.ENDPOINT_PORT : '5000'}/api-docs/` class="nav-link px-2 text-white") API Docs
 
             .text-end
               .btn-group(role="group")
-                a(href=`http://${locals.endpointConfig.HOSTNAME}:${locals.endpointConfig.PORT}/` class="btn btn-outline-light btn-sm") Endpoint Server
+                a(href=`http://${locals.endpointConfig ? locals.endpointConfig.ENDPOINT_HOST : 'localhost'}:${locals.endpointConfig ? locals.endpointConfig.ENDPOINT_PORT : '5000'}/` class="btn btn-outline-light btn-sm") Endpoint Server
 
     block content
       .container-fluid
