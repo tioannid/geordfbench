@@ -10,6 +10,8 @@
 \usepackage{booktabs}
 \usepackage{float}
 \usepackage{subcaption}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,positioning}
 
 \geometry{margin=1in}
 
@@ -150,8 +152,48 @@ The extended GeoRDFBench UI system maintains the existing dual-server architectu
 
 \begin{figure}[H]
     \centering
-    \begin{tikzpicture}[node distance=2cm, auto]
-        % Add architecture diagram here
+    \begin{tikzpicture}[
+        node distance=2cm,
+        auto,
+        block/.style={rectangle, draw, fill=blue!20, text width=3cm, text centered, rounded corners, minimum height=1cm},
+        server/.style={rectangle, draw, fill=green!20, text width=4cm, text centered, rounded corners, minimum height=1.5cm},
+        storage/.style={cylinder, draw, fill=yellow!20, text width=2.5cm, text centered, minimum height=1cm},
+        user/.style={ellipse, draw, fill=red!20, text width=2cm, text centered, minimum height=1cm}
+    ]
+        
+        % User
+        \node [user] (user) {User\\Browser};
+        
+        % UI Server
+        \node [server, below=of user] (uiserver) {UI Server\\(Node.js/Express)\\Port 5001};
+        
+        % Endpoint Server
+        \node [server, right=3cm of uiserver] (endpointserver) {Endpoint Server\\(Node.js/Express)\\Port 5000};
+        
+        % JSON Storage
+        \node [storage, below=of endpointserver] (jsonstorage) {JSON\\Specifications\\File System};
+        
+        % UI Components
+        \node [block, left=2cm of uiserver] (forms) {CRUD Forms\\Bootstrap 5\\Pug Templates};
+        
+        % API Components
+        \node [block, right=2cm of endpointserver] (api) {REST API\\OpenAPI\\Swagger Docs};
+        
+        % Specification Categories
+        \node [block, below=of uiserver] (categories) {7 Specification\\Categories\\Full CRUD};
+        
+        % Arrows
+        \draw [->] (user) -- (uiserver) node[midway, left] {HTTP Requests};
+        \draw [->] (uiserver) -- (endpointserver) node[midway, above] {REST API Calls};
+        \draw [->] (endpointserver) -- (jsonstorage) node[midway, right] {File I/O};
+        \draw [->] (forms) -- (uiserver);
+        \draw [->] (endpointserver) -- (api);
+        \draw [->] (categories) -- (uiserver);
+        
+        % Bidirectional arrows
+        \draw [<->] (uiserver) -- (user);
+        \draw [<->] (endpointserver) -- (uiserver);
+        
     \end{tikzpicture}
     \caption{Extended GeoRDFBench UI System Architecture}
     \label{fig:architecture}

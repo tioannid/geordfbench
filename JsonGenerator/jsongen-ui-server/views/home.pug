@@ -104,7 +104,7 @@ block content
                                 td
                                     strong Endpoint URL:
                                 td
-                                    a(href=locals.endpointUrl target="_blank")= locals.endpointUrl
+                                    a(href=locals.endpointUrl target="_blank")= locals.endpointUrl || 'http://localhost:5000'
                             tr
                                 td
                                     strong Total Specifications:
@@ -117,7 +117,7 @@ block content
                     .card-body
                         .d-grid.gap-2
                             a(href="/categories").btn.btn-outline-primary View All Categories
-                            a(href=`${locals.endpointUrl}/api-docs/` target="_blank").btn.btn-outline-secondary API Documentation
+                            a(href=`${locals.endpointUrl || 'http://localhost:5000'}/api-docs/` target="_blank").btn.btn-outline-secondary API Documentation
                             button(type="button" onclick="refreshCounts()").btn.btn-outline-success Refresh Counts
         
         .row
