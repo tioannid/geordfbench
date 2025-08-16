@@ -155,6 +155,33 @@ router.post("/:newspec", (req, res) => {
   }
 });
 
+// Update an existing execution specification by name
+router.put("/:existingspec", (req, res) => {
+  if (res.app.locals.canUpdate) {
+    const spec = req.params.existingspec;
+    const specFullPathName =
+      path.extname(spec) !== ".json"
+        ? path.join(targetDir, spec + ".json")
+        : path.join(targetDir, spec);
+    
+    if (!fs.existsSync(specFullPathName)) {
+      return res.status(404).json({ error: `${specFullPathName} does not exist!` });
+    }
+
+    const body = req.body;
+    // Basic validation for execution specs
+    if (!body.hasOwnProperty("classname") || !body.hasOwnProperty("execTypeReps")) {
+      return res.status(400).json({ error: "Required execution specification fields are missing!" });
+    }
+
+    fs.writeFileSync(specFullPathName, JSON.stringify(body, null, 2));
+    const result = JSON.parse(fs.readFileSync(specFullPathName));
+    return res.status(200).json(result);
+  } else {
+    return res.status(404).json(`${specEntity} update functionality is disabled!`);
+  }
+});
+
 // Delete an existing execution specification by name
 router.delete("/:existingspec", (req, res) => {
   if (res.app.locals.canDelete) {

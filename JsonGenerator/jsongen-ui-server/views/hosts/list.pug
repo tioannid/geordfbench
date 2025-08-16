@@ -1,0 +1,23 @@
+extends ../layout
+
+block content
+
+    .row 
+        .col-md-12
+            .d-flex.justify-content-between.align-items-center.mb-3
+                h2= locals.title || 'Please pass a title property'
+                a(href="/hosts/new").btn.btn-primary New Host Specification
+            .table-responsive
+                table.table.table-light.table-striped.table-hover.table-bordered
+                    thead.thead-dark 
+                        tr
+                            th Host Specification Name
+                            th Actions
+                    tbody.table-group-divider
+                        each record in records
+                            tr 
+                                td= record
+                                td
+                                    .btn-group(role="group")
+                                        a(href=`/hosts/edit/${record.replace('.json', '')}`).btn.btn-sm.btn-outline-primary Edit
+                                        a(href=`/hosts/delete/${record.replace('.json', '')}`).btn.btn-sm.btn-outline-danger Delete

@@ -4,27 +4,27 @@ block content
 
     .container 
 
-        form(name="hostform" method='POST' onsubmit='createHost(event)').col-8
-            h1.h3.mb-3.fw-normal Please enter host specification details:
+        form(name="editform" method='POST' onsubmit='updateHost(event)').col-8
+            h1.h3.mb-3.fw-normal Edit Host Specification: #{locals.spec}
             
             .row.mt-2
                 .col-md-6
                     .form-floating
-                        input(type="text" name="name" id="name" placeholder="name" aria-label="name" value=`${locals.name || "host-name"}` ).form-control 
+                        input(type="text" name="name" id="name" placeholder="name" aria-label="name" value=`${locals.data.name}` ).form-control 
                         label(for="name") Host Name
                 .col-md-6
                     .form-floating
-                        input(type="text" name="classname" id="classname" placeholder="classname" aria-label="classname" value="gr.uoa.di.rdf.geordfbench.runtime.hosts.impl.SimpleHost" ).form-control 
+                        input(type="text" name="classname" id="classname" placeholder="classname" aria-label="classname" value=`${locals.data.classname}` ).form-control 
                         label(for="classname") Class Name
             
             .row.mt-2
                 .col-md-6
                     .form-floating
-                        input(type="text" name="ipAddr" id="ipAddr" placeholder="ipAddr" aria-label="ipAddr" pattern="^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$" ).form-control 
+                        input(type="text" name="ipAddr" id="ipAddr" placeholder="ipAddr" aria-label="ipAddr" pattern="^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$" value=`${locals.data.ipAddr}` ).form-control 
                         label(for="ipAddr") IP Address
                 .col-md-6
                     .form-floating
-                        input(type="number" name="ram" id="ram" placeholder="ram" aria-label="ram" value="16" min="1" max="1024" ).form-control 
+                        input(type="number" name="ram" id="ram" placeholder="ram" aria-label="ram" value=`${locals.data.ram}` min="1" max="1024" ).form-control 
                         label(for="ram") RAM (GB)
             
             h4.mt-4 Operating System Configuration
@@ -32,53 +32,53 @@ block content
                 .col-md-6
                     .form-floating
                         select(name="osClassname" id="osClassname").form-select
-                            option(value="gr.uoa.di.rdf.geordfbench.runtime.os.impl.UbuntuBionicOS") Ubuntu Bionic
-                            option(value="gr.uoa.di.rdf.geordfbench.runtime.os.impl.UbuntuJammyOS") Ubuntu Jammy
-                            option(value="gr.uoa.di.rdf.geordfbench.runtime.os.impl.CentOSOS") CentOS
-                            option(value="gr.uoa.di.rdf.geordfbench.runtime.os.impl.WindowsOS") Windows
+                            option(value="gr.uoa.di.rdf.geordfbench.runtime.os.impl.UbuntuBionicOS" selected=(locals.data.os.classname === "gr.uoa.di.rdf.geordfbench.runtime.os.impl.UbuntuBionicOS")) Ubuntu Bionic
+                            option(value="gr.uoa.di.rdf.geordfbench.runtime.os.impl.UbuntuJammyOS" selected=(locals.data.os.classname === "gr.uoa.di.rdf.geordfbench.runtime.os.impl.UbuntuJammyOS")) Ubuntu Jammy
+                            option(value="gr.uoa.di.rdf.geordfbench.runtime.os.impl.CentOSOS" selected=(locals.data.os.classname === "gr.uoa.di.rdf.geordfbench.runtime.os.impl.CentOSOS")) CentOS
+                            option(value="gr.uoa.di.rdf.geordfbench.runtime.os.impl.WindowsOS" selected=(locals.data.os.classname === "gr.uoa.di.rdf.geordfbench.runtime.os.impl.WindowsOS")) Windows
                         label(for="osClassname") OS Class Name
                 .col-md-6
                     .form-floating
-                        input(type="text" name="osName" id="osName" placeholder="osName" aria-label="osName" value="Ubuntu-bionic" ).form-control 
+                        input(type="text" name="osName" id="osName" placeholder="osName" aria-label="osName" value=`${locals.data.os.name}` ).form-control 
                         label(for="osName") OS Name
             
             .row.mt-2
                 .col-md-4
                     .form-floating
-                        input(type="text" name="shellCmd" id="shellCmd" placeholder="shellCmd" aria-label="shellCmd" value="/bin/sh" ).form-control 
+                        input(type="text" name="shellCmd" id="shellCmd" placeholder="shellCmd" aria-label="shellCmd" value=`${locals.data.os.shell_cmd}` ).form-control 
                         label(for="shellCmd") Shell Command
                 .col-md-4
                     .form-floating
-                        input(type="text" name="syncCmd" id="syncCmd" placeholder="syncCmd" aria-label="syncCmd" value="sync" ).form-control 
+                        input(type="text" name="syncCmd" id="syncCmd" placeholder="syncCmd" aria-label="syncCmd" value=`${locals.data.os.sync_cmd}` ).form-control 
                         label(for="syncCmd") Sync Command
                 .col-md-4
                     .form-floating
-                        input(type="text" name="clearCacheCmd" id="clearCacheCmd" placeholder="clearCacheCmd" aria-label="clearCacheCmd" value="sudo /sbin/sysctl vm.drop_caches=3" ).form-control 
+                        input(type="text" name="clearCacheCmd" id="clearCacheCmd" placeholder="clearCacheCmd" aria-label="clearCacheCmd" value=`${locals.data.os.clearcache_cmd}` ).form-control 
                         label(for="clearCacheCmd") Clear Cache Command
             
             h4.mt-4 Directory Configuration
             .row.mt-2
                 .col-md-4
                     .form-floating
-                        input(type="text" name="sourceFileDir" id="sourceFileDir" placeholder="sourceFileDir" aria-label="sourceFileDir" ).form-control 
+                        input(type="text" name="sourceFileDir" id="sourceFileDir" placeholder="sourceFileDir" aria-label="sourceFileDir" value=`${locals.data.sourceFileDir}` ).form-control 
                         label(for="sourceFileDir") Source File Directory
                 .col-md-4
                     .form-floating
-                        input(type="text" name="reposBaseDir" id="reposBaseDir" placeholder="reposBaseDir" aria-label="reposBaseDir" ).form-control 
+                        input(type="text" name="reposBaseDir" id="reposBaseDir" placeholder="reposBaseDir" aria-label="reposBaseDir" value=`${locals.data.reposBaseDir}` ).form-control 
                         label(for="reposBaseDir") Repositories Base Directory
                 .col-md-4
                     .form-floating
-                        input(type="text" name="reportsBaseDir" id="reportsBaseDir" placeholder="reportsBaseDir" aria-label="reportsBaseDir" ).form-control 
+                        input(type="text" name="reportsBaseDir" id="reportsBaseDir" placeholder="reportsBaseDir" aria-label="reportsBaseDir" value=`${locals.data.reportsBaseDir}` ).form-control 
                         label(for="reportsBaseDir") Reports Base Directory
             
             .row.mt-3.justify-content-center
                 .col-2
-                    button(type="submit").btn.btn-primary Create
+                    button(type="submit").btn.btn-primary Update
                 .col-2
                     a(href="/hosts").btn.btn-secondary Cancel
 
     script.
-        async function createHost(event) {
+        async function updateHost(event) {
             event.preventDefault();
             const form = event.target;
             const formData = new FormData(form);
@@ -101,8 +101,8 @@ block content
             };
             
             try {
-                const response = await fetch(`#{locals.postBaseUrl}/${data.name}`, {
-                    method: 'POST',
+                const response = await fetch(`#{locals.putBaseUrl}/#{locals.spec}`, {
+                    method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                     },
@@ -110,13 +110,13 @@ block content
                 });
                 
                 if (response.ok) {
-                    alert('Host specification created successfully!');
+                    alert('Host specification updated successfully!');
                     window.location.href = '/hosts';
                 } else {
                     const error = await response.json();
-                    alert('Error creating host specification: ' + JSON.stringify(error));
+                    alert('Error updating host specification: ' + JSON.stringify(error));
                 }
             } catch (error) {
-                alert('Error creating host specification: ' + error.message);
+                alert('Error updating host specification: ' + error.message);
             }
         }

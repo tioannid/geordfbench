@@ -55,19 +55,38 @@ app.use(logger("dev"));
 const mapRouters = [
   { root: "/", router: require("./routes/home") },
   { root: "/categories", router: require("./routes/categories") }, // JSON Library Specification Categories
-  // { root: "/executionspecs", router: require("./routes/executionspecs") },
-  // { root: "/hosts", router: require("./routes/hosts") },
-  // { root: "/datasets", router: require("./routes/datasets") },
-  // { root: "/querysets", router: require("./routes/querysets") },
+  { root: "/executionspecs", router: require("./routes/executionspecs") },
+  { root: "/hosts", router: require("./routes/hosts") },
+  { root: "/datasets", router: require("./routes/datasets") },
+  { root: "/querysets", router: require("./routes/querysets") },
   { root: "/reportspecs", router: require("./routes/reportspecs") },
-  // { root: "/reportsources", router: require("./routes/reportsources") },
-  // { root: "/workloads", router: require("./routes/workloads") },
+  { root: "/reportsources", router: require("./routes/reportsources") },
+  { root: "/workloads", router: require("./routes/workloads") },
   // { root: "/admin", router: require("./routes/admin") },
 ];
 
 for (rootPair of mapRouters) {
   app.use(rootPair.root, rootPair.router);
 }
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error('Error:', err);
+  res.status(err.status || 500).render('error', {
+    title: 'Error',
+    message: err.message || 'Internal Server Error',
+    error: process.env.NODE_ENV === 'development' ? err : {}
+  });
+});
+
+// 404 handler
+app.use((req, res) => {
+  res.status(404).render('error', {
+    title: '404 - Page Not Found',
+    message: `The page ${req.originalUrl} was not found`,
+    error: {}
+  });
+});
 
 // Initialize swagger-jsdoc -> returns validated swagger spec in json format
 const swaggerInitSpecification = fs.readFileSync(

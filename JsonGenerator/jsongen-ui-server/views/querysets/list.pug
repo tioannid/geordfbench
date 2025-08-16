@@ -1,0 +1,23 @@
+extends ../layout
+
+block content
+
+    .row 
+        .col-md-12
+            .d-flex.justify-content-between.align-items-center.mb-3
+                h2= locals.title || 'Please pass a title property'
+                a(href="/querysets/new").btn.btn-primary New Query Set Specification
+            .table-responsive
+                table.table.table-light.table-striped.table-hover.table-bordered
+                    thead.thead-dark 
+                        tr
+                            th Query Set Specification Name
+                            th Actions
+                    tbody.table-group-divider
+                        each record in records
+                            tr 
+                                td= record
+                                td
+                                    .btn-group(role="group")
+                                        a(href=`/querysets/edit/${record.replace('.json', '')}`).btn.btn-sm.btn-outline-primary Edit
+                                        a(href=`/querysets/delete/${record.replace('.json', '')}`).btn.btn-sm.btn-outline-danger Delete

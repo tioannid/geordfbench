@@ -1,0 +1,50 @@
+extends ../layout
+
+block content
+
+    .container 
+
+        form(name="editform" method='POST' onsubmit='updateReportSpec(event)').col-6
+            h1.h3.mb-3.fw-normal Edit Report Specification: #{locals.spec}
+            .row.mt-2
+                .col
+                    .form-floating
+                        input(type="text" name="name" id="name" placeholder="name" aria-label="name" value=`${locals.spec}` readonly).form-control 
+                        label(for="name") Name
+                    .form-floating
+                        input(type="number" name="noQueryResultToReport" id="noQueryResultToReport" placeholder="noQueryResultToReport" aria-label="noQueryResultToReport" value=`${locals.data.noQueryResultToReport}` ).form-control 
+                        label(for="noQueryResultToReport") noQueryResultToReport
+            .row.mt-3.justify-content-center
+                .col-2
+                    button(type="submit").btn.btn-primary Update
+                .col-2
+                    a(href="/reportspecs").btn.btn-secondary Cancel
+
+    script.
+        async function updateReportSpec(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+            data.noQueryResultToReport = parseInt(data.noQueryResultToReport);
+            
+            try {
+                const response = await fetch(`#{locals.putBaseUrl}/${locals.spec}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    alert('Report specification updated successfully!');
+                    window.location.href = '/reportspecs';
+                } else {
+                    const error = await response.json();
+                    alert('Error updating report specification: ' + JSON.stringify(error));
+                }
+            } catch (error) {
+                alert('Error updating report specification: ' + error.message);
+            }
+        }

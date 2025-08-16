@@ -1,0 +1,70 @@
+extends ../layout
+
+block content
+
+    .container 
+
+        .col-8
+            h1.h3.mb-3.fw-normal Delete Host Specification: #{locals.spec}
+            .alert.alert-warning
+                strong Warning! 
+                | This action cannot be undone. Are you sure you want to delete this host specification?
+            
+            .card.mb-3
+                .card-header Current Host Specification Details
+                .card-body
+                    .row.mb-2
+                        .col-sm-4
+                            strong Name:
+                        .col-sm-8= locals.data.name
+                    .row.mb-2
+                        .col-sm-4
+                            strong IP Address:
+                        .col-sm-8= locals.data.ipAddr
+                    .row.mb-2
+                        .col-sm-4
+                            strong RAM:
+                        .col-sm-8= `${locals.data.ram} GB`
+                    .row.mb-2
+                        .col-sm-4
+                            strong OS Name:
+                        .col-sm-8= locals.data.os.name
+                    .row.mb-2
+                        .col-sm-4
+                            strong Source File Dir:
+                        .col-sm-8= locals.data.sourceFileDir
+                    .row.mb-2
+                        .col-sm-4
+                            strong Repos Base Dir:
+                        .col-sm-8= locals.data.reposBaseDir
+                    .row.mb-2
+                        .col-sm-4
+                            strong Reports Base Dir:
+                        .col-sm-8= locals.data.reportsBaseDir
+            
+            .row.mt-3.justify-content-center
+                .col-2
+                    button(type="button" onclick="deleteHost()").btn.btn-danger Delete
+                .col-2
+                    a(href="/hosts").btn.btn-secondary Cancel
+
+    script.
+        async function deleteHost() {
+            if (confirm('Are you absolutely sure you want to delete this host specification?')) {
+                try {
+                    const response = await fetch(`#{locals.deleteBaseUrl}/#{locals.spec}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    if (response.ok || response.status === 204) {
+                        alert('Host specification deleted successfully!');
+                        window.location.href = '/hosts';
+                    } else {
+                        const error = await response.json();
+                        alert('Error deleting host specification: ' + JSON.stringify(error));
+                    }
+                } catch (error) {
+                    alert('Error deleting host specification: ' + error.message);
+                }
+            }
+        }

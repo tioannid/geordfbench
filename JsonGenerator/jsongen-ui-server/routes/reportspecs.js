@@ -23,4 +23,48 @@ router.get("/new", (req, res) => {
   });
 });
 
+// render an "Edit Report Specification" form
+router.get("/edit/:spec", async (req, res) => {
+  const Title = "Edit Report Specification";
+  const spec = req.params.spec;
+  const url = `${req.app.locals.endpointConfig.ENDPOINT_URL}/reportspecs/${spec}`;
+  try {
+    const { body: reportspec } = await HTTP.get(url);
+    res.render("reportspecs/edit", {
+      title: Title,
+      spec: spec,
+      data: reportspec,
+      putBaseUrl: `${req.app.locals.endpointConfig.ENDPOINT_URL}/reportspecs`,
+    });
+  } catch (error) {
+    res.status(404).render("error", {
+      title: "Error",
+      message: `Report specification '${spec}' not found`,
+      error: error
+    });
+  }
+});
+
+// render a "Delete Report Specification" confirmation form
+router.get("/delete/:spec", async (req, res) => {
+  const Title = "Delete Report Specification";
+  const spec = req.params.spec;
+  const url = `${req.app.locals.endpointConfig.ENDPOINT_URL}/reportspecs/${spec}`;
+  try {
+    const { body: reportspec } = await HTTP.get(url);
+    res.render("reportspecs/delete", {
+      title: Title,
+      spec: spec,
+      data: reportspec,
+      deleteBaseUrl: `${req.app.locals.endpointConfig.ENDPOINT_URL}/reportspecs`,
+    });
+  } catch (error) {
+    res.status(404).render("error", {
+      title: "Error",
+      message: `Report specification '${spec}' not found`,
+      error: error
+    });
+  }
+});
+
 module.exports = router;

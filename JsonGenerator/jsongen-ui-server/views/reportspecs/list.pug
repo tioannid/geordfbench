@@ -3,14 +3,21 @@ extends ../layout
 block content
 
     .row 
-        .col-md-3
+        .col-md-12
+            .d-flex.justify-content-between.align-items-center.mb-3
+                h2= locals.title || 'Please pass a title property'
+                a(href="/reportspecs/new").btn.btn-primary New Report Specification
             .table-responsive
-                table.table.table-light.table-striped.table-hover.table-bordered.caption-top 
-                    caption= locals.title || 'Please pass a title property'
+                table.table.table-light.table-striped.table-hover.table-bordered
                     thead.thead-dark 
                         tr
-                            th Report Specifications
+                            th Report Specification Name
+                            th Actions
                     tbody.table-group-divider
                         each record in records
                             tr 
                                 td= record
+                                td
+                                    .btn-group(role="group")
+                                        a(href=`/reportspecs/edit/${record.replace('.json', '')}`).btn.btn-sm.btn-outline-primary Edit
+                                        a(href=`/reportspecs/delete/${record.replace('.json', '')}`).btn.btn-sm.btn-outline-danger Delete

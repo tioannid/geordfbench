@@ -129,6 +129,68 @@ router.post("/:newspec", (req, res) => {
   }
 });
 
+// Update an existing host specification by name
+router.put("/:existingspec", (req, res) => {
+  if (res.app.locals.canUpdate) {
+    const spec = req.params.existingspec;
+    // check if spec is a filename with .json file type
+    const specFullPathName =
+      path.extname(spec) !== ".json"
+        ? path.join(targetDir, spec + ".json")
+        : path.join(targetDir, spec);
+    console.log(
+      `Will be updating a host specification file in the path ${specFullPathName}`
+    );
+    if (!fs.existsSync(specFullPathName)) {
+      return res
+        .status(404)
+        .json({ error: `${specFullPathName} does not exist!` });
+    }
+
+    // grab the PUT body
+    const body = req.body;
+    // declare an example in order to augment error messages when necessary
+    const exampleJSON = JSON.parse(
+      '{"classname":"gr.uoa.di.rdf.geordfbench.runtime.hosts.impl.SimpleHost",  "name":"NUC8i7BEH", "ipAddr":"192.168.1.44", "ram":32, "os": {"classname":"gr.uoa.di.rdf.geordfbench.runtime.os.impl.UbuntuJammyOS", "name":"Ubuntu-jammy", "shell_cmd":"/bin/sh", "sync_cmd":"sync", "clearcache_cmd":"sudo /sbin/sysctl vm.drop_caches=3"}, "sourceFileDir":"/data/Geographica2_Datasets", "reposBaseDir":"/data", "reportsBaseDir":"/data/Results_Store"}'
+    );
+    
+    // validate required fields
+    if (
+      !(
+        body.hasOwnProperty("classname") &&
+        body.hasOwnProperty("name") &&
+        body.hasOwnProperty("ipAddr") &&
+        body.hasOwnProperty("ram") &&
+        body.hasOwnProperty("os") &&
+        body.hasOwnProperty("sourceFileDir") &&
+        body.hasOwnProperty("reposBaseDir") &&
+        body.hasOwnProperty("reportsBaseDir")
+      )
+    ) {
+      return res.status(400).json({
+        error: "Host specification fields are missing! Please check the following example:",
+        example: exampleJSON,
+      });
+    }
+    
+    // check if ram is integer
+    let ram = body.ram;
+    if (!Number.isInteger(ram)) {
+      return res.status(400).json({ error: "ram value is not integer!" });
+    }
+
+    fs.writeFileSync(specFullPathName, JSON.stringify(body, null, 2));
+    const result = JSON.parse(fs.readFileSync(specFullPathName));
+    return res.status(200).json(result);
+  } else {
+    return res
+      .status(404)
+      .json(
+        `${specEntity} update functionality is disabled by the endpoint's configuration!`
+      );
+  }
+});
+
 // Delete an existing host specification by name
 router.delete("/:existingspec", (req, res) => {
   if (res.app.locals.canDelete) {

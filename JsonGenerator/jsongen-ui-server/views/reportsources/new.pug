@@ -1,0 +1,86 @@
+extends ../layout
+
+block content
+
+    .container 
+
+        form(name="reportsourceform" method='POST' onsubmit='createReportSource(event)').col-6
+            h1.h3.mb-3.fw-normal Please enter report source specification details:
+            
+            .row.mt-2
+                .col-md-6
+                    .form-floating
+                        input(type="text" name="classname" id="classname" placeholder="classname" aria-label="classname" value="gr.uoa.di.rdf.geordfbench.runtime.reportsource.impl.H2EmbeddedRepSrc" ).form-control 
+                        label(for="classname") Class Name
+                .col-md-6
+                    .form-floating
+                        select(name="driver" id="driver").form-select
+                            option(value="h2") H2 Database
+                            option(value="mysql") MySQL
+                            option(value="postgresql") PostgreSQL
+                        label(for="driver") Database Driver
+            
+            .row.mt-2
+                .col-md-6
+                    .form-floating
+                        input(type="text" name="relativeBaseDir" id="relativeBaseDir" placeholder="relativeBaseDir" aria-label="relativeBaseDir" value="../scripts/h2embeddedreportsource" ).form-control 
+                        label(for="relativeBaseDir") Relative Base Directory
+                .col-md-6
+                    .form-floating
+                        input(type="text" name="database" id="database" placeholder="database" aria-label="database" value="geordfbench" ).form-control 
+                        label(for="database") Database Name
+            
+            .row.mt-2
+                .col-md-6
+                    .form-floating
+                        input(type="text" name="user" id="user" placeholder="user" aria-label="user" value="sa" ).form-control 
+                        label(for="user") Database User
+                .col-md-6
+                    .form-floating
+                        input(type="password" name="password" id="password" placeholder="password" aria-label="password" ).form-control 
+                        label(for="password") Database Password
+            
+            .row.mt-3.justify-content-center
+                .col-2
+                    button(type="submit").btn.btn-primary Create
+                .col-2
+                    a(href="/reportsources").btn.btn-secondary Cancel
+
+    script.
+        async function createReportSource(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            
+            const data = {
+                classname: formData.get('classname'),
+                driver: formData.get('driver'),
+                relativeBaseDir: formData.get('relativeBaseDir'),
+                database: formData.get('database'),
+                user: formData.get('user'),
+                password: formData.get('password')
+            };
+            
+            const specName = prompt('Enter specification name:');
+            if (!specName) return;
+            
+            try {
+                const response = await fetch(`#{locals.postBaseUrl}/${specName}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (response.ok) {
+                    alert('Report source specification created successfully!');
+                    window.location.href = '/reportsources';
+                } else {
+                    const error = await response.json();
+                    alert('Error creating report source specification: ' + JSON.stringify(error));
+                }
+            } catch (error) {
+                alert('Error creating report source specification: ' + error.message);
+            }
+        }
