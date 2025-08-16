@@ -1,0 +1,21 @@
+extends layout
+
+block content
+
+    .row 
+        .col-md-6 
+            .table-responsive
+                table.table.table-light.table-striped.table-hover.table-bordered.caption-top
+                    caption= locals.title || 'Please pass a title property'
+                    thead.thead-dark
+                        tr
+                            each field, i in fields
+                                - if (showfields.has(i))
+                                    - const capitalized = field.name.charAt(0).toUpperCase()+ field.name.slice(1)
+                                    th= capitalized
+                    tbody.table-group-divider
+                        each record in records
+                            tr 
+                                each field, i in fields
+                                    - if (showfields.has(i))
+                                        td= record[field.name]

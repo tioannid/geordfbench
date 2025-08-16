@@ -1,0 +1,16 @@
+extends ../layout
+
+block content
+
+    .row 
+        .col-md-3
+            .table-responsive
+                table.table.table-light.table-striped.table-hover.table-bordered.caption-top 
+                    caption= locals.title || 'Please pass a title property'
+                    thead.thead-dark 
+                        tr
+                            th Report Specifications
+                    tbody.table-group-divider
+                        each record in records
+                            tr 
+                                td= record

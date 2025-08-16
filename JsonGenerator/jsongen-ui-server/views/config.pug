@@ -1,0 +1,33 @@
+doctype html 
+html
+    head 
+        title Endpoint Configuration
+        style.
+            p.mixin {
+                font-family: sans-serif;
+                line-height: 1.5;
+                padding: 10px;
+                border: 1px solid #555;
+                width: 350px;
+            }
+
+
+
+    body
+
+        - let { PORT, JSON_LIB_PATH, HOSTNAME, PLATFORM, CRUD_MAP } = config;
+        p PORT: #{ PORT }
+        p JSON_LIB_PATH: #{ JSON_LIB_PATH }
+        p HOSTNAME: #{ HOSTNAME }
+        p PLATFORM: #{ PLATFORM }
+        p CRUD_MAP: #{ JSON.stringify(CRUD_MAP, undefined, 2) }
+
+        each p, i in config 
+            //- p= i + " - " + p
+            //- propertyData = JSON.parse('{ "label": #{i}, "value": #{p} }')
+            configProperty({ label: i, value: p })
+        p PORT: #{ PORT }
+        p JSON_LIB_PATH: #{ JSON_LIB_PATH }
+        p HOSTNAME: #{ HOSTNAME }
+        p PLATFORM: #{ PLATFORM }
+        p CRUD_MAP: #{ JSON.stringify(CRUD_MAP, undefined, 2) }

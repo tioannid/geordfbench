@@ -1,0 +1,19 @@
+extends ../layout
+
+block content
+
+    .container 
+
+        form(name="myform" action=`${locals.postBaseUrl}` method='POST' onsubmit='() => {document.myform.action = document.myform.action + "/" + document.myform.elements.name.value; alert(document.myform.action); document.myform.requestSubmit();})').col-6
+            h1.h3.mb-3.fw-normal Please enter report specification details:
+            .row.mt-2
+                .col
+                    .form-floating
+                        input(type="text" name="name" id="name" placeholder="name" aria-label="name" value=`${locals.name || "JSON spec file name"}` ).form-control 
+                        label(for="name") Name
+                    .form-floating
+                        input(type="text" name="noQueryResultToReport" id="noQueryResultToReport" placeholder="noQueryResultToReport" aria-label="noQueryResultToReport" value=`${locals.noQueryResultToReport || "1"}` ).form-control 
+                        label(for="noQueryResultToReport") noQueryResultToReport
+            .row.mt-3.justify-content-center
+                .col-2
+                    button(type="submit").btn.btn-primary Add

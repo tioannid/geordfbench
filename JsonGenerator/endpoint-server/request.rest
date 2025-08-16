@@ -1,0 +1,36 @@
+GET http://localhost:5000/admin/users
+
+###
+
+POST http://localhost:5000/admin/users
+Content-Type: application/json
+
+{
+    "name": "Theofilos",
+    "password": "Ioannidis",
+    "description": "Me"
+}
+
+###
+
+POST http://localhost:5000/admin/users/login
+Content-Type: application/json
+
+{
+    "name": "Monica",
+    "password": "Miranda" 
+}
+
+
+###
+
+PUT http://localhost:5000/config
+Content-Type: application/json
+
+{
+
+}
+
+###
+GET http://localhost:5000/admin/users/token
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaW5zdGltZSI6IjIwMjUtMDgtMDhUMTU6NTM6MDUuNTgyWiIsImRlc2NyaXB0aW9uIjoizpXPis68zrHOuSDOtc6zz44iLCJuYW1lIjoizpjOtc-Mz4bOuc67zr_PgiIsInBhc3N3ZCI6IiQyYiQxMCRzZHl5OG1iVy94QXdVL240bG9lbk8ucTIyVnluTEdtc1lXeDNEMHlxQ0t6TEhDbjFraVhtSyIsInNhbHQiOiIkMmIkMTAkc2R5eThtYlcveEF3VS9uNGxvZW5PLiIsImlhdCI6MTc1NDgyMDA2NH0.wz76Yk-Xf-Lds-bz6blBDFizVKc0orMCKvRhW4DFaDY

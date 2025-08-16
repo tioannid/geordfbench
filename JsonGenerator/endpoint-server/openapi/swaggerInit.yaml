@@ -1,0 +1,1380 @@
+---
+openapi: 3.1.0
+info:
+  title: GeoRDFBench Framework JSON Specification API with Swagger
+  version: 2.0.0
+  description: A cRud API application made with Express and documented with Swagger
+  license:
+    name: Apache-2.0
+    url: https://spdx.org/licenses/Apache-2.0.html
+  contact:
+    name: Theofilos Ioannidis
+    url: http://users.uoa.gr/~tioannid/
+    email: tioannid@di.uoa.gr
+servers:
+  - url: http://localhost:{port}/
+    description: Development server
+    variables:
+      port:
+        enum:
+          - "5000"
+          - "3000"
+        default: "5000"
+  - url: "{scheme}://geordfbench.di.uoa.gr/jsonapi/"
+    description: Production server
+    variables:
+      scheme:
+        enum:
+          - http
+          - https
+        default: http
+paths:
+  "/admin/config":
+    get:
+      summary: Lists the endpoint's persisted configuration
+      tags:
+        - Administration
+      responses:
+        "200":
+          description: The list of the endpoint's persisted configuration values
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/Config"
+  "/admin/config/current":
+    get:
+      summary: Lists the endpoint's running configuration
+      tags:
+        - Administration
+      responses:
+        "200":
+          description: The list of the endpoint's running configuration values
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/Config"
+  "/categories":
+    get:
+      summary: Lists all available specification categories
+      tags:
+        - Specification Categories
+      responses:
+        "200":
+          description: The list of the available specification categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/Category"
+  "/reportspecs":
+    get:
+      summary: Lists all available report (logging) specifications
+      tags:
+        - Report (Logging) Specifications
+      responses:
+        "200":
+          description: The list of the available report (logging) specifications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/ReportSpecification"
+  "/reportspecs/{spec}":
+    get:
+      summary: Get the report (logging) by specification name
+      tags:
+        - Report (Logging) Specifications
+      parameters:
+        - in: path
+          name: spec
+          schema:
+            type: string
+          required: true
+          description: The report (logging) specification name
+      responses:
+        "200":
+          description:
+            The specification for the report (logging) specification name
+            provided
+          contens:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ReportSpecification"
+        "404":
+          description: The report (logging) specification name was not found
+  "/reportspecs/{newspec}":
+    post:
+      summary: Create the report (logging) by specification name
+      requestBody:
+        description: Specify a **JSON** string
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ReportSpecification"
+      tags:
+        - Report (Logging) Specifications
+      parameters:
+        - in: path
+          name: newspec
+          schema:
+            type: string
+          required: true
+          description: The report (logging) specification name
+      responses:
+        "201":
+          description: The report (logging) specification created
+          contens:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ReportSpecification"
+        "400":
+          description: The field noQueryResultToReport is either missing or not integer!
+        "404":
+          description: The report (logging) specification name already exists!
+  "/reportspecs/{existingspec}":
+    delete:
+      summary: Delete an existing report (logging) specification by name
+      tags:
+        - Report (Logging) Specifications
+      parameters:
+        - in: path
+          name: existingspec
+          schema:
+            type: string
+          required: true
+          description: The report (logging) specification name
+      responses:
+        "204":
+          description: The report (logging) specification was deleted
+        "404":
+          description: The report (logging) specification name was not found
+  "/reportsources":
+    get:
+      summary: Lists all available report source specifications
+      tags:
+        - Report Sources
+      responses:
+        "200":
+          description: The list of the available report source specifications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  oneOf:
+                    - "$ref": "#/components/schemas/JDBCReportSource"
+                    - "$ref": "#/components/schemas/EmbeddedJDBCReportSource"
+  "/reportsources/{spec}":
+    get:
+      summary: Get the report source by specification name
+      tags:
+        - Report Sources
+      parameters:
+        - in: path
+          name: spec
+          schema:
+            type: string
+          required: true
+          description: The report source specification name
+      responses:
+        "200":
+          "404":
+            description: The report source specification name was not found
+          description:
+            The specification for the report source specification name
+            provided
+          contens:
+            application/json:
+              schema:
+                oneOf:
+                  - "$ref": "#/components/schemas/JDBCReportSource"
+                  - "$ref": "#/components/schemas/EmbeddedJDBCReportSource"
+  "/reportsources/{newspec}":
+    post:
+      summary: Create the report source by specification name
+      requestBody:
+        description: Specify a **JSON** string
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - "$ref": "#/components/schemas/JDBCReportSource"
+                - "$ref": "#/components/schemas/EmbeddedJDBCReportSource"
+      tags:
+        - Report Sources
+      parameters:
+        - in: path
+          name: newspec
+          schema:
+            type: string
+          required: true
+          description: The report source specification name
+      responses:
+        "201":
+          description: The report source specification was created
+          contens:
+            application/json:
+              schema:
+                oneOf:
+                  - "$ref": "#/components/schemas/JDBCReportSource"
+                  - "$ref": "#/components/schemas/EmbeddedJDBCReportSource"
+        "400":
+          description: Base Report Source fields are missing!
+        "403":
+          description: Embedded JDBC or JDBC Report Source specific fields are missing!
+        "404":
+          description: The report source specification name already exists!
+  "/reportsources/{existingspec}":
+    delete:
+      summary: Delete an existing report source by specification name
+      tags:
+        - Report Sources
+      parameters:
+        - in: path
+          name: existingspec
+          schema:
+            type: string
+          required: true
+          description: The report source specification name
+      responses:
+        "204":
+          description: The report source specification was deleted
+        "404":
+          description: The report source specification name was not found
+  "/hosts":
+    get:
+      summary: Lists all available host specifications
+      tags:
+        - Hosts
+      responses:
+        "200":
+          description: The list of the available host specifications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/Host"
+  "/hosts/{spec}":
+    get:
+      summary: Get the host by specification name
+      tags:
+        - Hosts
+      parameters:
+        - in: path
+          name: spec
+          schema:
+            type: string
+          required: true
+          description: The host specification name
+      responses:
+        "200":
+          description: The specification for the host specification name provided
+          contens:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Host"
+        "404":
+          description: The host specification name was not found
+  "/hosts/{newspec}":
+    post:
+      summary: Create the host by specification name
+      requestBody:
+        description: Specify a **JSON** string
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/Host"
+      tags:
+        - Hosts
+      parameters:
+        - in: path
+          name: newspec
+          schema:
+            type: string
+          required: true
+          description: The host specification name
+      responses:
+        "201":
+          description: The host specification was created
+          contens:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Host"
+        "400":
+          description: A field is either missing or the ram field is not integer!
+        "404":
+          description: The host specification name already exists!
+  "/hosts/{existingspec}":
+    delete:
+      summary: Delete an existing host by specification name
+      tags:
+        - Hosts
+      parameters:
+        - in: path
+          name: existingspec
+          schema:
+            type: string
+          required: true
+          description: The host specification name
+      responses:
+        "204":
+          description: The host specification was deleted
+        "404":
+          description: The host specification name was not found
+  "/datasets":
+    get:
+      summary: Lists all available dataset specifications
+      tags:
+        - Datasets
+      responses:
+        "200":
+          description: The list of the available dataset specifications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/Dataset"
+  "/datasets/{spec}":
+    get:
+      summary: Get the dataset by specification name
+      tags:
+        - Datasets
+      parameters:
+        - in: path
+          name: spec
+          schema:
+            type: string
+          required: true
+          description: The dataset specification name
+      responses:
+        "200":
+          description: The specification for the dataset specification name provided
+          contens:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Dataset"
+        "404":
+          description: The dataset specification name was not found
+
+  "/datasets/{newspec}":
+    post:
+      summary: Create the dataset by specification name
+      requestBody:
+        description: Specify a **JSON** string
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/Dataset"
+      tags:
+        - Datasets
+      parameters:
+        - in: path
+          name: newspec
+          schema:
+            type: string
+          required: true
+          description: The dataset specification name
+      responses:
+        "201":
+          description: The dataset specification was created
+          contens:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Dataset"
+        "400":
+          description: A field is either missing or the n field is not integer!
+        "404":
+          description: The dataset specification name already exists!
+  "/datasets/{existingspec}":
+    delete:
+      summary: Delete an existing host by specification name
+      tags:
+        - Datasets
+      parameters:
+        - in: path
+          name: existingspec
+          schema:
+            type: string
+          required: true
+          description: The host specification name
+      responses:
+        "204":
+          description: The host specification was deleted
+        "404":
+          description: The host specification name was not found
+  "/querysets":
+    get:
+      summary: Lists all available queryset specifications
+      tags:
+        - Querysets
+      responses:
+        "200":
+          description: The list of the available queryset specifications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/Queryset"
+  "/querysets/{spec}":
+    get:
+      summary: Get the queryset by specification name
+      tags:
+        - Querysets
+      parameters:
+        - in: path
+          name: spec
+          schema:
+            type: string
+          required: true
+          description: The queryset specification name
+      responses:
+        "200":
+          description: The specification for the queryset specification name provided
+          contens:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Queryset"
+        "404":
+          description: The queryset specification name was not found
+  "/querysets/{newspec}":
+    post:
+      summary: Create the queryset by specification name
+      requestBody:
+        description: Specify a **JSON** string
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/Queryset"
+      tags:
+        - Querysets
+      parameters:
+        - in: path
+          name: newspec
+          schema:
+            type: string
+          required: true
+          description: The queryset specification name
+      responses:
+        "201":
+          description: The queryset specification was created
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Queryset"
+        "400":
+          description: SimpleQueryset fields are missing!
+        "403":
+          description: StaticTempParamQS or DynamicTempParamQueryset specific fields are missing!
+        "404":
+          description: The queryset specification name already exists!
+  "/querysets/{existingspec}":
+    delete:
+      summary: Delete an queryset by specification name
+      tags:
+        - Querysets
+      parameters:
+        - in: path
+          name: existingspec
+          schema:
+            type: string
+          required: true
+          description: The queryset specification name
+      responses:
+        "204":
+          description: The queryset specification was deleted
+        "404":
+          description: The queryset specification name was not found
+  "/executionspecs":
+    get:
+      summary: Lists all available execution specifications
+      tags:
+        - Execution Specifications
+      responses:
+        "200":
+          description: The list of the available execution specifications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/ExecutionSpec"
+  "/executionspecs/{spec}":
+    get:
+      summary: Get the execution by specification name
+      tags:
+        - Execution Specifications
+      parameters:
+        - in: path
+          name: spec
+          schema:
+            type: string
+          required: true
+          description: The execution specification name
+      responses:
+        "200":
+          description: The specification for the execution specification name provided
+          contens:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExecutionSpec"
+        "404":
+          description: The dataset specification name was not found
+  "/executionspecs/{newspec}":
+    post:
+      summary: Create the execution specification by specification name
+      requestBody:
+        description: Specify a **JSON** string
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ExecutionSpec"
+      tags:
+        - Execution Specifications
+      parameters:
+        - in: path
+          name: newspec
+          schema:
+            type: string
+          required: true
+          description: The execution specification name
+      responses:
+        "201":
+          description: The execution specification was created
+          contens:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ExecutionSpec"
+        "400":
+          description: A field is missing!
+        "403":
+          description:
+            "Not integer value one of: { maxDurationSecsPerQueryRep | maxDurationSecs
+            | clearCacheDelaymSecs }"
+        "404":
+          description: The execution specification name already exists!
+  "/executionspecs/{existingspec}":
+    delete:
+      summary: Delete an existing execution specification by specification name
+      tags:
+        - Execution Specifications
+      parameters:
+        - in: path
+          name: existingspec
+          schema:
+            type: string
+          required: true
+          description: The execution specification name
+      responses:
+        "204":
+          description: The execution specification was deleted
+        "404":
+          description: The execution specification name was not found
+  "/workloads":
+    get:
+      summary: Lists all available workload specifications
+      tags:
+        - Workloads
+      responses:
+        "200":
+          description: The list of the available workload specifications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/Workload"
+  "/workloads/{spec}":
+    get:
+      summary: Get the workload by specification name
+      tags:
+        - Workloads
+      parameters:
+        - in: path
+          name: spec
+          schema:
+            type: string
+          required: true
+          description: The workload specification name
+      responses:
+        "200":
+          description: The specification for the workload specification name provided
+          contens:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Workload"
+        "404":
+          description: The workload specification name was not found
+components:
+  schemas:
+    Dataset:
+      type: object
+      required:
+        - classname
+        - name
+        - relativeBaseDir
+        - simpleGeospatialDataSetList
+        - mapDataSetContexts
+        - "n"
+      properties:
+        classname:
+          type: string
+          description: The java full class name
+        name:
+          type: string
+          description: The name of the dataset
+        relativeBaseDir:
+          type: string
+          format: path
+          description: The actual dataset's path relative to the host's sourceFileDir
+        simpleGeospatialDataSetList:
+          type: object
+          description: A single file dataset
+        mapDataSetContexts:
+          type: array
+          description: The named graphs (contexts) used in the simple dataset files
+        "n":
+          type: number
+          format: int32
+          description: Scaling factor for synthetially generated datasets
+      example:
+        classname: gr.uoa.di.rdf.geordfbench.runtime.datasets.complex.impl.GeographicaDS
+        name: scalability_500M
+        relativeBaseDir: Scalability/500M
+        simpleGeospatialDataSetList:
+          name: scalability_500M
+          relativeBaseDir: Scalability/500M
+          dataFile: scalability_500M.nt
+          rdfFormat: N-TRIPLES
+          mapUsefulNamespacePrefixes:
+            geo: "<http://www.opengis.net/ont/geosparql#>"
+            rdf: "<http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
+            owl: "<http://www.w3.org/2002/07/owl#>"
+            geof: "<http://www.opengis.net/def/function/geosparql/>"
+            lgo: "<http://data.linkedeodata.eu/ontology#>"
+            xsd: "<http://www.w3.org/2001/XMLSchema#>"
+            rdfs: "<http://www.w3.org/2000/01/rdf-schema#>"
+            geo-sf: "<http://www.opengis.net/ont/sf#>"
+          mapAsWKT:
+            scalabilityAsWKT: "<http://www.opengis.net/ont/geosparql#asWKT>"
+          mapHasGeometry:
+            scalabilityHasGeometry: "<http://www.opengis.net/ont/geosparql#hasGeometry>"
+        mapDataSetContexts:
+          scalability_500M:
+        "n": 0
+    Category:
+      type: array
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: The name of the specification category
+      example:
+        - datasets
+        - executionspecs
+        - hosts
+        - querysets
+        - reportsources
+        - reportspecs
+        - workloads
+    ReportSpecification:
+      type: array
+      required:
+        - noQueryResultToReport
+      properties:
+        noQueryResultToReport:
+          type: number
+          format: int32
+          description: The number of results to display for each query execution
+      example:
+        noQueryResultToReport: 3
+    Os:
+      type: object
+      properties:
+        classname:
+          type: string
+          description: The java full class name
+        name:
+          type: string
+          description: The name of the operating system
+        shell_cmd:
+          type: string
+          description: The command line interpreter
+        sync_cmd:
+          type: string
+          description: The command used to synchronize cached data to permanent storage
+        clearcache_cmd:
+          type: string
+          description: The command to clear system caches
+    Host:
+      type: object
+      required:
+        - classname
+        - name
+        - ipAddr
+        - ram
+        - os
+        - sourceFileDir
+        - reposBaseDir
+        - reportsBaseDir
+      properties:
+        classname:
+          type: string
+          description: The java full class name
+        name:
+          type: string
+          description: The name of the host
+        ipAddr:
+          type: string
+          format: ipv4
+          description: The host IP4 address
+        ram:
+          type: number
+          format: int32
+          description: Host's total RAM in GBs
+        os:
+          "$ref": "#/components/schemas/Os"
+        sourceFileDir:
+          type: string
+          format: path
+          description: Host's base location for dataset files
+        reposBaseDir:
+          type: string
+          format: path
+          description: Host's base location for RDF store repositories
+        reportsBaseDir:
+          type: string
+          format: path
+          description: Host's base location for experiment reports
+      example:
+        classname: gr.uoa.di.rdf.geordfbench.runtime.hosts.impl.SimpleHost
+        name: NUC8i7BEH
+        ipAddr: 192.168.1.44
+        ram: 32
+        os:
+          classname: gr.uoa.di.rdf.geordfbench.runtime.os.impl.UbuntuJammyOS
+          name: Ubuntu-jammy
+          shell_cmd: "/bin/sh"
+          sync_cmd: sync
+          clearcache_cmd: sudo /sbin/sysctl vm.drop_caches=3
+        sourceFileDir: "/data/Geographica2_Datasets"
+        reposBaseDir: "/data"
+        reportsBaseDir: "/data/Results_Store"
+    ExecutionSpec:
+      type: object
+      required:
+        - classname
+        - execTypeReps
+        - maxDurationSecsPerQueryRep
+        - maxDurationSecs
+        - action
+        - avgFunc
+        - onColdFailure
+        - clearCacheDelaymSecs
+      properties:
+        classname:
+          type: string
+          description: The java full class name
+        execTypeReps:
+          type: array
+          description: The repetitions per execution type
+        maxDurationSecsPerQueryRep:
+          type: number
+          format: int32
+          description: The max duration (secs) per query execution
+        maxDurationSecs:
+          type: number
+          format: int32
+          description: The max duration (secs) for the queryset execution
+        action:
+          type: string
+          enum:
+            - RUN
+            - PRINT
+          description: The action that experiment should perform
+        avgFunc:
+          type: string
+          enum:
+            - QUERY_MEDIAN
+            - QUERY_MEAN
+            - QUERYSET_MEAN
+          description: The average function and the scope of its use
+        onColdFailure:
+          type: string
+          enum:
+            - SKIP_REMAINING_ALL_QUERY_EXECUTIONS
+            - SKIP_REMAINING_COLD_EXECUTIONS
+            - EXCLUDE_AND_PROCEED
+          description: Desired behaviour upon COLD execution failure
+        clearCacheDelaymSecs:
+          type: number
+          format: int32
+          description: The delay (msecs) waiting for clearing caches and garbage collection
+      example:
+        classname: gr.uoa.di.rdf.geordfbench.runtime.executionspecs.impl.SimpleES
+        execTypeReps:
+          COLD: 3
+          WARM: 3
+        maxDurationSecsPerQueryRep: 86400
+        maxDurationSecs: 604800
+        action: RUN
+        avgFunc: QUERY_MEDIAN
+        onColdFailure: SKIP_REMAINING_ALL_QUERY_EXECUTIONS
+        clearCacheDelaymSecs: 5000
+    Workload:
+      type: object
+      required:
+        - classname
+        - name
+        - relativeBaseDir
+        - geospatialDataset
+        - geospatialQueryset
+      properties:
+        classname:
+          type: string
+          description: The java full class name
+        name:
+          type: string
+          description: The name of the workload
+        relativeBaseDir:
+          type: string
+          format: path
+          description: The workload's path relative to the host's sourceFileDir
+        geospatialDataset:
+          type: object
+          description: The dataset specification
+        geospatialQueryset:
+          type: object
+          description: The queryset specification encapsulating the execution specification
+      example:
+        classname: gr.uoa.di.rdf.geordfbench.runtime.workloadspecs.impl.SimpleGeospatialWL
+        name: ScalabilityFunc
+        relativeBaseDir: ""
+        geospatialDataset:
+          name: scalability_10K
+          relativeBaseDir: Scalability/10K
+          simpleGeospatialDataSetList:
+            - name: scalability_10K
+              relativeBaseDir: Scalability/10K
+              dataFile: scalability_10K.nt
+              rdfFormat: N-TRIPLES
+              mapUsefulNamespacePrefixes:
+                geo: "<http://www.opengis.net/ont/geosparql#>"
+                rdf: "<http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
+                owl: "<http://www.w3.org/2002/07/owl#>"
+                geof: "<http://www.opengis.net/def/function/geosparql/>"
+                lgo: "<http://data.linkedeodata.eu/ontology#>"
+                xsd: "<http://www.w3.org/2001/XMLSchema#>"
+                rdfs: "<http://www.w3.org/2000/01/rdf-schema#>"
+                geo-sf: "<http://www.opengis.net/ont/sf#>"
+              mapAsWKT:
+                scalabilityAsWKT: "<http://www.opengis.net/ont/geosparql#asWKT>"
+              mapHasGeometry:
+                scalabilityHasGeometry: "<http://www.opengis.net/ont/geosparql#hasGeometry>"
+          mapDataSetContexts:
+            scalability_10K: ""
+          "n": 0
+        geospatialQueryset:
+          classname: gr.uoa.di.rdf.geordfbench.runtime.querysets.partofworkload.impl.StaticTempParamQS
+          name: scalabilityFunc
+          relativeBaseDir: ""
+          hasPredicateQueriesAlso: false
+          mapQueries:
+            "0":
+              label: SC1_Geometries_Intersects_GivenPolygon
+              text:
+                "SELECT ?s1 ?o1 WHERE { \n ?s1 geo:asWKT ?o1 . \n  FILTER(geof:sfIntersects(?o1,
+                \"POLYGON((23.708496093749996 37.95719224376526,22.906494140625 40.659805938378526,11.524658203125002
+                48.16425348854739,-0.1181030273437499 51.49506473014367,-3.2189941406250004
+                55.92766341247031,-5.940856933593749 54.59116279530599,-3.1668090820312504
+                51.47967237816337,23.708496093749996 37.95719224376526))\"^^<http://www.opengis.net/ont/geosparql#wktLiteral>)).
+                \n} \n"
+              usePredicate: false
+              expectedResults: -1
+            "1":
+              label: SC2_Intensive_Geometries_Intersect_Geometries
+              text:
+                "SELECT ?s1 ?s2 \nWHERE { \n ?s1 geo:hasGeometry [ geo:asWKT ?o1
+                ] ;\n    lgo:has_code \"1001\"^^xsd:integer . \n ?s2 geo:hasGeometry
+                [ geo:asWKT ?o2 ] ;\n    lgo:has_code ?code2 .  \n FILTER(?code2>5000
+                && ?code2<6000 && ?code2 != 5260) .\n FILTER(geof:sfIntersects(?o1,
+                ?o2)). \n} \n"
+              usePredicate: false
+              expectedResults: -1
+            "2":
+              label: SC3_Relaxed_Geometries_Intersect_Geometries
+              text:
+                "SELECT ?s1 ?s2\nWHERE {\n ?s1 geo:hasGeometry [ geo:asWKT ?o1
+                ] ;\n    lgo:has_code \"1001\"^^xsd:integer .\n ?s2 geo:hasGeometry
+                [ geo:asWKT ?o2 ] ;\n    lgo:has_code ?code2 .\n FILTER(?code2 IN
+                (5622, 5601, 5641, 5621, 5661)) .\n FILTER(geof:sfIntersects(?o1,
+                ?o2)).\n} \n"
+              usePredicate: false
+              expectedResults: -1
+          mapUsefulNamespacePrefixes: {}
+          executionSpec:
+            execTypeReps:
+              COLD: 3
+              WARM: 3
+            maxDurationSecsPerQueryRep: 86400
+            maxDurationSecs: 604800
+            action: RUN
+            avgFunc: QUERY_MEDIAN
+            onColdFailure: SKIP_REMAINING_ALL_QUERY_EXECUTIONS
+            clearCacheDelaymSecs: 5000
+          mapTemplateParams:
+            GIVEN_SPATIAL_LITERAL:
+              '"POLYGON((23.708496093749996 37.95719224376526,22.906494140625
+              40.659805938378526,11.524658203125002 48.16425348854739,-0.1181030273437499
+              51.49506473014367,-3.2189941406250004 55.92766341247031,-5.940856933593749
+              54.59116279530599,-3.1668090820312504 51.47967237816337,23.708496093749996
+              37.95719224376526))"^^<http://www.opengis.net/ont/geosparql#wktLiteral>'
+            FUNCTION: sfIntersects
+          mapGraphPrefixes: {}
+
+    Config:
+      type: array
+      required:
+        - PORT
+        - JSON_LIB_PATH
+        - HOSTNAME
+        - PLATFORM
+        - CRUD_MAP
+      properties:
+        PORT:
+          type: number
+          format: int32
+          description: The port number on which the endpoint is listening
+        JSON_LIB_PATH:
+          type: string
+          format: path
+          description:
+            The JSON library path where the endpoint is serving specifications
+            from
+        HOSTNAME:
+          type: string
+          description: The hostname of the endpoint server
+        PLATFORM:
+          type: string
+          description: The endpoint server's operating system type, version and architecture
+        CRUD_MAP:
+          type: object
+          description: The endpoint's allowed operations per specification class { (C)reate (R)ead (U)pdate (D)elete }
+      example:
+        PORT: "5000"
+        JSON_LIB_PATH: 'F:\VM_Shared\PHD\NetBeansProjects\PhD_2\geordfbench\json_defs'
+        HOSTNAME: TIOA-PC2
+        PLATFORM: "Windows 10 Pro v10.0.19045, x86_64"
+        CRUD_MAP:
+          datasets: cRud
+          executionspecs: cRud
+          hosts: CRuD
+          querysets: cRud
+          reportsources: cRud
+          reportspecs: cRud
+          workloads: cRud
+
+    BaseReportSource:
+      type: object
+      required:
+        - classname
+        - driver
+        - database
+        - user
+        - password
+      properties:
+        classname:
+          type: string
+          description: The java full class name
+        driver:
+          type: string
+          enum:
+            - postgresql
+            - h2
+        database:
+          type: string
+          description: The database name
+        user:
+          type: string
+          description: The database user name
+        password:
+          type: string
+          description: The database user password
+    JDBCReportSource:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/BaseReportSource"
+          type: object
+          required:
+            - hostname
+            - althostname
+            - port
+          properties:
+            hostname:
+              type: string
+              description: The PostgreSQL server host name or IPv4
+            althostname:
+              type: string
+              description: The alternative PostgreSQL server host name or IPv4
+            port:
+              type: number
+              format: int32
+              description: The PostgreSQL server's listening port
+      example:
+        classname: gr.uoa.di.rdf.geordfbench.runtime.reportsource.impl.PostgreSQLRepSrc
+        driver: postgresql
+        hostname: 10.0.2.15
+        althostname: localhost
+        port: 5432
+        database: geordfbench
+        user: geordfbench
+        password: geordfbench
+    EmbeddedJDBCReportSource:
+      allOf:
+        - $ref: "#/components/schemas/BaseReportSource"
+          type: object
+          required:
+            - relativeBaseDir
+          properties:
+            relativeBaseDir:
+              type: string
+              description: The database path relative to the host's sourceFileDir
+      example:
+        classname: gr.uoa.di.rdf.geordfbench.runtime.reportsource.impl.H2EmbeddedRepSrc
+        driver: h2
+        relativeBaseDir: "../scripts/h2embeddedreportsource"
+        database: geordfbench
+        user: sa
+        password: ""
+
+    SimpleQueryset:
+      type: object
+      required:
+        - classname
+        - name
+        - relativeBaseDir
+        - hasPredicateQueriesAlso
+        - mapQueries
+        - mapUsefulNamespacePrefixes
+      properties:
+        classname:
+          type: string
+          description: The java full class name
+        name:
+          type: string
+          description: The name of the queryset
+        relativeBaseDir:
+          type: string
+          format: path
+          description: The queryset's path relative to the host's sourceFileDir
+        hasPredicateQueriesAlso:
+          type: boolean
+          description: There exist queries with spatial predicate queries
+        mapQueries:
+          type: array
+          description: The queries that make up the queryset
+        mapUsefulNamespacePrefixes:
+          type: array
+          description: The queries that make up the queryset
+      example:
+        classname: gr.uoa.di.rdf.geordfbench.runtime.querysets.complex.impl.SimpleQS
+        name: scalabilityFunc
+        relativeBaseDir: ""
+        hasPredicateQueriesAlso: false
+        mapQueries:
+          "0":
+            label: SC1_Geometries_Intersects_GivenPolygon
+            text: "SELECT ?s1 ?o1 WHERE { \n ?s1 geo:asWKT ?o1 . \n  FILTER(geof:sfIntersects(?o1, \"POLYGON((23.708496093749996 37.95719224376526,22.906494140625 40.659805938378526, 23.708496093749996 37.95719224376526))\"^^<http://www.opengis.net/ont/geosparql#wktLiteral>)). \n} \n"
+            usePredicate: false
+            expectedResults: -1
+        mapUsefulNamespacePrefixes: {}
+
+    StaticTempParamQueryset:
+      allOf:
+        - $ref: "#/components/schemas/SimpleQueryset"
+          type: object
+          required:
+            - mapTemplateParams
+            - mapGraphPrefixes
+          properties:
+            mapTemplateParams:
+              type: array
+              description: The template parameters used in the queryset
+            mapGraphPrefixes:
+              type: array
+              description: The named graph prefixes closely related to the target dataset
+          example:
+            classname: gr.uoa.di.rdf.geordfbench.runtime.querysets.complex.impl.StaticTempParamQS
+            name: scalabilityFunc
+            relativeBaseDir: ""
+            hasPredicateQueriesAlso: false
+            mapQueries:
+              "0":
+                label: SC1_Geometries_Intersects_GivenPolygon
+                text:
+                  "SELECT ?s1 ?o1 WHERE { \n ?s1 geo:asWKT ?o1 . \n  FILTER(geof:FUNCTION(?o1,
+                  GIVEN_SPATIAL_LITERAL)). \n} \n"
+                usePredicate: false
+                expectedResults: -1
+              "1":
+                label: SC2_Intensive_Geometries_Intersect_Geometries
+                text:
+                  "SELECT ?s1 ?s2 \nWHERE { \n ?s1 geo:hasGeometry [ geo:asWKT ?o1
+                  ] ;\n    lgo:has_code \"1001\"^^xsd:integer . \n ?s2 geo:hasGeometry
+                  [ geo:asWKT ?o2 ] ;\n    lgo:has_code ?code2 .  \n FILTER(?code2>5000
+                  && ?code2<6000 && ?code2 != 5260) .\n FILTER(geof:FUNCTION(?o1, ?o2)).
+                  \n} \n"
+                usePredicate: false
+                expectedResults: -1
+              "2":
+                label: SC3_Relaxed_Geometries_Intersect_Geometries
+                text:
+                  "SELECT ?s1 ?s2\nWHERE {\n ?s1 geo:hasGeometry [ geo:asWKT ?o1 ]
+                  ;\n    lgo:has_code \"1001\"^^xsd:integer .\n ?s2 geo:hasGeometry [
+                  geo:asWKT ?o2 ] ;\n    lgo:has_code ?code2 .\n FILTER(?code2 IN (5622,
+                  5601, 5641, 5621, 5661)) .\n FILTER(geof:FUNCTION(?o1, ?o2)).\n} \n"
+                usePredicate: false
+                expectedResults: -1
+            mapUsefulNamespacePrefixes: {}
+            mapTemplateParams:
+              GIVEN_SPATIAL_LITERAL:
+                '"POLYGON((23.708496093749996 37.95719224376526,22.906494140625
+                40.659805938378526,11.524658203125002 48.16425348854739,-0.1181030273437499
+                51.49506473014367,-3.2189941406250004 55.92766341247031,-5.940856933593749
+                54.59116279530599,-3.1668090820312504 51.47967237816337,23.708496093749996
+                37.95719224376526))"^^<http://www.opengis.net/ont/geosparql#wktLiteral>'
+              FUNCTION: sfIntersects
+            mapGraphPrefixes: {}
+
+    DynamicTempParamQueryset:
+      allOf:
+        - $ref: "#/components/schemas/SimpleQueryset"
+          type: object
+          required:
+            - mapQueryTemplates
+            - mapLiteralValues
+            - templateDynamicParamNameList
+            - templateParamValueMatrix
+            - isTranslated
+          properties:
+            mapQueryTemplates:
+              type: object
+              description: The template name or template query
+              additionalProperties:
+                type: string
+            mapLiteralValues:
+              type: object
+              description: The map of named literal values (static template parameters common for the entire queryset)
+              additionalProperties:
+                type: string
+            templateDynamicParamNameList:
+              type: array
+              description: The list of template parameter names
+            templateParamValueMatrix:
+              type: object
+              description: The map of query number and dynamic template parameter pairs to values
+              additionalProperties:
+                type: string
+            isTranslated:
+              type: boolean
+              description: Translation of template parameters should be done only once
+          example:
+            classname: gr.uoa.di.rdf.geordfbench.runtime.querysets.complex.impl.DynamicTempParamQS
+            name: rwmicro
+            relativeBaseDir: ""
+            hasPredicateQueriesAlso: false
+            mapQueries:
+              "0":
+                label: Buffer_GeoNames
+                text: NONTOP_BUFFER
+                usePredicate: false
+                expectedResults: 21990
+              "1":
+                label: Buffer_LGD
+                text: NONTOP_BUFFER
+                usePredicate: false
+                expectedResults: 12097
+              "2":
+                label: Within_GeoNames_Point_Buffer
+                text: SELECT_BUFFER
+                usePredicate: false
+                expectedResults: 152
+              "3":
+                label: Touches_GAG_GAG
+                text: JOIN_2
+                usePredicate: false
+                expectedResults: 1022
+            mapUsefulNamespacePrefixes:
+              uom: "<http://www.opengis.net/def/uom/OGC/1.0/>"
+              strdf: "<http://strdf.di.uoa.gr/ontology#>"
+            mapQueryTemplates:
+              SELECT_BUFFER: "SELECT ?s1 \nWHERE {\n\tGRAPH <GRAPH1> {\n\t\t?s1 <ASWKT1> ?o1\n\t}\nFILTER(geof:<FUNCTION1>(?o1, geof:<FUNCTION2>(\"POINT(23.71622 37.97945)\"^^<http://www.opengis.net/ont/geosparql#wktLiteral>, 3000, uom:metre))).\n}"
+              NONTOP_BUFFER: "SELECT (geof:<FUNCTION1>(?o1, 4, uom:metre) AS ?ret) \nWHERE {\n\tGRAPH <GRAPH1> {\n\t\t?s1 <ASWKT1> ?o1\n\t}\n}"
+              JOIN_2: "SELECT ?s1 ?s2 \nWHERE { \n\tGRAPH <GRAPH1> {\n\t\t?s1 <ASWKT1> ?o1\n\t}\n\tGRAPH <GRAPH2> {\n\t\t?s2 <ASWKT2> ?o2\n\t}\nFILTER(?s1 != ?s2).\nFILTER(geof:<FUNCTION1>(?o1, ?o2)).\n}"
+            mapLiteralValues:
+              LL_clc: "<http://geographica.di.uoa.gr/dataset/clc>"
+              LL_clc_asWKT: "<http://geo.linkedopendata.gr/corine/ontology#asWKT>"
+              LL_gadm_asWKT: "<http://geo.linkedopendata.gr/gag/ontology/asWKT>"
+              LL_geonames_asWKT: "<http://www.geonames.org/ontology#asWKT>"
+              LL_fn_area: area
+              LL_sfWithin: sfWithin
+              LL_lgd: "<http://geographica.di.uoa.gr/dataset/lgd>"
+              LL_gadm: "<http://geographica.di.uoa.gr/dataset/gag>"
+              LL_sfTouches: sfTouches
+              LL_geonames: "<http://geographica.di.uoa.gr/dataset/geonames>"
+              LL_lgd_asWKT: "<http://linkedgeodata.org/ontology/asWKT>"
+              LL_fn_buffer: buffer
+            templateDynamicParamNameList:
+              - <FUNCTION1>
+              - <FUNCTION2>
+              - <ASWKT1>
+              - <ASWKT2>
+              - <GRAPH1>
+              - <GRAPH2>
+            templateParamValueMatrix:
+              mapTemplateParamValues:
+                "0##<GRAPH1>": LL_geonames
+                "1##<GRAPH1>": LL_lgd
+                "2##<FUNCTION2>": LL_fn_buffer
+                "2##<FUNCTION1>": LL_sfWithin
+                "1##<ASWKT1>": LL_lgd_asWKT
+                "3##<FUNCTION1>": LL_sfTouches
+                "2##<GRAPH1>": LL_geonames
+                "2##<ASWKT1>": LL_geonames_asWKT
+                "3##<GRAPH2>": LL_gadm
+                "3##<GRAPH1>": LL_gadm
+                "3##<ASWKT2>": LL_gadm_asWKT
+                "3##<ASWKT1>": LL_gadm_asWKT
+                "1##<FUNCTION1>": LL_fn_buffer
+                "0##<ASWKT1>": LL_geonames_asWKT
+                "0##<FUNCTION1>": LL_fn_buffer
+            isTranslated: false
+
+    MacroGeocodingQueryset:
+      allOf:
+        - $ref: "#/components/schemas/SimpleQueryset"
+          type: object
+          required:
+            - streetNameTemplateName
+            - houseNoTemplateName
+            - zipTemplateName
+            - parityTemplateName
+          properties:
+            streetNameTemplateName:
+              type: array
+              description: The template parameter name for the street name value
+            houseNoTemplateName:
+              type: array
+              description: The template parameter name for the house number value
+            zipTemplateName:
+              type: array
+              description: The template parameter name for the zip code value
+            parityTemplateName:
+              type: array
+              description: The template parameter name for the address parity value
+          example:
+            classname: gr.uoa.di.rdf.geordfbench.runtime.querysets.complex.impl.MacroGeocodingQS
+            name: geocoding
+            relativeBaseDir: ""
+            hasPredicateQueriesAlso: false
+            mapQueries:
+              "0":
+                label: Geocode_left
+                text: "SELECT ?lfromhn ?ltohn ?wkt \n((<HOUSE_NO>-?lfromhn)*((?x1-?x0)/(?ltohn-?lfromhn))+?x1 AS ?x) \n((<HOUSE_NO>-?lfromhn)*((?y1-?y0)/(?ltohn-?lfromhn))+?y1 AS ?y) \nWHERE { \n\t?f census:lfromhn ?lfromhn. \n\t?f census:ltohn ?ltohn. \n\t?f census:parityl <PARITY> . \n\t?f census:fullname <STREET_NAME> . \n\t?f census:zipl \"<ZIP>\"^^xsd:integer. \n\t?f census:hasGeometry ?geo. \n\t?f census:minx ?x0. \n\t?f census:miny ?y0. \n\t?f census:maxx ?x1. \n\t?f census:maxy ?y1. \n\t?geo census:asWKT ?wkt. \n\tFILTER( (?lfromhn <= \"<HOUSE_NO>\"^^xsd:integer && \"<HOUSE_NO>\"^^xsd:integer <= ?ltohn) \n\t\t || (?ltohn <= \"<HOUSE_NO>\"^^xsd:integer && \"<HOUSE_NO>\"^^xsd:integer <= ?lfromhn) ). \n}"
+                usePredicate: false
+                expectedResults: -2
+              "1":
+                label: Geocode_right
+                text: "SELECT ?rfromhn ?rtohn ?wkt \n((<HOUSE_NO>-?rfromhn)*((?x1-?x0)/(?rtohn-?rfromhn))+?x1 AS ?x) \n((<HOUSE_NO>-?rfromhn)*((?y1-?y0)/(?rtohn-?rfromhn))+?y1 AS ?y) \nWHERE { \n\t?f census:rfromhn ?rfromhn. \n\t?f census:rtohn ?rtohn. \n\t?f census:parityr <PARITY> . \n\t?f census:fullname <STREET_NAME> . \n\t?f census:zipr \"<ZIP>\"^^xsd:integer. \n\t?f census:hasGeometry ?geo. \n\t?f census:minx ?x0. \n\t?f census:miny ?y0. \n\t?f census:maxx ?x1. \n\t?f census:maxy ?y1. \n\t?geo census:asWKT ?wkt. \n\tFILTER( (?rfromhn <= \"<HOUSE_NO>\"^^xsd:integer && \"<HOUSE_NO>\"^^xsd:integer <= ?rtohn) \n\t\t || (?rtohn <= \"<HOUSE_NO>\"^^xsd:integer && \"<HOUSE_NO>\"^^xsd:integer <= ?rfromhn) ). \n}"
+                usePredicate: false
+                expectedResults: -2
+            mapUsefulNamespacePrefixes:
+              census: "<http://geographica.di.uoa.gr/cencus/ontology#>"
+            streetNameTemplateName: <STREET_NAME>
+            houseNoTemplateName: <HOUSE_NO>
+            zipTemplateName: <ZIP>
+            parityTemplateName: <PARITY>
+
+    MacroMapSearchQueryset:
+      allOf:
+        - $ref: "#/components/schemas/SimpleQueryset"
+          type: object
+          required:
+            - toponymTemplateName
+            - rectangleTemplateName
+          properties:
+            toponymTemplateName:
+              type: array
+              description: The template parameter name for the toponym value
+            rectangleTemplateName:
+              type: array
+              description: The template parameter name for the rectangle value
+          example:
+            classname: gr.uoa.di.rdf.geordfbench.runtime.querysets.complex.impl.MacroMapSearchQS
+            name: mapsearch
+            relativeBaseDir: ""
+            hasPredicateQueriesAlso: false
+            mapQueries:
+              "0":
+                label: Thematic_Search
+                text: "SELECT ?f ?name ?geo ?wkt\nWHERE {\n\tGRAPH <http://geographica.di.uoa.gr/dataset/geonames> {\n\t\t?f geonames:name ?name;\n\t\t\t<http://www.geonames.org/ontology#hasGeometry> ?geo.\n\t\t?geo <http://www.geonames.org/ontology#asWKT> ?wkt.\n\t\tFILTER(?name = \"<TOPONYME>\"^^xsd:string)\n\t}\n}"
+                usePredicate: false
+                expectedResults: -2
+              "1":
+                label: Get_Around_POIs
+                text: "SELECT ?f ?name ?fGeo ?code ?parent ?class ?fGeoWKT\nWHERE {\n\tGRAPH <http://geographica.di.uoa.gr/dataset/geonames> {\n\t\t?f geonames:name ?name;\n\t\t\tgeonames:hasGeometry ?fGeo;\n\t\t\tgeonames:featureCode ?code;\n\t\t\tgeonames:parentFeature ?parent;\n\t\t\tgeonames:featureClass ?class.\n\t\t?fGeo geonames:asWKT ?fGeoWKT.\n\t\tFILTER(geof:sfIntersects(?fGeoWKT, \"<RECTANGLE_LITERAL>\"^^geo:wktLiteral)).\n\t}\n}"
+                usePredicate: false
+                expectedResults: -2
+              "2":
+                label: Get_Around_Roads
+                text: "SELECT ?r ?label ?rGeo ?rGeoWKT\nWHERE {\n\tGRAPH <http://geographica.di.uoa.gr/dataset/lgd> {\n\t\t?r rdf:type ?type.\n\t\tOPTIONAL{ ?r rdfs:label ?label }.\n\t\t?r lgo:hasGeometry ?rGeo.\n\t\t?rGeo lgo:asWKT ?rGeoWKT.\n\t\tFILTER(geof:sfIntersects(?rGeoWKT, \"<RECTANGLE_LITERAL>\"^^geo:wktLiteral)).\n\t}\n}"
+                usePredicate: false
+                expectedResults: -2
+            mapUsefulNamespacePrefixes:
+              lgo: "<http://linkedgeodata.org/ontology/>"
+            toponymTemplateName: <TOPONYME>
+            rectangleTemplateName: <RECTANGLE_LITERAL>
+
+    Queryset:
+      oneOf:
+        - $ref: "#/components/schemas/SimpleQueryset"
+        - $ref: "#/components/schemas/StaticTempParamQueryset"
+        - $ref: "#/components/schemas/DynamicTempParamQueryset"
+        - $ref: "#/components/schemas/MacroGeocodingQueryset"
+        - $ref: "#/components/schemas/MacroMapSearchQueryset"
+
+tags:
+  - name: Specification Categories
+    description: The specification categories managing API
+  - name: Hosts
+    description: The host specifications managing API
+  - name: Execution Specifications
+    description: The execution specifications API
+  - name: Datasets
+    description: The dataset specifications API
+  - name: Querysets
+    description: The queryset specifications API
+  - name: Report Sources
+    description: The report source specifications API
+  - name: Report (Logging) Specifications
+    description: The report (logging) specifications API
+  - name: Workloads
+    description: The workload specifications API
+  - name: Administration
+    description: The endpoint's administraton

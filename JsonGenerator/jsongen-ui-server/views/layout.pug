@@ -1,0 +1,55 @@
+doctype html
+html
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title= locals.title || 'Please pass a title property'
+
+    style 
+      include ./assets/css/bootstrap.min.css
+    script  
+      include ./assets/js/bootstrap.min.js
+  body
+    block menu
+      .header.p-3.text-bg-dark
+        .container
+          .d-flex.flex-wrap.align-items-center.justify-content-center.justify-content-lg-start
+            a(href="/").d-flex.align-items-center.mb-2.mb-lg-0.text-white.text-decoration-none
+              img.mt-2.mb-2(src="/static/geordfbench_image_favicon.png" alt="" width="40" height="40")
+            ul.nav.col-12.col-lg-auto.me-lg-auto.mb-2.justify-content-center.mb-md-0
+              li 
+                a(href="#" class="nav-link px-2 text-secondary") Home
+              li 
+                a(href=`http://${locals.endpointConfig.HOSTNAME}:${locals.endpointConfig.PORT}/endpointui/` class="nav-link px-2 text-white") Endpoint-UI
+              li 
+                a(href=`http://${locals.endpointConfig.HOSTNAME}:${locals.endpointConfig.PORT}/api-docs/` class="nav-link px-2 text-white") OpenAPI Docs
+              li 
+                a(href="#" class="nav-link px-2 text-white") FAQs
+              li 
+                a(href="#" class="nav-link px-2 text-white") About
+
+            form.col-12.col-lg-auto.mb-3.mb-lg-0.me-lg-3(role="search")
+              input(type="search" class="form-control form-control-dark text-bg-dark" placeholder="Search..." aria-label="Search")
+            .text-end
+              button(type="button" class="btn btn-outline-light me-2") Login
+              button(type="button" class="btn btn-warning") Sign-up
+
+    block content
+      .container-fluid
+        //- img.mt-2.mb-2(src="/static/geordfbench_image_favicon.png" alt="" width="60" height="60")
+
+    block foot
+      footer.d-flex.flex-wrap.justify-content-between.align-items-center.py-3.my-4.border-top
+        .col-md-4.d-flex.align-items-center
+          a(href="/" class="mb-3 me-2 mb-md-0 text-body-secondary text-decoration-none lh-1" aria-label="Bootstrap")
+            svg.bi(width="30" height="24" aria-hidden="true")
+              use(xlink:href="#bootstrap")
+          span.mb-3.mb-md-0.text-body-secondary © 2025 Ioannidis Theofilos, Inc
+        ul.nav.col-md-4.justify-content-end.list-unstyled.d-flex
+        li.ms-3
+          a.text-body-secondary(href="#" aria-label="Instagram")
+            svg(class="bi" width="24" height="24" aria-hidden="true")
+              use(xlink:href="#instagram")
+        li.ms-3
+          a.text-body-secondary(href="#" aria-label="Facebook")
+            img.mt-2.mb-2(src="/static/facebook.svg" alt="" width="40" height="40")
