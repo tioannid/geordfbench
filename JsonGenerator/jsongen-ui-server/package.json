@@ -1,0 +1,31 @@
+{
+  "devDependencies": {
+    "nodemon": "^3.1.10",
+    "openapi-splitter": "^1.0.1",
+    "swagger-cli": "^4.0.4"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "bootstrap": "^5.3.3",
+    "child_process": "^1.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.2",
+    "express": "^4.18.2",
+    "http-call": "^5.3.0",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "pg": "^8.16.3",
+    "pug": "^3.0.3",
+    "swagger-ui-express": "^5.0.1",
+    "yaml": "^2.8.0"
+  },
+  "scripts": {
+    "start": "node jsongen-ui-server.js",
+    "dev": "nodemon jsongen-ui-server.js"
+  },
+  "name": "geordfbench_jsonlib_ui_server",
+  "description": "GeoRDFBench Framework - JSON Specification UI Server",
+  "version": "2.1.0",
+  "main": "jsongen-ui-server.js",
+  "author": "Theofilos Ioannidis"
+}

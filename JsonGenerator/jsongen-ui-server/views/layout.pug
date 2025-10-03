@@ -1,0 +1,83 @@
+doctype html
+html
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title= locals.title || 'Please pass a title property'
+
+    style 
+      include ./assets/css/bootstrap.min.css
+    script  
+      include ./assets/js/color-modes.js
+      include ./assets/js/bootstrap.bundle.min.js
+  body
+    block menu
+      .header.p-3.text-bg-dark
+        //- The navigation bar
+        navbar.navbar-expand-lg.navbar-dark.bg-dark
+          .container-fluid
+            div(class="collapse navbar-collapse justify-content-md-center" id="navbarsExample08")
+              img.rounded.me-1(src="/static/geordfbench_image_favicon.png" alt="" width="50" height="50")
+              ul(class="navbar-nav")
+                //- .px-2 spaces menus horizontally
+                //- Link to JSON Specification Library Endpoint (which is actually serving the data)
+                li(class="nav-item dropdown").px-2
+                  a(class="nav-link dropdown-toggle show" data-bs-toggle="dropdown" aria-expanded="true" target="_blank") JSON Specification Library Endpoint
+                  ul(class="dropdown-menu" data-bs-popper="static")
+                    li
+                      a(class="dropdown-item" href=`${locals.endpointConfig.ENDPOINT_URL}` target="_blank") Status
+                    li
+                      a(class="dropdown-item" href=`${locals.endpointConfig.ENDPOINT_URL}/api-docs` target="_blank") OpenAPI (Swagger)
+                //- Link to JSON Specification UI Endpoint (the endpoint serving UI pages to users for easily manipulating JSON spec data)
+                li(class="nav-item dropdown").px-2
+                  a(class="nav-link dropdown-toggle show" data-bs-toggle="dropdown" aria-expanded="true" target="_blank") JSON Specification UI Endpoint
+                  ul(class="dropdown-menu" data-bs-popper="static")
+                    li
+                      a(class="dropdown-item" href=`${locals.endpointConfig.UI_URL}` target="_blank") Status
+                //- Categories menu 
+                li(class="nav-item dropdown").px-2
+                  a(class="nav-link dropdown-toggle show" href="#" data-bs-toggle="dropdown" aria-expanded="true") Categories
+                  ul(class="dropdown-menu" data-bs-popper="static")
+                    li
+                      a(class="dropdown-item" href=`${locals.endpointConfig.UI_URL}/categories` target="_blank") List
+                //- Report specs menu      
+                li(class="nav-item dropdown").px-2
+                  a(class="nav-link dropdown-toggle show" href="#" data-bs-toggle="dropdown" aria-expanded="true") Report Specs
+                  ul(class="dropdown-menu" data-bs-popper="static")
+                    li
+                      a(class="dropdown-item" href=`${locals.endpointConfig.UI_URL}/reportspecs` target="_blank") List
+                    li
+                      a(class="dropdown-item" href=`${locals.endpointConfig.UI_URL}/reportspecs/new` target="_blank") New
+                //- Host spec menu      
+                li(class="nav-item dropdown").px-2
+                  a(class="nav-link dropdown-toggle show" href="#" data-bs-toggle="dropdown" aria-expanded="true") Hosts
+                  ul(class="dropdown-menu" data-bs-popper="static")
+                    li
+                      a(class="dropdown-item" href=`${locals.endpointConfig.UI_URL}/hosts` target="_blank") List
+                    li
+                      a(class="dropdown-item" href=`${locals.endpointConfig.UI_URL}/hosts/new` target="_blank") New
+
+
+    block content
+      //- img.mt-2.mb-2(src="/static/geordfbench_image_favicon.png" alt="" width="60" height="60")
+
+    block response
+      .rounded.p-2.mx-2.my-2.bg-warning-subtle.col-lg-12.border.border-secondary
+        h5 Response
+        p(id="responseparagraph" name="responseparagraph").lead.my-1.fs-6.fst-italic
+
+    block footer
+      footer.d-flex.flex-wrap.justify-content-between.align-items-center.py-3.my-4.border-top
+        .col-md-4.d-flex.align-items-center
+          a(href="/" class="mb-3 me-2 mb-md-0 text-body-secondary text-decoration-none lh-1" aria-label="Bootstrap")
+            svg.bi(width="30" height="24" aria-hidden="true")
+              use(xlink:href="#bootstrap")
+          span.mb-3.mb-md-0.text-body-secondary © 2025 Ioannidis Theofilos, Inc
+        ul.nav.col-md-4.me-2.justify-content-end.list-unstyled.d-flex
+          li.ms-3
+            a.text-body-secondary(href="http://www.linkedin.com/in/θεόφιλος-ιωαννίδης-83abb283" aria-label="LinkedIn" target="_blank")
+              img.mt-2.mb-2(src="/static/linkedin.png" alt="" width="40" height="40")
+          li.ms-3
+            a.text-body-secondary(href="https://www.facebook.com/theofilos.ioannidis.39/" aria-label="Facebook" target="_blank")
+              img.mt-2.mb-2(src="/static/facebook.svg" alt="" width="40" height="40")
+

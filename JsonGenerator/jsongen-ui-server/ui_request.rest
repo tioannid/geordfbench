@@ -1,0 +1,6 @@
+
+GET http://localhost:5001/categories
+
+###
+
+GET http://localhost:5001/reportspecs

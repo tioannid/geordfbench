@@ -1,0 +1,28 @@
+{
+  "devDependencies": {
+    "nodemon": "^3.1.10",
+    "openapi-splitter": "^1.0.1",
+    "swagger-cli": "^4.0.4"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "child_process": "^1.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.2",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "pg": "^8.11.3",
+    "swagger-ui-express": "^5.0.1",
+    "yaml": "^2.8.0"
+  },
+  "scripts": {
+    "start": "node endpoint.js",
+    "dev": "nodemon endpoint.js"
+  },
+  "name": "geordfbench_jsonlib_endpoint_server",
+  "description": "GeoRDFBench Framework - JSON Specification Library Endpoint Server",
+  "version": "2.1.0",
+  "main": "endpoint.js",
+  "author": "Theofilos Ioannidis"
+}

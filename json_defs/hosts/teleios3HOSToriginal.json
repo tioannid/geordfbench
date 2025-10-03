@@ -4,7 +4,7 @@
   "ipAddr" : "10.0.10.12",
   "ram" : 32,
   "os" : {
-    "classname" : "gr.uoa.di.rdf.geordfbench.runtime.os.impl.UbuntuBionicOS",
+    "classname" : "gr.uoa.di.rdf.geordfbench.runtime.os.impl.UbuntuPreciseOS",
     "name" : "Ubuntu-precise",
     "shell_cmd" : "/bin/sh",
     "sync_cmd" : "sync",

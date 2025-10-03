@@ -1,0 +1,117 @@
+extends ../layout
+
+block content
+
+    .container-fluid
+        .row 
+            .col-md-6
+                .table-responsive
+                    table(id="tblList").table.table-light.table-striped.table-hover.table-bordered.caption-top 
+                        caption= locals.title || 'Please pass a title property'
+                        thead.thead-dark 
+                            tr
+                                th.col-md-5 Report Specifications
+                                th.col-md-2
+                                    a(id="btnNew" href=`${locals.UIUrl}/new` target="_blank").btn.btn-md.btn-primary New
+
+                        tbody.table-group-divider
+                            each record, recno in records
+                                tr 
+                                    td(id="specName_"+recno).col-md-5= record
+                                    td.col-md-2
+                                        a(id="btnDel_"+recno).me-1.btn.btn-sm.btn-danger Del
+                                            img.rounded.me-1(src="/static/bucket.png" alt="" width="20" height="20")
+                                        a(id="btnCopy_"+recno).btn.btn-sm.btn-warning Copy
+                                            img.rounded.me-1(src="/static/copy.png" alt="" target="_blank" width="25" height="25")
+        //- Hidden field 'baseUrl' is used to store the initial value passed during pug view rendering
+        //- with the base URL for posting the data for the new specification object
+        input(type="hidden" id="baseUrl" name="baseUrl" value=`${locals.postBaseUrl}`).form-control
+        input(type="hidden" id="UIUrl" name="UIUrl" value=`${locals.UIUrl}`).form-control
+
+        script. 
+            //- Get number of rows in first table body object through DOM
+            var tableRows = document.getElementById("tblList").tBodies[0].rows.length;
+
+            //- register listener function for the table row "Delete" and "Copy" buttons' click events
+            for (let i = 0; i < tableRows; i++) {
+                var btnDelete = document.getElementById("btnDel_"+i);
+                btnDelete.addEventListener("click", deleteSpecClick);
+                var btnCopy = document.getElementById("btnCopy_"+i);
+                btnCopy.addEventListener("click", copySpecClick);
+            }
+
+            //- the click function for "Copy" buttons 
+            //- ====================================
+            async function copySpecClick(e) {
+                //- get click event's calling object
+                var btnCopy = e.currentTarget;
+                //- alert("Selected copy button is " + btnCopy.id);
+                //- the URL for querying the existing specification objects in the library
+                //- in the form locals.postBaseUrl + "/" + name
+                const postURL =
+                    document.getElementById("baseUrl").value + "/" + document.getElementById("specName_" + btnCopy.id.split("_")[1]).innerHTML;
+                const ResponseParagraph = document.getElementById("responseparagraph");
+                //- fetch selected specification data in subform
+                try {
+                    const response = await fetch(postURL, {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    });
+                    if (response.ok) {
+                        if (response.status === 200) { // contents are in the body
+                            // create a new page and preload the data with a different
+                            // specification name
+                            const returnedSpec = await response.json();
+                            ResponseParagraph.innerHTML = JSON.stringify(returnedSpec);
+                        }
+                    } else {
+                        const resourceNotRetrieved = "Resource was not retrieved!";
+                        console.error(resourceNotRetrieved);
+                        ResponseParagraph.innerHTML = resourceNotRetrieved;
+                    }
+                } catch (error) {
+                    console.error(error.message);
+                    ResponseParagraph.innerHTML = output;
+                }
+                //- alert("Will navigate to " + document.getElementById("UIUrl").value + "/new/" + document.getElementById("specName_" + btnCopy.id.split("_")[1]).innerHTML);
+                //- location.href = document.getElementById("UIUrl").value + "/new/" + document.getElementById("specName_" + btnCopy.id.split("_")[1]).innerHTML;
+                window.open(document.getElementById("UIUrl").value + "/new/" + document.getElementById("specName_" + btnCopy.id.split("_")[1]).innerHTML, '_blank');
+            };
+
+            //- the "Delete" buttons' click function
+            //- ====================================
+            async function deleteSpecClick(e) {
+                //- get click event's calling object
+                var btnDelete = e.currentTarget;
+                //- alert("Selected delete button is " + btnDelete.id);
+                //- the URL for querying the existing specification objects in the library
+                //- in the form locals.postBaseUrl + "/" + name
+                const postURL =
+                    document.getElementById("baseUrl").value + "/" + document.getElementById("specName_" + btnDelete.id.split("_")[1]).innerHTML;
+                const ResponseParagraph = document.getElementById("responseparagraph");
+                if (confirm("Are you sure you want to delete specification " + document.getElementById("specName_" + btnDelete.id.split("_")[1]).innerHTML) == true) {
+                    try {
+                        const response = await fetch(postURL, {
+                            method: "DELETE",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                        });
+                        if (response.ok) {
+                            if (response.status === 204) { // contents will be ignored
+                                // reload current page in order to reflect the deleted item
+                                location.reload();
+                            }
+                        } else {
+                            const result = await response.json();
+                            ResponseParagraph.innerHTML = JSON.stringify(result);
+                            //- alert("Result = " + JSON.stringify(result));
+                        }
+                    } catch (error) {
+                        console.error(error.message);
+                        ResponseParagraph.innerHTML = output;
+                    }
+                }`
+            };

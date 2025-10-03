@@ -1,0 +1,51 @@
+GET http://localhost:5000/admin/users
+
+###
+
+POST http://localhost:5000/admin/users
+Content-Type: application/json
+
+{
+    "name": "Theofilos",
+    "password": "Ioannidis",
+    "description": "Me"
+}
+
+###
+
+POST http://localhost:5000/admin/users/login
+Content-Type: application/json
+
+{
+    "name": "Monica",
+    "password": "Miranda" 
+}
+
+
+###
+
+PUT http://localhost:5000/config
+Content-Type: application/json
+
+{
+
+}
+
+###
+GET http://localhost:5000/admin/users/token
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaW5zdGltZSI6IjIwMjUtMDgtMTJUMDc6MDc6MjQuOTk1WiIsIm5hbWUiOiJNb25pY2EiLCJwYXNzd2QiOiIkMmIkMTAkbDl3VmN1Wkk1MlE2SXJYRWdxbUk4LmFZS2VvZHIzN1QwMWhPRGZITGdYMWFTQlE3cGZYQUsiLCJzYWx0IjoiJDJiJDEwJGw5d1ZjdVpJNTJRNklyWEVncW1JOC4iLCJkZXNjcmlwdGlvbiI6IldpZmUiLCJpYXQiOjE3NTY3MTk3NDR9.gAPMDMWN6_Ak1NNDF2C-c9F8a4F9Rmc6rxKysOsQ0ts
+
+###
+# Send PUT request to /admin/config in order to set 
+# CRUD_MAP("reportspecs") = "CRUD",
+PUT http://localhost:5000/admin/config/
+
+### 
+# GET /admin/config 
+# Lists the endpoint's persisted configuration
+GET http://localhost:5000/admin/config
+
+### 
+# GET /admin/config/current
+# Lists the endpoint's running configuration
+GET http://localhost:5000/admin/config/current

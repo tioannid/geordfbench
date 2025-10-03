@@ -1,0 +1,71 @@
+extends ../layout
+
+block content
+
+    .container-fluid
+        form(id="myform" name="myform").col-xlg-12.col-lg-12.col-md-12.col-sm-12.col-xs-12
+            h4.mb-3.fw-normal= locals.title
+            .row
+                .col-xlg-12.col-lg-11.col-md-11.col-sm-11.col-xs-11.ms-3
+                    .form-floating.mt-2.ps-2.col-xlg-6.col-lg-7.col-md-11.col-sm-12.col-xs-12
+                        input(type="text" name="name" id="name" placeholder="name" aria-label="name" value=`${(locals.existingSpec) ? locals.existingSpec.name :  "JSON spec file name"}` required).form-control 
+                        label(for="name") Name
+                        //- Hidden field 'baseUrl' is used to store the initial value passed during pug view rendering
+                        //- with the base URL for posting the data for the new specification object
+                        input(type="hidden" id="baseUrl" name="baseUrl" value=`${locals.postBaseUrl}`).form-control
+                    .form-floating.mt-2.ps-2.col-xlg-1.col-lg-1.col-md-2.col-sm-2.col-xs-3
+                        input(type="number" name="noQueryResultToReport" id="noQueryResultToReport" placeholder="noQueryResultToReport" aria-label="noQueryResultToReport" value=`${(locals.existingSpec) ? locals.existingSpec.noQueryResultToReport : "1"}` min="0" required).form-control
+                        label(for="noQueryResultToReport") noQueryResultToReport
+            .row.mt-2.mb-2.justify-content-center
+                .col-2
+                    button(type="submit" name="btnAdd" value="add").btn.btn-primary Add
+
+        script. 
+            //- Get form object through DOM
+            var myform = document.getElementById("myform");
+            //- register listener function for the form submit event
+            myform.addEventListener("submit", submitForm);
+
+            //- the form submit function
+            async function submitForm(e) {
+                //- cancel the event's default action if it is cancelable
+                if (e.cancelable) {
+                    e.preventDefault();
+                    //- alert("Event is cancelable and it's default action has been canceled.");
+                    //- alert("The element that triggered the event is " + e.currentTarget);
+                }
+
+                //- var myform = document.getElementById("myform");
+                var myform = e.currentTarget 
+                var submitter = document.querySelector("button[value=add]");
+                var formData = new FormData(myform, submitter);
+                var jsonFormData = JSON.stringify(Object.fromEntries(formData));
+                const postURL =
+                    myform.elements["baseUrl"].value +
+                    "/" +
+                    myform.elements["name"].value;
+                const ResponseParagraph = document.getElementById("responseparagraph");
+                try {
+                    const response = await fetch(postURL, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },                    
+                        body: jsonFormData,
+                    });
+                    const result = await response.json();
+                    const output = JSON.stringify({
+                        returnStatus: response.status,
+                        returnMessage: result,
+                    },null,2);
+
+                    if (response.status > 400) {
+                        ResponseParagraph.innerHTML = output;
+                    } else {
+                        ResponseParagraph.innerHTML = output;
+                    }
+                } catch (error) {
+                    console.error(error.message);
+                    ResponseParagraph.innerHTML = output;
+                }
+            };

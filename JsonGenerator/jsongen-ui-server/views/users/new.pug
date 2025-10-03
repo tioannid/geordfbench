@@ -1,0 +1,25 @@
+extends ../layout
+
+block content
+
+    .container 
+
+        form(action="/admin/users" method='POST').col-6
+            h1.h3.mb-3.fw-normal Please enter user details:
+            .row.mt-2
+                .col
+                    .form-floating
+                        input(type="text" name="name" id="name" placeholder="Name" aria-label="Name" value=`${locals.name || "name"}` ).form-control 
+                        label(for="name") Name
+                .col
+                    .form-floating
+                        input(type="text" name="password" id="password" placeholder="Password" aria-label="Password" value=`${locals.password || "password"}`).form-control 
+                        label(for="password") Password                    
+            .row.mt-2
+                .col
+                    .form-floating
+                        input(type="text" name="description" id="description" placeholder="Description" aria-label="Description" value=`${locals.description || "description"}`).form-control 
+                        label(for="description") Description                   
+            .row.mt-3.justify-content-center
+                .col-2
+                    button(type="submit").btn.btn-primary Submit

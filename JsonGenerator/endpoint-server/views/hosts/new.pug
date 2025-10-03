@@ -1,0 +1,23 @@
+extends ../layout
+
+block content
+
+    form(action="/endpointui/hosts" method='POST').row.g-3
+        .col-md-6
+            input(type="text" name="classname" id="classname" placeholder="classname" aria-label="classname" value=`${locals.classname || "classname"}` ).form-control 
+        .col-md-6
+            input(type="text" name="name" id="name" placeholder="name" aria-label="name" value=`${locals.name || "name"}`).form-control 
+        .col-md-6
+            input(type="text" name="ipAddr" id="ipAddr" placeholder="ipAddr" aria-label="ipAddr" value=`${locals.ipAddr || "ipAddr"}`).form-control         
+        .col-md-6
+            input(type="text" name="ram" id="ram" placeholder="ram" aria-label="ram" value=`${locals.ram || "ram"}`).form-control         
+        p OS: 
+        p   
+            .row 
+                .col-md-2 
+                    select.form-select.form-select-sm  
+                        each os in oses
+                            option(value=os.name)= os.name 
+                            br
+        .col-md-12
+            button(type="submit").btn.btn-primary 

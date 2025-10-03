@@ -1,0 +1,7 @@
+{
+    "classname" : "gr.uoa.di.rdf.geordfbench.runtime.os.impl.DebianOS",
+    "name" : "Debian-stretch",
+    "shell_cmd" : "/bin/sh",
+    "sync_cmd" : "sync",
+    "clearcache_cmd" : "sudo /sbin/sysctl vm.drop_caches=3"
+}

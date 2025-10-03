@@ -1,0 +1,7 @@
+{
+    "classname" : "gr.uoa.di.rdf.geordfbench.runtime.os.impl.Windows10OS",
+    "name" : "Windows 10",
+    "shell_cmd" : "cmd.exe",
+    "sync_cmd" : "echo sync",
+    "clearcache_cmd" : "echo drop_caches"
+}
