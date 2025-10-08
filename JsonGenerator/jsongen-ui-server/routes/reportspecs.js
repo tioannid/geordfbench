@@ -20,6 +20,7 @@ router.get("/", async (req, res) => {
     postBaseUrl: `${endpointUrl}`,
     records: specs,
     UIUrl: `${UIUrl}`,
+    specEntity: specEntity,
   });
 });
 

@@ -1,0 +1,202 @@
+extends ../layout
+
+block content
+
+    .container-fluid
+        form(id="myform" name="myform").col-xlg-12.col-lg-12.col-md-12.col-sm-12.col-xs-12
+            h4.mb-3.fw-normal= locals.title
+            .row
+                .col.ms-3
+                    .form-floating.mt-2.ps-2.col-xlg-6.col-lg-8.col-md-10.col-sm-12.col-xs-12
+                        input(type="text" name="classname" id="classname" placeholder="classname" aria-label="classname" value=`${(locals.existingSpec) ? locals.existingSpec.classname : "gr.uoa.di.rdf.geordfbench.runtime.executionspecs.impl.SimpleES"}` readonly required).form-control 
+                        label(for="classname") Class Name
+            .row
+                .col.ms-3
+                    .form-floating.mt-2.ps-2.col-xlg-6.col-lg-8.col-md-10.col-sm-12.col-xs-12
+                        input(type="text" name="name" id="name" placeholder="name" aria-label="name" value=`${(locals.existingSpec) ? locals.existingSpec.name :  "JSON spec file name"}` required).form-control 
+                        label(for="name") Name
+                        //- Hidden field 'baseUrl' is used to store the initial value passed during pug view rendering
+                        //- with the base URL for posting the data for the new specification object
+                        input(type="hidden" id="baseUrl" name="baseUrl" value=`${locals.postBaseUrl}`).form-control
+            .row
+                .col.ms-3
+                    .form-floating.mt-2.ps-2.col-xlg-12.col-lg-12.col-md-12.col-sm-12.col-xs-12
+                        input(type="number" name="maxDurationSecsPerQueryRep" id="maxDurationSecsPerQueryRep" placeholder="maxDurationSecsPerQueryRep" title="Timeout (secs) for each query execution" aria-label="maxDurationSecsPerQueryRep" value=`${(locals.existingSpec) ? locals.existingSpec.maxDurationSecsPerQueryRep : "60"}` min="30" required).form-control
+                        label(for="maxDurationSecsPerQueryRep") maxDurationSecsPerQueryRep
+                .col
+                    .form-floating.mt-2.ps-2.col-xlg-12.col-lg-12.col-md-12.col-sm-12.col-xs-12
+                        input(type="number" name="maxDurationSecs" id="maxDurationSecs" placeholder="maxDurationSecs" title="Timeout (secs) for the entire experiment execution" aria-label="maxDurationSecs" value=`${(locals.existingSpec) ? locals.existingSpec.maxDurationSecs : "120"}` min="10" required).form-control
+                        label(for="maxDurationSecs") maxDurationSecs
+                .col
+                    .form-floating.mt-2.ps-2.col-xlg-12.col-lg-12.col-md-12.col-sm-12.col-xs-12
+                        input(type="number" name="clearCacheDelaymSecs" id="clearCacheDelaymSecs" placeholder="clearCacheDelaymSecs" title="Delay (msecs) for clearing caches and Java garbage collection" aria-label="clearCacheDelaymSecs" value=`${(locals.existingSpec) ? locals.existingSpec.clearCacheDelaymSecs : "5000"}` min="1000" max="10000" required).form-control
+                        label(for="clearCacheDelaymSecs") clearCacheDelaymSecs
+            .row
+                .col.ms-3
+                    .form-floating.mt-2.ps-2.col-xlg-12.col-lg-12.col-md-12.col-sm-12.col-xs-12
+                        select(id="action" name="action").form-select
+                            option(value="Choose action" selected)= "Choose action" 
+                            option(value="RUN" title="Run a benchmark experiment")= "RUN" 
+                            option(value="PRINT" title="Print the ground form of the queries")= "PRINT" 
+                        label(for="action").form-label Action:
+                        //- Hidden field 'actionVal' is used to store the initial value passed during pug view rendering
+                        //- with the 'action' for posting the data for the new specification object
+                        input(type="hidden" id="actionVal" name="actionVal" value=`${(locals.existingSpec) ? locals.existingSpec.action : ""}`).form-control     
+                .col               
+                    .form-floating.mt-2.ps-2.col-xlg-12.col-lg-12.col-md-12.col-sm-12.col-xs-12
+                        select(id="avgFunc" name="avgFunc").form-select
+                            option(value="Choose average function" selected)= "Choose average function" 
+                            option(value="QUERY_MEDIAN" title="Middle value from an ordered set of response times for a single query")= "QUERY_MEDIAN" 
+                            option(value="QUERY_MEAN" title="Arithmetic Mean (Average) from a set of response times for a single query")= "QUERY_MEAN" 
+                            option(value="QUERYSET_MEAN" title="Arithmetic Mean (Average) from a set of response times for a group of queries")= "QUERYSET_MEAN" 
+                        label(for="avgFunc").form-label Average Function:                        
+                        //- Hidden field 'avgFuncVal' is used to store the initial value passed during pug view rendering
+                        //- with the 'avgFunc' for posting the data for the new specification object
+                        input(type="hidden" id="avgFuncVal" name="avgFuncVal" value=`${(locals.existingSpec) ? locals.existingSpec.avgFunc : ""}`).form-control   
+                .col                 
+                    .form-floating.mt-2.ps-2.col-xlg-12.col-lg-12.col-md-12.col-sm-12.col-xs-12
+                        select(id="onColdFailure" name="onColdFailure").form-select
+                            option(value="Choose behaviour on cold execution failure" selected)= "Choose behaviour on cold execution failure" 
+                            option(value="SKIP_REMAINING_ALL_QUERY_EXECUTIONS" title="Skip remaining COLD and WARM executions")= "SKIP_REMAINING_ALL_QUERY_EXECUTIONS" 
+                            option(value="SKIP_REMAINING_COLD_EXECUTIONS" title="Skip remaining COLD executions")= "SKIP_REMAINING_COLD_EXECUTIONS" 
+                            option(value="EXCLUDE_AND_PROCEED" title="Exclude query and proceed")= "EXCLUDE_AND_PROCEED" 
+                        label(for="onColdFailure").form-label On Cold Failure:  
+                        //- Hidden field 'onColdFailureVal' is used to store the initial value passed during pug view rendering
+                        //- with the 'onColdFailure' for posting the data for the new specification object
+                        input(type="hidden" id="onColdFailureVal" name="onColdFailureVal" value=`${(locals.existingSpec) ? locals.existingSpec.onColdFailure : ""}`).form-control
+            .row
+                .col.ms-3
+                    .table-responsive.col-xlg-6.col-lg-8.col-md-10.col-sm-12.col-xs-12
+                        table(id="tblExecutionTypes").table.table-secondary.table-striped.table-hover.table-bordered.caption-top 
+                            caption= 'Repetitions Per Execution Type'
+                            thead.thead-dark 
+                                tr
+                                    th.col-md-4= "Execution Type"
+                                    th.col-md-2= "Repetitions"
+                            tbody.table-group-divider
+                                tr 
+                                    td(id="td_cold" title="First execution of a query after all application and system caches have been cleared").col-md-4= "COLD" 
+                                    td
+                                        input(id="td_cold_reps" type="number" value=`${(locals.existingSpec) ? locals.existingSpec.execTypeReps["COLD"] : "0"}` min="0").form-control
+                                tr
+                                    td(id="td_warm" title="Subsequent execution of a query where application and system caches have been engaged by previous execution of the same query").col-md-4= "WARM" 
+                                    td
+                                        input(id="td_warm_reps" type="number" value=`${(locals.existingSpec) ? locals.existingSpec.execTypeReps["WARM"] : "0"}` min="0").form-control
+                                tr
+                                    td(id="td_cold_continuous" title="Execution of a set of queries (one after the other) after all application and system caches have been cleared").col-md-4= "COLD_CONTINUOUS" 
+                                    td
+                                        input(id="td_cold_continuous_reps" type="number" value=`${(locals.existingSpec) ? locals.existingSpec.execTypeReps["COLD_CONTINUOUS"] : "0"}` min="-1" max="0").form-control 
+            .row.mt-2.mb-2.justify-content-center
+                .col-2
+                    button(type="submit" name="btnAdd" value="add").btn.btn-primary Add
+
+        script. 
+            //- Get form object through DOM
+            var myform = document.getElementById("myform");
+            //- register listener function for the form submit event
+            myform.addEventListener("submit", submitForm);
+            //- In case of a clone/copy operation, retrieve the values from the hidden fields
+            document.getElementById("action").value = document.getElementById("actionVal").value;
+            document.getElementById("avgFunc").value = document.getElementById("avgFuncVal").value;
+            document.getElementById("onColdFailure").value = document.getElementById("onColdFailureVal").value;
+
+            //- the form submit function
+            async function submitForm(e) {
+                //- cancel the event's default action if it is cancelable
+                if (e.cancelable) {
+                    e.preventDefault();
+                    //- alert("Event is cancelable and it's default action has been canceled.");
+                    //- alert("The element that triggered the event is " + e.currentTarget);
+                }
+
+                //- var myform = document.getElementById("myform");
+                var myform = e.currentTarget 
+                var submitter = document.querySelector("button[value=add]");
+                const ResponseParagraph = document.getElementById("responseparagraph");
+                //- create the execTypeReps map with values from the form table
+                const td_cold_reps = document.getElementById("td_cold_reps").value;
+                const td_warm_reps = document.getElementById("td_warm_reps").value;
+                const td_cold_continuous_reps = document.getElementById("td_cold_continuous_reps").value;
+                const execTypeRepsMap = new Map();
+                try{
+                    if (Number(td_cold_reps) !== 0) {
+                        execTypeRepsMap.set("COLD", parseInt(td_cold_reps));
+                    };
+                } catch (error) {
+                    console.error(error.message);
+                    ResponseParagraph.innerHTML = output;
+                };
+                try { 
+                    if (Number(td_warm_reps) !== 0) {
+                        execTypeRepsMap.set("WARM", parseInt(td_warm_reps));
+                    };
+                } catch (error) {
+                    console.error(error.message);
+                    ResponseParagraph.innerHTML = output;
+                };
+                try {
+                    if (Number(td_cold_continuous_reps) !== 0) {
+                        execTypeRepsMap.set("COLD_CONTINUOUS", parseInt(td_cold_continuous_reps));
+                    };
+                } catch (error) {
+                    console.error(error.message);
+                    ResponseParagraph.innerHTML = output;
+                };
+                //- Validate that there is at least one execTypeReps entry
+                if (execTypeRepsMap.size < 1) {
+                    const errormsg = "Validation error: There should be at least one execution type with its repetitions declared!";
+                    console.error(errormsg);
+                    ResponseParagraph.innerHTML = errormsg;
+                    return;
+                };
+                //- Validate that the maxDurationSecs is greater than maxDurationSecsPerQueryRep
+                if (Number(document.getElementById("maxDurationSecsPerQueryRep").value) > Number(document.getElementById("maxDurationSecs").value)) {
+                    const errormsg = "Validation error: The maxDurationSecsPerQueryRep cannot be greater than maxDurationSecs!";
+                    console.error(errormsg);
+                    ResponseParagraph.innerHTML = errormsg;
+                    return;
+                };
+                var formData = new FormData(myform, submitter);
+                //- get form data as a JSON object (map -> JSON object)
+                var formDataJSON = Object.fromEntries(formData);
+                var jsonFormData = JSON.stringify(formDataJSON);
+                //- Create a non-flat version of the Execution specification object
+                var jsonData = {
+                    classname: formDataJSON.classname,
+                    execTypeReps: Object.fromEntries(execTypeRepsMap),
+                    maxDurationSecsPerQueryRep: parseInt(formDataJSON.maxDurationSecsPerQueryRep),
+                    maxDurationSecs: parseInt(formDataJSON.maxDurationSecs),
+                    action: formDataJSON.action,
+                    avgFunc: formDataJSON.avgFunc,
+                    onColdFailure: formDataJSON.onColdFailure,
+                    clearCacheDelaymSecs: parseInt(formDataJSON.clearCacheDelaymSecs),
+                };
+
+                const postURL =
+                    myform.elements["baseUrl"].value +
+                    "/" +
+                    myform.elements["name"].value;
+                try {
+                    const response = await fetch(postURL, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },                    
+                        body: JSON.stringify(jsonData),
+                    });
+                    const result = await response.json();
+                    const output = JSON.stringify({
+                        returnStatus: response.status,
+                        returnMessage: result,
+                    },null,2);
+
+                    if (response.status > 400) {
+                        ResponseParagraph.innerHTML = output;
+                    } else {
+                        ResponseParagraph.innerHTML = output;
+                    }
+                } catch (error) {
+                    console.error(error.message);
+                    ResponseParagraph.innerHTML = output;
+                }
+            };

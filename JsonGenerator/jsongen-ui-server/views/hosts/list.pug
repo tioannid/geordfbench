@@ -10,7 +10,7 @@ block content
                         caption= locals.title || 'Please pass a title property'
                         thead.thead-dark 
                             tr
-                                th.col-md-5 Host Specifications
+                                th.col-md-5= `${locals.specEntity} Specifications`
                                 th.col-md-2
                                     a(id="btnNew" href=`${locals.UIUrl}/new` target="_blank").btn.btn-md.btn-primary New
 

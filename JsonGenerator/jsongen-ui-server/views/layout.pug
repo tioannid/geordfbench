@@ -56,6 +56,14 @@ html
                       a(class="dropdown-item" href=`${locals.endpointConfig.UI_URL}/hosts` target="_blank") List
                     li
                       a(class="dropdown-item" href=`${locals.endpointConfig.UI_URL}/hosts/new` target="_blank") New
+                //- Execution spec menu      
+                li(class="nav-item dropdown").px-2
+                  a(class="nav-link dropdown-toggle show" href="#" data-bs-toggle="dropdown" aria-expanded="true") Executions
+                  ul(class="dropdown-menu" data-bs-popper="static")
+                    li
+                      a(class="dropdown-item" href=`${locals.endpointConfig.UI_URL}/executionspecs` target="_blank") List
+                    li
+                      a(class="dropdown-item" href=`${locals.endpointConfig.UI_URL}/executionspecs/new` target="_blank") New
 
 
     block content

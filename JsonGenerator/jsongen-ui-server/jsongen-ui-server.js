@@ -57,7 +57,7 @@ app.use(logger("dev"));
 const mapRouters = [
   { root: "/", router: require("./routes/home") },
   { root: "/categories", router: require("./routes/categories") }, // JSON Library Specification Categories
-  // { root: "/executionspecs", router: require("./routes/executionspecs") },
+  { root: "/executionspecs", router: require("./routes/executionspecs") },
   { root: "/hosts", router: require("./routes/hosts") },
   // { root: "/datasets", router: require("./routes/datasets") },
   // { root: "/querysets", router: require("./routes/querysets") },
