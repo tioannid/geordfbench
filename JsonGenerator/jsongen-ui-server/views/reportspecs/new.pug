@@ -60,12 +60,12 @@ block content
                     },null,2);
 
                     if (response.status > 400) {
-                        ResponseParagraph.innerHTML = output;
+                        ResponseParagraph.value = output;
                     } else {
-                        ResponseParagraph.innerHTML = output;
+                        ResponseParagraph.value = output;
                     }
                 } catch (error) {
                     console.error(error.message);
-                    ResponseParagraph.innerHTML = output;
+                    ResponseParagraph.value = output;
                 }
             };

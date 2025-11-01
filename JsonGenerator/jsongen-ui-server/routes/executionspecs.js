@@ -8,7 +8,7 @@ const path = require("path");
 const specCategory = "executionspecs";
 const specEntity = "Execution";
 
-// get a list of report specifications for use with a
+// get a list of execution specifications for use with a
 // PUG template
 router.get("/", async (req, res) => {
   const Title = `List of ${specEntity} Specifications`;
@@ -27,10 +27,22 @@ router.get("/", async (req, res) => {
 // render a "New Execution Specification" form
 router.get("/new", async (req, res, next) => {
   const Title = `Create New ${specEntity} Specification`;
+  // provide an object with default values for major fields
+  const specDefaultValues = {
+    classname: "gr.uoa.di.rdf.geordfbench.runtime.executionspecs.impl.SimpleES",
+    name: "Execution name",
+    maxDurationSecsPerQueryRep: "60",
+    maxDurationSecs: "120",
+    clearCacheDelaymSecs: "5000",
+    action: "RUN",
+    avgFunc: "QUERY_MEDIAN",
+    onColdFailure: "SKIP_REMAINING_ALL_QUERY_EXECUTIONS",
+  };
   res.render(`${specCategory}/new`, {
     title: Title,
     postBaseUrl: `${req.app.locals.endpointConfig.ENDPOINT_URL}/${specCategory}`,
     endpointConfig: req.app.locals.endpointConfig,
+    specDefaultValues: specDefaultValues,
   });
 });
 

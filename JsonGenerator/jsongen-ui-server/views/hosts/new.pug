@@ -35,19 +35,19 @@ block content
                         label(for="os_select").form-label OS: 
                     .mt-3.ps-3.bg-light.rounded-1.col-xlg-8.col-lg-10.col-md-12.col-sm-12.col-xs-12
                         .form-floating.mt-2.pt-2.col-xlg-8.col-lg-11.col-md-12.col-sm-12.col-xs-12.form-control-sm
-                            input(type="text" name="os_classname" id="os_classname" placeholder="os_classname" aria-label="os_classname" value=`${(locals.existingSpec) ? locals.existingSpec.os.classname : ""}` readonly required).form-control.fst-italic
+                            input(type="text" name="os_classname" id="os_classname" placeholder="os_classname" aria-label="os_classname" value=`${(locals.existingSpec) ? locals.existingSpec.os.classname : ""}` readonly required).form-control.bg-info.fst-italic
                             label(for="os_classname") Classname
                         .form-floating.mt-2.col-xlg-8.col-lg-11.col-md-12.col-sm-12.col-xs-12.form-control-sm
-                            input(type="text" name="os_name" id="os_name" placeholder="os_name" aria-label="os_name" value=`${(locals.existingSpec) ? locals.existingSpec.os.name : ""}` readonly required).form-control.fst-italic
+                            input(type="text" name="os_name" id="os_name" placeholder="os_name" aria-label="os_name" value=`${(locals.existingSpec) ? locals.existingSpec.os.name : ""}` readonly required).form-control.bg-info.fst-italic
                             label(for="os_name") Name
                         .form-floating.mt-2.col-xlg-8.col-lg-11.col-md-12.col-sm-12.col-xs-12.form-control-sm
-                            input(type="text" name="os_shell_cmd" id="os_shell_cmd" placeholder="os_shell_cmd" aria-label="os_shell_cmd" value=`${(locals.existingSpec) ? locals.existingSpec.os.shell_cmd : ""}` readonly required).form-control.fst-italic
+                            input(type="text" name="os_shell_cmd" id="os_shell_cmd" placeholder="os_shell_cmd" aria-label="os_shell_cmd" value=`${(locals.existingSpec) ? locals.existingSpec.os.shell_cmd : ""}` readonly required).form-control.bg-info.fst-italic
                             label(for="os_shell_cmd") Shell Cmd
                         .form-floating.mt-2.col-xlg-8.col-lg-11.col-md-12.col-sm-12.col-xs-12.form-control-sm
-                            input(type="text" name="os_sync_cmd" id="os_sync_cmd" placeholder="os_sync_cmd" aria-label="os_sync_cmd" value=`${(locals.existingSpec) ? locals.existingSpec.os.sync_cmd : ""}` readonly required).form-control.fst-italic
+                            input(type="text" name="os_sync_cmd" id="os_sync_cmd" placeholder="os_sync_cmd" aria-label="os_sync_cmd" value=`${(locals.existingSpec) ? locals.existingSpec.os.sync_cmd : ""}` readonly required).form-control.bg-info.fst-italic
                             label(for="os_sync_cmd") Sync Cmd
                         .form-floating.mt-2.mb-2.pb-2.col-xlg-8.col-lg-11.col-md-12.col-sm-12.col-xs-12.form-control-sm
-                            input(type="text" name="os_clearcache_cmd" id="os_clearcache_cmd" placeholder="os_clearcache_cmd" aria-label="os_clearcache_cmd" value=`${(locals.existingSpec) ? locals.existingSpec.os.clearcache_cmd : ""}` readonly required).form-control.fst-italic
+                            input(type="text" name="os_clearcache_cmd" id="os_clearcache_cmd" placeholder="os_clearcache_cmd" aria-label="os_clearcache_cmd" value=`${(locals.existingSpec) ? locals.existingSpec.os.clearcache_cmd : ""}` readonly required).form-control.bg-info.bg-info.fst-italic
                             label(for="os_clearcache_cmd") Clear Cache Cmd
 
                     .form-floating.mt-2.col-xlg-8.col-lg-10.col-md-12.col-sm-12.col-xs-12
@@ -115,9 +115,9 @@ block content
                         document.getElementById("os_clearcache_cmd").value = result.clearcache_cmd;
                     } catch(error) {
                         console.error(error.message);
-                        ResponseParagraph.innerHTML = output;
+                        ResponseParagraph.value = output;
                     };
-                    ResponseParagraph.innerHTML = ResponseParagraph.innerHTML + "<br>" + "Dropdown's new value is " + selectValue;
+                    ResponseParagraph.value = ResponseParagraph.value + "\nDropdown's new value is " + selectValue;
                 }
             };
 
@@ -180,12 +180,12 @@ block content
                     },null,2);
 
                     if (response.status > 400) {
-                        ResponseParagraph.innerHTML = output;
+                        ResponseParagraph.value = output;
                     } else {
-                        ResponseParagraph.innerHTML = output;
+                        ResponseParagraph.value = output;
                     }
                 } catch (error) {
                     console.error(error.message);
-                    ResponseParagraph.innerHTML = output;
+                    ResponseParagraph.value = output;
                 }
             };            

@@ -1,0 +1,396 @@
+extends ../layout
+
+block content
+
+    .container-fluid
+        form(id="myform" name="myform").col-xlg-12.col-lg-12.col-md-12.col-sm-12.col-xs-12
+            h4.mb-3.fw-normal= locals.title
+            .row
+                .col.ms-3
+                    .form-floating.mt-2.ps-2.col-xlg-6.col-lg-8.col-md-10.col-sm-12.col-xs-12
+                        input(type="text" name="classname" id="classname" placeholder="classname" aria-label="classname" value=`${(locals.existingSpec) ? locals.existingSpec.classname : locals.specDefaultValues.classname }` readonly required).form-control.bg-info.fst-italic 
+                        label(for="classname") Class Name
+                        //- Hidden field 'childSpecDefaultValues' is used to store the initial values for a new Simple Dataset
+                        input(type="hidden" id="childSpecDefaultValues" value=`${JSON.stringify(locals.childSpecDefaultValues)}`).form-control
+                        //- Hidden field 'childSpecDefaultValues' is used to store the initial values for a new Simple Dataset
+                        input(type="hidden" id="existingSpec" value=`${(locals.existingSpec)?JSON.stringify(locals.existingSpec):"null"}`).form-control
+                        //- Hidden field which holds the page operation mode ("new" for starting from scratch, "copy" from an existing persisted specification, 
+                        //- "clone" from an transient specification in a UI page)
+                        input(type="hidden" id="pageMode" value=`${locals.pageMode}`).form-control
+                        //- Hidden field 'copyUrl' is used to store the initial value passed during pug view rendering
+                        //- with the copy URL for posting the data for updating the edited specification object
+                        input(type="hidden" id="copyURL" value=`${locals.copyURL}`).form-control
+                        //- Hidden field 'cloneUrl' is used to store the initial value passed during pug view rendering
+                        //- with the clone URL for posting the data for updating the edited specification object
+                        input(type="hidden" id="cloneURL" value=`${locals.cloneURL}`).form-control
+            .row
+                .col.ms-3
+                    .form-floating.mt-2.ps-2.col-xlg-6.col-lg-8.col-md-10.col-sm-12.col-xs-12
+                        input(type="text" name="name" id="name" placeholder="name" title="Dataset name (is also used as filename)" aria-label="name" value=`${(locals.existingSpec) ? locals.existingSpec.name :  locals.specDefaultValues.name }` required).form-control 
+                        label(for="name") Name
+                        //- Hidden field 'baseUrl' is used to store the initial value passed during pug view rendering
+                        //- with the base URL for posting the data for the new specification object
+                        input(type="hidden" id="baseUrl" value=`${locals.postBaseUrl}`).form-control
+            .row
+                .col.ms-3
+                    .form-floating.mt-2.ps-2.col-xlg-2.col-lg-4.col-md-6.col-sm-8.col-xs-10
+                        input(type="number" name="scale_n" id="scale_n" placeholder="scale_n" title="Scale factor for datasets with variants (0 = invariant dataset" aria-label="scale_n" value=`${(locals.existingSpec) ? locals.existingSpec.n :  locals.specDefaultValues.n }` min="0" required).form-control 
+                        label(for="scale_n") Scale Factor
+            .row
+                .col.ms-3 
+                    .form-floating.mt-2.ps-2.col-xlg-6.col-lg-8.col-md-10.col-sm-12.col-xs-12
+                        input(type="text" name="relativeBaseDir" id="relativeBaseDir" placeholder="relativeBaseDir" title="Relative base directory for complex dataset" aria-label="relativeBaseDir" value=`${(locals.existingSpec) ? locals.existingSpec.relativeBaseDir : locals.specDefaultValues.relativeBaseDir }` required).form-control 
+                        label(for="relativeBaseDir") Relative Base Dir
+            .row
+                .col.ms-3
+                    .form-floating.mt-2.ps-2.col-xlg-6.col-lg-8.col-md-10.col-sm-12.col-xs-12
+                        textarea(name="mapDataSetContexts" id="mapDataSetContexts" style="height: 100px" title=`Map of dataset contexts, e.g. {"clc" : "<http://geographica.di.uoa.gr/dataset/clc>", "gag" : "<http://geographica.di.uoa.gr/dataset/gag>"}`).form-control.form-control-sm= `${(locals.existingSpec) ? JSON.stringify(locals.existingSpec.mapDataSetContexts, null, 2) : JSON.stringify(locals.specDefaultValues.mapDataSetContexts, null, 2) }` 
+                        label(for="mapDataSetContexts") Dataset Contexts
+
+            .row.mt-2.mb-2.justify-content-center
+                .col-2
+                    button(type="submit" id="btnAdd" value="add").btn.btn-primary Add
+
+            //- List with Simple Datasets
+            .row 
+                .col.ms-4.mt-2.ps-2
+
+                    h5.bg-secondary.text-light.rounded.ps-2.pb-1= "Simple Datasets"
+                        a(id="btnAddSDS").btn
+                            img.rounded(src="/static/add_new.png" alt="" width="30" height="30")
+                    .accordion(id="accordionSDSList")
+                        //- For each SDS (Simple Data Set)
+                        each sds, index in locals.existingSpec.simpleGeospatialDataSetList
+                            //- We have to remove SPACE from SDS names which cannot be used for DOM elements' id
+                            - var sds_name_nospace = sds.name.replace(/\s+/g, "");
+                            .accordion-item(id=`${"accordionSDSItem_" + sds_name_nospace}`)
+                                h2.accordion-header
+                                    button(type="button" data-bs-toggle="collapse" data-bs-target=`${"#collapse_" + sds_name_nospace}` aria-expanded="false" aria-controls=`${"collapse_" + sds_name_nospace}`).accordion-button.collapsed
+                                        strong.text-secondary= sds_name_nospace
+                                        a(id=`${"btnDelSDS_" + sds_name_nospace}`).btn.ms-1
+                                            img.rounded(src="/static/delete_existing.png" alt="" width="20" height="20")
+                                div(id=`${"collapse_" + sds_name_nospace}` data-bs-parent="#accordionSDSList").accordion-collapse.collapse
+                                    .accordion-body.bg-secondary
+                                        .row
+                                            .col
+                                                .form-floating.mt-2.ps-2.col-xlg-6.col-lg-8.col-md-10.col-sm-12.col-xs-12
+                                                    input(type="text" id=`${"sds_" + sds_name_nospace + "_name"}` name=`${"sds_" + sds_name_nospace + "_name"}` title="Simple dataset name" value=`${sds.name}` required).form-control 
+                                                    label(for=`${"sds_" + sds_name_nospace + "_name"}`) Name
+                                        .row
+                                            .col 
+                                                .form-floating.mt-2.ps-2.col-xlg-6.col-lg-8.col-md-10.col-sm-12.col-xs-12
+                                                    input(type="text" id=`${"sds_" + sds_name_nospace + "_relativeBaseDir"}` name=`${"sds_" + sds_name_nospace + "_relativeBaseDir"}` title="Relative base directory for simple dataset" value=`${sds.relativeBaseDir}` required).form-control 
+                                                    label(for=`${"sds_" + sds_name_nospace + "_relativeBaseDir"}`) Relative Base Dir
+                                        .row
+                                            .col 
+                                                .form-floating.mt-2.ps-2.col-xlg-6.col-lg-8.col-md-10.col-sm-12.col-xs-12
+                                                    input(type="text" id=`${"sds_" + sds_name_nospace + "_dataFile"}` name=`${"sds_" + sds_name_nospace + "_dataFile"}` title="Relative base directory for simple dataset" value=`${sds.dataFile}` required).form-control 
+                                                    label(for=`${"sds_" + sds_name_nospace + "_dataFile"}`) Data File
+                                        .row
+                                            .col
+                                                .form-floating.mt-2.ps-2.col-xlg-4.col-lg-6.col-md-8.col-sm-12.col-xs-12
+                                                    select(id=`${"sds_" + sds_name_nospace + "_rdfFormat"}` name=`${"sds_" + sds_name_nospace + "_rdfFormat"}`).form-select
+                                                        option(value="Choose RDF format" selected)= "Choose RDF format" 
+                                                        option(value="N-TRIPLES" title="N-Triples is a line-based, plain text format for encoding an RDF graph")= "N-TRIPLES" 
+                                                        option(value="TRIG" title="A TriG document defines an RDF Dataset composed of one default graph and zero or more named graphs")= "TRIG" 
+                                                    label(for=`${"sds_" + sds_name_nospace + "_rdfFormat"}`).form-label RDF Format:
+                                                    //- Hidden field 'rdfFormatVal' is used to store the initial value passed during pug view rendering
+                                                    //- with the 'rdfFormat' for posting the data for the new specification object
+                                                    input(type="hidden" id=`${"sds_" + sds_name_nospace + "_rdfFormatVal"}` value=`${sds.rdfFormat}`).form-control     
+                                        .row
+                                            .col
+                                                .form-floating.mt-2.ps-2.col-xlg-4.col-lg-6.col-md-8.col-sm-12.col-xs-12
+                                                    textarea(name=`${"sds_" + sds_name_nospace + "_mapUsefulNamespacePrefixes"}` id=`${"sds_" + sds_name_nospace + "_mapUsefulNamespacePrefixes"}` style="height: 100px" title=`Map of useful namespace prefixes, e.g. {"clc" : "<http://geographica.di.uoa.gr/dataset/clc>", "gag" : "<http://geographica.di.uoa.gr/dataset/gag>"}`).form-control.form-control-sm= `${JSON.stringify(sds.mapUsefulNamespacePrefixes, null, 2)}` 
+                                                    label(for=`${"sds_" + sds_name_nospace + "_mapUsefulNamespacePrefixes"}`) Useful Namespace Prefixes
+                                        .row
+                                            .col
+                                                .form-floating.mt-2.ps-2.col-xlg-4.col-lg-6.col-md-8.col-sm-12.col-xs-12
+                                                    textarea(name=`${"sds_" + sds_name_nospace + "_mapAsWKT"}` id=`${"sds_" + sds_name_nospace + "_mapAsWKT"}` style="height: 100px" title=`Map of "geometry (has)WKT serialization" properties, e.g. {"geo" : "<http://www.opengis.net/ont/geosparql#>", "censusAsWKT" : "<http://geographica.di.uoa.gr/cencus/ontology#asWKT>"}`).form-control.form-control-sm= `${JSON.stringify(sds.mapAsWKT, null, 2)}` 
+                                                    label(for=`${"sds_" + sds_name_nospace + "_mapAsWKT"}`) Geometry (has)WKT Serialization Properties
+                                        .row
+                                            .col
+                                                .form-floating.mt-2.ps-2.col-xlg-4.col-lg-6.col-md-8.col-sm-12.col-xs-12
+                                                    textarea(name=`${"sds_" + sds_name_nospace + "_mapHasGeometry"}` id=`${"sds_" + sds_name_nospace + "_mapHasGeometry"}` style="height: 100px" title=`Map of "(has)geometry" properties, e.g. {"scalabilityHasGeometry" : "<http://www.opengis.net/ont/geosparql#hasGeometry>"}`).form-control.form-control-sm= `${JSON.stringify(sds.mapHasGeometry, null, 2)}` 
+                                                    label(for=`${"sds_" + sds_name_nospace + "_mapHasGeometry"}`) (has)Geometry Properties
+
+
+    script. 
+        //- Get form object through DOM
+        var myform = document.getElementById("myform");
+        //- alert("Form object is " + myform.name);
+
+        //- register listener function for the form submit event
+        myform.addEventListener("submit", submitForm);
+        //- alert("Added function submitForm to " + myform.name + " submit event");
+
+        //- Get pageMode through DOM
+        const pageMode = document.getElementById("pageMode").value;
+        //- alert("pageMode is " + pageMode);
+
+        //- Get the Add SDS button through DOM
+        var btnAddSDS = document.getElementById("btnAddSDS");
+        //- alert("SDS Add button is " + btnAddSDS.id);
+
+        //- register listener function for the 'btnAddSDS' click event
+        btnAddSDS.addEventListener("click", addSDSClick);
+        //- alert("Added function addSDSClick to " + btnAddSDS.name + " click event");
+
+        //- Since we could not set the SDSs' rdfFormat during PUG rendering
+        //- we will retrieve the values from the corresponding hidden field
+        //- and set them as the last step of the document load process
+        const simpleGeospatialDataSetList = JSON.parse(document.getElementById("existingSpec").value).simpleGeospatialDataSetList;
+        for (sds of simpleGeospatialDataSetList) {
+            //- We have to remove SPACE from SDS names which cannot be used for DOM elements' id
+            var sds_name_nospace = sds.name.replace(/\s+/g, "");
+            //- console.log("Will set Select tag value for SDS with name = " + sds_name_nospace);
+            document.getElementById("sds_" + sds_name_nospace + "_rdfFormat").value = document.getElementById("sds_" + sds_name_nospace + "_rdfFormatVal").value;
+            //- register listener function for the 'btnDelSDS' click event
+            var btnDelete = document.getElementById(`${"btnDelSDS_" + sds_name_nospace}`);
+            btnDelete.addEventListener("click", deleteSpecClick);
+        };
+
+        //- the SDS "Delete" buttons' click function
+        //- ========================================
+        async function deleteSpecClick(e) {
+            //- cancel the event's default action if it is cancelable
+            if (e.cancelable) {
+                e.preventDefault();
+            }
+            //- get click event's calling object
+            var btnDelete = e.currentTarget;
+            const ResponseParagraph = document.getElementById("responseparagraph");
+            //- retrieve sds_name_nospace from the second part of the currentTarget id (starting after the '_')
+            var sds2del_name_nospace = btnDelete.id.slice(btnDelete.id.lastIndexOf("_")+1, btnDelete.id.length);
+            //- retrieve sds_name from the value property of SDS[i] 'name' field
+            var sds2del_name = document.getElementById(`sds_${sds2del_name_nospace}_name`).value;
+            //- prompt the user to verify whether he wants to proceed with the deletion of the
+            //- SDS with the given name (with spaces, if there are present!)
+            if (confirm("Are you sure you want to delete Simple dataset " + sds2del_name + " ?") == true) {
+                try {
+                    alert("You chose to delete SDS " + sds2del_name);
+                    //- We should proceed with two actions. There is no need to make calls to the
+                    //- JSON Library UI Endpoint like we have to do for the addition of a new SDS!
+                    //- 1. remove the SDS from the serialized existingSpec
+                    //- 1.1. Deserialize the value of the 'existingSpec' input HTML element into an object
+                    var existingSpec = JSON.parse(document.getElementById("existingSpec").value);
+                    //- Iterate over the existingSpec.simpleGeospatialDataSetList
+                    var foundSDS2Delete = false;
+                    var posFoundSDS2Delete = 0;
+                    for(posFoundSDS2Delete in existingSpec.simpleGeospatialDataSetList) {
+                        //- retrieve the current Simple DataSet (SDS)
+                        var sds = existingSpec.simpleGeospatialDataSetList[posFoundSDS2Delete];
+                        //- previous known SDS name without spaces
+                        var sds_name_nospace = sds.name.replace(/\s+/g, "");
+                        foundSDS2Delete = (sds_name_nospace === sds2del_name_nospace);
+                        if (foundSDS2Delete) {
+                            break;
+                        };
+                    }
+                    if (foundSDS2Delete) {
+                        existingSpec.simpleGeospatialDataSetList.splice(posFoundSDS2Delete, 1);
+                        //- alert(`SDS ${sds2del_name} was found and removed from existingSpec!`);
+                        //- 1.2. Serialize the updated existingSpec back to the 'existingSpec' input HTML element
+                        document.getElementById("existingSpec").value = JSON.stringify(existingSpec);
+                    } else {
+                        alert(`SDS ${sds2del_name} was not found!`);
+                    };
+                    //- 2. remove the SDS from the DOM
+                    var accordionItem2Delete = document.getElementById(`accordionSDSItem_${sds2del_name_nospace}`);
+                    if (accordionItem2Delete) {
+                        accordionItem2Delete.remove();
+                        //- alert(`Accordion item ${accordionItem2Delete.id} was found and removed from DOM!`);
+
+                    };
+                } catch (error) {
+                    ResponseParagraph.value = error.message;
+                }
+            };
+        };        
+
+
+        //- ==============================================================
+        //- Update the 'existingSpec' element from DOM and its serialized
+        //- alter-ego in the DOM
+        //- ==============================================================
+        function updateExistingSpecFromDOM() {
+            //- Start collecting all form data. This basically means updating the 
+            //- 'existingSpec' input HTML element, which is the serialized version of 
+            //- the locals.existingSpec. NOTE: the main 'name' and SDSs' 'name' properties
+            //- have to be dealt a bit differently (spaces removed) because they are used as 
+            //- DOM element IDs and as filename for the new/modified JSON specification file. 
+            //- 1. Deserialize the value of the 'existingSpec' input HTML element into an object
+            var existingSpec = JSON.parse(document.getElementById("existingSpec").value);
+            //- 2. Update existingSpec main fields from DOM
+            //-    'classname' cannot be modified, therefore there is no need to update it
+            existingSpec.name = document.getElementById("name").value.replace(/\s+/g, "");
+            existingSpec.relativeBaseDir = document.getElementById("relativeBaseDir").value;
+            //- 'scale_n' element value should be converted to an integer
+            existingSpec.n= parseInt(document.getElementById("scale_n").value);
+            existingSpec.mapDataSetContexts = JSON.parse(document.getElementById("mapDataSetContexts").value);
+
+            //- 3. Update existingSpec detail fields (SDS fields) from DOM
+            //-    Iterate over the existingSpec.simpleGeospatialDataSetList
+            //-    which is guaranteed (by the Add and Del SDS buttons) to have the correct number of items 
+            for(let i in existingSpec.simpleGeospatialDataSetList) {
+                //- retrieve the current Simple DataSet (SDS)
+                var sds = existingSpec.simpleGeospatialDataSetList[i];
+                //- previous known SDS name without spaces
+                var sds_name_nospace = sds.name.replace(/\s+/g, "");
+                //- set new SDS name without spaces
+                console.log(`sds_${sds_name_nospace}_name`);
+                sds.name = document.getElementById(`sds_${sds_name_nospace}_name`).value.replace(/\s+/g, "");
+                sds.relativeBaseDir = document.getElementById(`sds_${sds_name_nospace}_relativeBaseDir`).value;
+                sds.dataFile = document.getElementById(`sds_${sds_name_nospace}_dataFile`).value;
+                sds.rdfFormat = document.getElementById(`sds_${sds_name_nospace}_rdfFormat`).value;
+                sds.mapUsefulNamespacePrefixes = JSON.parse(document.getElementById(`sds_${sds_name_nospace}_mapUsefulNamespacePrefixes`).innerHTML);
+                sds.mapAsWKT = JSON.parse(document.getElementById(`sds_${sds_name_nospace}_mapAsWKT`).innerHTML);
+                sds.mapHasGeometry = JSON.parse(document.getElementById(`sds_${sds_name_nospace}_mapHasGeometry`).innerHTML);
+            };
+            //- 4. Serialize the updated existingSpec back to the 'existingSpec' input HTML element
+            document.getElementById("existingSpec").value = JSON.stringify(existingSpec);
+        }
+
+        //- ==============================================================
+        //- the form submit function
+        //- ==============================================================
+        async function submitForm(e) {
+            //- cancel the event's default action if it is cancelable
+            if (e.cancelable) {
+                e.preventDefault();
+            }
+
+            //- retrieve the form object from the event currentTarget
+            const myform = e.currentTarget;
+            //- retrieve the event submitter
+            const submitter = document.getElementById("btnAdd");
+            //- the last document area where responses are recorded
+            const ResponseParagraph = document.getElementById("responseparagraph");
+
+            //- Update the 'existingSpec' element from DOM and its serialized
+            //- alter-ego in the DOM            
+            updateExistingSpecFromDOM();
+
+            //- Deserialize the value of the 'existingSpec' input HTML element into an object
+            const existingSpec = JSON.parse(document.getElementById("existingSpec").value);
+            //- send a POST request to add a new dataset to the JSON Library Endpoint
+            //- 1. Form the POST url request
+            const postURL =
+                myform.elements["baseUrl"].value +
+                "/" +
+                existingSpec.name;
+            //- 2. Send the POST request and handle it
+            try {
+                //- send an asynchronous POST request
+                const response = await fetch(postURL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },                    
+                    body: document.getElementById("existingSpec").value, 
+                });
+                //- asynchronously get the result of the response
+                const result = await response.json();
+                console.log(result);
+                const output = JSON.stringify({
+                    returnStatus: response.status,
+                    returnMessage: result,
+                },null,2);
+                //- display the response to the user
+                if (response.status > 400) {
+                    ResponseParagraph.value = output;
+                } else {
+                    ResponseParagraph.value = output;
+                }
+            } catch (error) {
+                ResponseParagraph.value = error.message;
+            }
+        };
+
+        //- ==============================================================
+        //- the click function for the "btnAddSDS" button
+        //- ==============================================================
+        async function addSDSClick(e) {
+            //- get click event's calling object
+            var btnAddSDS = e.currentTarget;
+
+            //- Get pageMode through DOM
+            const pageMode = document.getElementById("pageMode").value;
+            //- alert("Page mode is " + pageMode);
+
+            //- Update the 'existingSpec' element from DOM and its serialized
+            //- alter-ego in the DOM            
+            updateExistingSpecFromDOM();
+
+            //- We have to add a new SDS record in the simpleGeospatialDataSetList property of the
+            //- 'existingSpec' input HTML element which holds the serialized version of the actual
+            //- and initial value which existed in the locals.existingSpec.simpleGeospatialDataSetList object. 
+            //- Therefore we have to take the following steps:
+            //- 1. Deserialize the value of the 'existingSpec' input HTML element into an array
+            var existingSpec = JSON.parse(document.getElementById("existingSpec").value);
+
+            //- 2. Deserialize the value of the 'childSpecDefaultValues' input HTML element in order
+            //-    to add it to the existingSpec.simpleGeospatialDataSetList
+            var childSpecDefaultObject = JSON.parse(document.getElementById("childSpecDefaultValues").value);
+            //- 3. Check if the same SDS name already exists in the existingSpec.simpleGeospatialDataSetList
+            let sdsExists = false;
+            for(let i in existingSpec.simpleGeospatialDataSetList) {
+                var sds = existingSpec.simpleGeospatialDataSetList[i];
+                sdsExists = (sds.name == childSpecDefaultObject.name);
+                if (sdsExists) {
+                    break;
+                }
+            };
+            //- 3.1. If same SDS with same name exists, coin a new default SDS name based on the number of SDSs
+            if (sdsExists) {
+                childSpecDefaultObject.name = childSpecDefaultObject.name + existingSpec.simpleGeospatialDataSetList.length;
+            };
+
+            //- 4. Add the childSpecDefaultObject SDS object to the existingSpec.simpleGeospatialDataSetList array 
+            existingSpec.simpleGeospatialDataSetList.push(childSpecDefaultObject);
+            //- 5. Serialize the existingSpec back to the 'existingSpec' input HTML element
+            document.getElementById("existingSpec").value = JSON.stringify(existingSpec);
+
+            const ResponseParagraph = document.getElementById("responseparagraph");
+            //- Send POST request with modified specification object to be stored in
+            //- UI endpoint dataset module's local database
+            try {
+                //- send an asynchronous POST request to JSON Library UI Endpoint
+                const response = await fetch(document.getElementById("cloneURL").value, {
+                    method: "POST",
+                    body: JSON.stringify(existingSpec),
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                });
+                //- asynchronously get the result of the response
+                const result = await response.json();
+                //- display the response to the user
+                if (response.ok) { //- If response was OK
+                    if (response.status === 200) { // contents could be ignored
+                        const output = JSON.stringify({
+                            msg: result.msg, // message from JSON Library UI Endpoint
+                            dbitems: result.dbitems, // number of items in 'db' map
+                        },null,2);
+                        ResponseParagraph.value = output;
+                    }
+                } else { //- If response was NOT OK
+                    ResponseParagraph.value = JSON.stringify(result);
+                }
+            } catch (error) {
+                ResponseParagraph.value = error.message;
+            }
+            //- Send GET request to re-render the 'new' pug file with the 
+            //- modified specification object which should be stored in the
+            //- UI endpoint dataset module's local database
+            try {
+                const copyURL = document.getElementById("copyURL").value;
+                const newCopyURL = copyURL.slice(0, copyURL.lastIndexOf('/')) + "/" + existingSpec.name;
+                //- open a new window for the new  copy url
+                window.open(newCopyURL, '_blank');
+                //- close current window
+                window.close();
+            } catch (error) {
+                ResponseParagraph.value = error.message;
+            }
+            return;           
+        };        

@@ -64,7 +64,7 @@ block content
                             // create a new page and preload the data with a different
                             // specification name
                             const returnedSpec = await response.json();
-                            ResponseParagraph.innerHTML = JSON.stringify(returnedSpec);
+                            ResponseParagraph.innerHTML = JSON.stringify(returnedSpec, null, 2);
                         }
                     } else {
                         const resourceNotRetrieved = "Resource was not retrieved!";
@@ -72,8 +72,8 @@ block content
                         ResponseParagraph.innerHTML = resourceNotRetrieved;
                     }
                 } catch (error) {
-                    console.error(error.message);
-                    ResponseParagraph.innerHTML = output;
+                    //- console.error(error.message);
+                    ResponseParagraph.innerHTML = error.message;
                 }
                 //- alert("Will navigate to " + document.getElementById("UIUrl").value + "/new/" + document.getElementById("specName_" + btnCopy.id.split("_")[1]).innerHTML);
                 //- location.href = document.getElementById("UIUrl").value + "/new/" + document.getElementById("specName_" + btnCopy.id.split("_")[1]).innerHTML;
@@ -110,8 +110,8 @@ block content
                             //- alert("Result = " + JSON.stringify(result));
                         }
                     } catch (error) {
-                        console.error(error.message);
-                        ResponseParagraph.innerHTML = output;
+                        //- console.error(error.message);
+                        ResponseParagraph.innerHTML = error.message;
                     }
                 }
             };

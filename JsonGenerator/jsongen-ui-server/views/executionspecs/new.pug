@@ -8,12 +8,12 @@ block content
             .row
                 .col.ms-3
                     .form-floating.mt-2.ps-2.col-xlg-6.col-lg-8.col-md-10.col-sm-12.col-xs-12
-                        input(type="text" name="classname" id="classname" placeholder="classname" aria-label="classname" value=`${(locals.existingSpec) ? locals.existingSpec.classname : "gr.uoa.di.rdf.geordfbench.runtime.executionspecs.impl.SimpleES"}` readonly required).form-control 
+                        input(type="text" name="classname" id="classname" placeholder="classname" aria-label="classname" value=`${(locals.existingSpec) ? locals.existingSpec.classname : locals.specDefaultValues.classname}` readonly required).form-control 
                         label(for="classname") Class Name
             .row
                 .col.ms-3
                     .form-floating.mt-2.ps-2.col-xlg-6.col-lg-8.col-md-10.col-sm-12.col-xs-12
-                        input(type="text" name="name" id="name" placeholder="name" aria-label="name" value=`${(locals.existingSpec) ? locals.existingSpec.name :  "JSON spec file name"}` required).form-control 
+                        input(type="text" name="name" id="name" placeholder="name" aria-label="name" value=`${(locals.existingSpec) ? locals.existingSpec.name :  locals.specDefaultValues.name}` required).form-control 
                         label(for="name") Name
                         //- Hidden field 'baseUrl' is used to store the initial value passed during pug view rendering
                         //- with the base URL for posting the data for the new specification object
@@ -21,15 +21,15 @@ block content
             .row
                 .col.ms-3
                     .form-floating.mt-2.ps-2.col-xlg-12.col-lg-12.col-md-12.col-sm-12.col-xs-12
-                        input(type="number" name="maxDurationSecsPerQueryRep" id="maxDurationSecsPerQueryRep" placeholder="maxDurationSecsPerQueryRep" title="Timeout (secs) for each query execution" aria-label="maxDurationSecsPerQueryRep" value=`${(locals.existingSpec) ? locals.existingSpec.maxDurationSecsPerQueryRep : "60"}` min="30" required).form-control
+                        input(type="number" name="maxDurationSecsPerQueryRep" id="maxDurationSecsPerQueryRep" placeholder="maxDurationSecsPerQueryRep" title="Timeout (secs) for each query execution" aria-label="maxDurationSecsPerQueryRep" value=`${(locals.existingSpec) ? locals.existingSpec.maxDurationSecsPerQueryRep : locals.specDefaultValues.maxDurationSecsPerQueryRep}` min="30" required).form-control
                         label(for="maxDurationSecsPerQueryRep") maxDurationSecsPerQueryRep
                 .col
                     .form-floating.mt-2.ps-2.col-xlg-12.col-lg-12.col-md-12.col-sm-12.col-xs-12
-                        input(type="number" name="maxDurationSecs" id="maxDurationSecs" placeholder="maxDurationSecs" title="Timeout (secs) for the entire experiment execution" aria-label="maxDurationSecs" value=`${(locals.existingSpec) ? locals.existingSpec.maxDurationSecs : "120"}` min="10" required).form-control
+                        input(type="number" name="maxDurationSecs" id="maxDurationSecs" placeholder="maxDurationSecs" title="Timeout (secs) for the entire experiment execution" aria-label="maxDurationSecs" value=`${(locals.existingSpec) ? locals.existingSpec.maxDurationSecs : locals.specDefaultValues.maxDurationSecs}` min="10" required).form-control
                         label(for="maxDurationSecs") maxDurationSecs
                 .col
                     .form-floating.mt-2.ps-2.col-xlg-12.col-lg-12.col-md-12.col-sm-12.col-xs-12
-                        input(type="number" name="clearCacheDelaymSecs" id="clearCacheDelaymSecs" placeholder="clearCacheDelaymSecs" title="Delay (msecs) for clearing caches and Java garbage collection" aria-label="clearCacheDelaymSecs" value=`${(locals.existingSpec) ? locals.existingSpec.clearCacheDelaymSecs : "5000"}` min="1000" max="10000" required).form-control
+                        input(type="number" name="clearCacheDelaymSecs" id="clearCacheDelaymSecs" placeholder="clearCacheDelaymSecs" title="Delay (msecs) for clearing caches and Java garbage collection" aria-label="clearCacheDelaymSecs" value=`${(locals.existingSpec) ? locals.existingSpec.clearCacheDelaymSecs : locals.specDefaultValues.clearCacheDelaymSecs}` min="1000" max="10000" required).form-control
                         label(for="clearCacheDelaymSecs") clearCacheDelaymSecs
             .row
                 .col.ms-3
@@ -41,7 +41,7 @@ block content
                         label(for="action").form-label Action:
                         //- Hidden field 'actionVal' is used to store the initial value passed during pug view rendering
                         //- with the 'action' for posting the data for the new specification object
-                        input(type="hidden" id="actionVal" name="actionVal" value=`${(locals.existingSpec) ? locals.existingSpec.action : ""}`).form-control     
+                        input(type="hidden" id="actionVal" name="actionVal" value=`${(locals.existingSpec) ? locals.existingSpec.action : locals.specDefaultValues.action}`).form-control     
                 .col               
                     .form-floating.mt-2.ps-2.col-xlg-12.col-lg-12.col-md-12.col-sm-12.col-xs-12
                         select(id="avgFunc" name="avgFunc").form-select
@@ -52,7 +52,7 @@ block content
                         label(for="avgFunc").form-label Average Function:                        
                         //- Hidden field 'avgFuncVal' is used to store the initial value passed during pug view rendering
                         //- with the 'avgFunc' for posting the data for the new specification object
-                        input(type="hidden" id="avgFuncVal" name="avgFuncVal" value=`${(locals.existingSpec) ? locals.existingSpec.avgFunc : ""}`).form-control   
+                        input(type="hidden" id="avgFuncVal" name="avgFuncVal" value=`${(locals.existingSpec) ? locals.existingSpec.avgFunc : locals.specDefaultValues.avgFunc}`).form-control   
                 .col                 
                     .form-floating.mt-2.ps-2.col-xlg-12.col-lg-12.col-md-12.col-sm-12.col-xs-12
                         select(id="onColdFailure" name="onColdFailure").form-select
@@ -63,7 +63,7 @@ block content
                         label(for="onColdFailure").form-label On Cold Failure:  
                         //- Hidden field 'onColdFailureVal' is used to store the initial value passed during pug view rendering
                         //- with the 'onColdFailure' for posting the data for the new specification object
-                        input(type="hidden" id="onColdFailureVal" name="onColdFailureVal" value=`${(locals.existingSpec) ? locals.existingSpec.onColdFailure : ""}`).form-control
+                        input(type="hidden" id="onColdFailureVal" name="onColdFailureVal" value=`${(locals.existingSpec) ? locals.existingSpec.onColdFailure : locals.specDefaultValues.onColdFailure}`).form-control
             .row
                 .col.ms-3
                     .table-responsive.col-xlg-6.col-lg-8.col-md-10.col-sm-12.col-xs-12
@@ -123,37 +123,34 @@ block content
                         execTypeRepsMap.set("COLD", parseInt(td_cold_reps));
                     };
                 } catch (error) {
-                    console.error(error.message);
-                    ResponseParagraph.innerHTML = output;
+                    ResponseParagraph.value = error.message;
                 };
                 try { 
                     if (Number(td_warm_reps) !== 0) {
                         execTypeRepsMap.set("WARM", parseInt(td_warm_reps));
                     };
                 } catch (error) {
-                    console.error(error.message);
-                    ResponseParagraph.innerHTML = output;
+                    ResponseParagraph.value = error.message;
                 };
                 try {
                     if (Number(td_cold_continuous_reps) !== 0) {
                         execTypeRepsMap.set("COLD_CONTINUOUS", parseInt(td_cold_continuous_reps));
                     };
                 } catch (error) {
-                    console.error(error.message);
-                    ResponseParagraph.innerHTML = output;
+                    ResponseParagraph.value = error.message;
                 };
                 //- Validate that there is at least one execTypeReps entry
                 if (execTypeRepsMap.size < 1) {
                     const errormsg = "Validation error: There should be at least one execution type with its repetitions declared!";
                     console.error(errormsg);
-                    ResponseParagraph.innerHTML = errormsg;
+                    ResponseParagraph.value = errormsg;
                     return;
                 };
                 //- Validate that the maxDurationSecs is greater than maxDurationSecsPerQueryRep
                 if (Number(document.getElementById("maxDurationSecsPerQueryRep").value) > Number(document.getElementById("maxDurationSecs").value)) {
                     const errormsg = "Validation error: The maxDurationSecsPerQueryRep cannot be greater than maxDurationSecs!";
                     console.error(errormsg);
-                    ResponseParagraph.innerHTML = errormsg;
+                    ResponseParagraph.value = errormsg;
                     return;
                 };
                 var formData = new FormData(myform, submitter);
@@ -191,12 +188,11 @@ block content
                     },null,2);
 
                     if (response.status > 400) {
-                        ResponseParagraph.innerHTML = output;
+                        ResponseParagraph.value = output;
                     } else {
-                        ResponseParagraph.innerHTML = output;
+                        ResponseParagraph.value = output;
                     }
                 } catch (error) {
-                    console.error(error.message);
-                    ResponseParagraph.innerHTML = output;
+                    ResponseParagraph.value = error.message;
                 }
             };

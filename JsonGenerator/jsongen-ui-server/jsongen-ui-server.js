@@ -41,7 +41,7 @@ app.use(cors(corsOptions));
 app.use("/static", express.static("public"));
 
 // view engine setup
-app.set("views", path.join(__dirname, "views"));
+app.set("views", path.join(__dirname, 'views'));
 app.set("view engine", "pug");
 
 /**
@@ -59,7 +59,7 @@ const mapRouters = [
   { root: "/categories", router: require("./routes/categories") }, // JSON Library Specification Categories
   { root: "/executionspecs", router: require("./routes/executionspecs") },
   { root: "/hosts", router: require("./routes/hosts") },
-  // { root: "/datasets", router: require("./routes/datasets") },
+  { root: "/datasets", router: require("./routes/datasets") },
   // { root: "/querysets", router: require("./routes/querysets") },
   { root: "/reportspecs", router: require("./routes/reportspecs") },
   // { root: "/reportsources", router: require("./routes/reportsources") },

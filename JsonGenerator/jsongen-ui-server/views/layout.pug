@@ -64,15 +64,23 @@ html
                       a(class="dropdown-item" href=`${locals.endpointConfig.UI_URL}/executionspecs` target="_blank") List
                     li
                       a(class="dropdown-item" href=`${locals.endpointConfig.UI_URL}/executionspecs/new` target="_blank") New
+                //- Dataset spec menu      
+                li(class="nav-item dropdown").px-2
+                  a(class="nav-link dropdown-toggle show" href="#" data-bs-toggle="dropdown" aria-expanded="true") Datasets
+                  ul(class="dropdown-menu" data-bs-popper="static")
+                    li
+                      a(class="dropdown-item" href=`${locals.endpointConfig.UI_URL}/datasets` target="_blank") List
+                    li
+                      a(class="dropdown-item" href=`${locals.endpointConfig.UI_URL}/datasets/new` target="_blank") New
 
 
     block content
       //- img.mt-2.mb-2(src="/static/geordfbench_image_favicon.png" alt="" width="60" height="60")
 
     block response
-      .rounded.p-2.mx-2.my-2.bg-warning-subtle.col-lg-12.border.border-secondary
-        h5 Response
-        p(id="responseparagraph" name="responseparagraph").lead.my-1.fs-6.fst-italic
+      .form-floating.ms-2.mt-2.ps-1.col-xlg-11.col-lg-12.col-md-12.col-sm-12.col-xs-12
+        textarea(type="text" name="responseparagraph" id="responseparagraph" placeholder="Response" aria-label="responseparagraph" style="height: 150px").form-control.form-control-sm.fst-italic.bg-warning-subtle
+        label(for="responseparagraph") Response
 
     block footer
       footer.d-flex.flex-wrap.justify-content-between.align-items-center.py-3.my-4.border-top
