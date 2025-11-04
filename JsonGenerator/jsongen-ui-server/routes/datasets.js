@@ -50,9 +50,9 @@ const specDefaultValues = {
 // PUG template
 router.get("/", async (req, res) => {
   const Title = `List of ${specEntity} Specifications`;
-  const endpointUrl = `${req.app.locals.endpointConfig.ENDPOINT_URL}/${specCategory}`;
+  const endpointUrl = `${req.app.locals.endpointConfig.ACCESS_ENDPOINT_URL}/${specCategory}`;
   const { body: specs } = await HTTP.get(endpointUrl);
-  const UIUrl = `${req.app.locals.endpointConfig.UI_URL}/${specCategory}`;
+  const UIUrl = `${req.app.locals.endpointConfig.ACCESS_UI_URL}/${specCategory}`;
   return res.render(
     `${specCategory}/list`,
     {
@@ -74,14 +74,14 @@ router.get("/new", async (req, res, next) => {
   var existingSpec = {};
   const existingspecname = specDefaultValues.name;
   // try to retrieve the existingspec from the JSON Library endpoint
-  const copyURL = `${req.app.locals.endpointConfig.UI_URL}/${specCategory}/new/${existingspecname}`;
-  const cloneURL = `${req.app.locals.endpointConfig.UI_URL}/${specCategory}/clone`;
+  const copyURL = `${req.app.locals.endpointConfig.ACCESS_UI_URL}/${specCategory}/new/${existingspecname}`;
+  const cloneURL = `${req.app.locals.endpointConfig.ACCESS_UI_URL}/${specCategory}/clone`;
   try {
     res.render(
       `${specCategory}/new`,
       {
         title: Title,
-        postBaseUrl: `${req.app.locals.endpointConfig.ENDPOINT_URL}/${specCategory}`,
+        postBaseUrl: `${req.app.locals.endpointConfig.ACCESS_ENDPOINT_URL}/${specCategory}`,
         endpointConfig: req.app.locals.endpointConfig,
         existingSpec: specDefaultValues,
         specDefaultValues: specDefaultValues,
@@ -132,7 +132,7 @@ router.get("/new/:existingspec", async (req, res, next) => {
   } else {
     try {
       const response = await HTTP.get(
-        `${req.app.locals.endpointConfig.ENDPOINT_URL}/${specCategory}/${existingspecname}`
+        `${req.app.locals.endpointConfig.ACCESS_ENDPOINT_URL}/${specCategory}/${existingspecname}`
       );
       existingSpec = response.body;
       // change the specification name
@@ -144,14 +144,14 @@ router.get("/new/:existingspec", async (req, res, next) => {
   }
 
   // try to retrieve the existingspec from the JSON Library endpoint
-  const copyURL = `${req.app.locals.endpointConfig.UI_URL}/${specCategory}/new/${existingspecname}`;
-  const cloneURL = `${req.app.locals.endpointConfig.UI_URL}/${specCategory}/clone`;
+  const copyURL = `${req.app.locals.endpointConfig.ACCESS_UI_URL}/${specCategory}/new/${existingspecname}`;
+  const cloneURL = `${req.app.locals.endpointConfig.ACCESS_UI_URL}/${specCategory}/clone`;
   try {
     res.render(
       `${specCategory}/new`,
       {
         title: Title,
-        postBaseUrl: `${req.app.locals.endpointConfig.ENDPOINT_URL}/${specCategory}`,
+        postBaseUrl: `${req.app.locals.endpointConfig.ACCESS_ENDPOINT_URL}/${specCategory}`,
         endpointConfig: req.app.locals.endpointConfig,
         existingSpec: existingSpec,
         childSpecDefaultValues: childSpecDefaultValues,

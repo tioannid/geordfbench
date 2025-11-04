@@ -6,7 +6,7 @@ const { HTTP } = require("http-call");
 // PUG template
 router.get("/", async (req, res) => {
   const Title = "List of Specification Categories";
-  const url = `${req.app.locals.endpointConfig.ENDPOINT_URL}/categories`;
+  const url = `${req.app.locals.endpointConfig.ACCESS_ENDPOINT_URL}/categories`;
   const { body: categories } = await HTTP.get(url);
   return res.render("categories", {
     title: Title,

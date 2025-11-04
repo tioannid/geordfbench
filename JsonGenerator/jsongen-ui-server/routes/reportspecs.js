@@ -12,9 +12,9 @@ const specEntity = "Report";
 // PUG template
 router.get("/", async (req, res) => {
   const Title = `List of ${specEntity} Specifications`;
-  const endpointUrl = `${req.app.locals.endpointConfig.ENDPOINT_URL}/${specCategory}`;
+  const endpointUrl = `${req.app.locals.endpointConfig.ACCESS_ENDPOINT_URL}/${specCategory}`;
   const { body: specs } = await HTTP.get(endpointUrl);
-  const UIUrl = `${req.app.locals.endpointConfig.UI_URL}/${specCategory}`;
+  const UIUrl = `${req.app.locals.endpointConfig.ACCESS_UI_URL}/${specCategory}`;
   return res.render(`${specCategory}/list`, {
     title: Title,
     postBaseUrl: `${endpointUrl}`,
@@ -29,7 +29,7 @@ router.get("/new", async (req, res, next) => {
   const Title = `Create New ${specEntity} Specification`;
   res.render(`${specCategory}/new`, {
     title: Title,
-    postBaseUrl: `${req.app.locals.endpointConfig.ENDPOINT_URL}/${specCategory}`,
+    postBaseUrl: `${req.app.locals.endpointConfig.ACCESS_ENDPOINT_URL}/${specCategory}`,
     endpointConfig: req.app.locals.endpointConfig,
   });
 });
@@ -40,15 +40,15 @@ router.get("/new/:existingspec", async (req, res, next) => {
   const existingspecname = req.params.existingspec;
   const specfilenameonly = path.parse(existingspecname).name;
   // try to retrieve the existingspec from the JSON Library endpoint
-  var url = `${req.app.locals.endpointConfig.ENDPOINT_URL}/${specCategory}/${existingspecname}`;
-  const copyURL = `${req.app.locals.endpointConfig.UI_URL}/${specCategory}/new/${existingspecname}`;
+  var url = `${req.app.locals.endpointConfig.ACCESS_ENDPOINT_URL}/${specCategory}/${existingspecname}`;
+  const copyURL = `${req.app.locals.endpointConfig.ACCESS_UI_URL}/${specCategory}/new/${existingspecname}`;
   try {
     const { body: existingSpec } = await HTTP.get(url);
     // change the specification name
     existingSpec.name = specfilenameonly + " (copy)";
     res.render(`${specCategory}/new`, {
       title: Title,
-      postBaseUrl: `${req.app.locals.endpointConfig.ENDPOINT_URL}/${specCategory}`,
+      postBaseUrl: `${req.app.locals.endpointConfig.ACCESS_ENDPOINT_URL}/${specCategory}`,
       endpointConfig: req.app.locals.endpointConfig,
       existingSpec: existingSpec,
       copyURL: copyURL,

@@ -105,12 +105,12 @@ block content
                                         .row
                                             .col
                                                 .form-floating.mt-2.ps-2.col-xlg-4.col-lg-6.col-md-8.col-sm-12.col-xs-12
-                                                    textarea(name=`${"sds_" + sds_name_nospace + "_mapAsWKT"}` id=`${"sds_" + sds_name_nospace + "_mapAsWKT"}` style="height: 100px" title=`Map of "geometry (has)WKT serialization" properties, e.g. {"geo" : "<http://www.opengis.net/ont/geosparql#>", "censusAsWKT" : "<http://geographica.di.uoa.gr/cencus/ontology#asWKT>"}`).form-control.form-control-sm= `${JSON.stringify(sds.mapAsWKT, null, 2)}` 
+                                                    textarea(name=`${"sds_" + sds_name_nospace + "_mapAsWKT"}` id=`${"sds_" + sds_name_nospace + "_mapAsWKT"}` style="height: 100px" title=`Map of "geometry (has)WKT serialization" properties, e.g. {"geo" : "<http://www.opengis.net/ont/geosparql#>", "censusAsWKT" : "<http://geographica.di.uoa.gr/cencus/ontology#asWKT>"}`).form-control.form-control-sm= `${(sds.mapAsWKT) ? JSON.stringify(sds.mapAsWKT, null, 2) : "{}"}` 
                                                     label(for=`${"sds_" + sds_name_nospace + "_mapAsWKT"}`) Geometry (has)WKT Serialization Properties
                                         .row
                                             .col
                                                 .form-floating.mt-2.ps-2.col-xlg-4.col-lg-6.col-md-8.col-sm-12.col-xs-12
-                                                    textarea(name=`${"sds_" + sds_name_nospace + "_mapHasGeometry"}` id=`${"sds_" + sds_name_nospace + "_mapHasGeometry"}` style="height: 100px" title=`Map of "(has)geometry" properties, e.g. {"scalabilityHasGeometry" : "<http://www.opengis.net/ont/geosparql#hasGeometry>"}`).form-control.form-control-sm= `${JSON.stringify(sds.mapHasGeometry, null, 2)}` 
+                                                    textarea(name=`${"sds_" + sds_name_nospace + "_mapHasGeometry"}` id=`${"sds_" + sds_name_nospace + "_mapHasGeometry"}` style="height: 100px" title=`Map of "(has)geometry" properties, e.g. {"scalabilityHasGeometry" : "<http://www.opengis.net/ont/geosparql#hasGeometry>"}`).form-control.form-control-sm= `${(sds.mapHasGeometry) ? JSON.stringify(sds.mapHasGeometry, null, 2) : "{}"}` 
                                                     label(for=`${"sds_" + sds_name_nospace + "_mapHasGeometry"}`) (has)Geometry Properties
 
 

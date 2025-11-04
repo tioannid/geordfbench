@@ -8,8 +8,8 @@ router.get("/", function (req, res, next) {
   //   `${packageJson.description} v${packageJson.version} is up and running at port ${req.app.locals.endpointConfig.PORT}!`
   // );
   res.render("home", {
-    title: `${packageJson.description} v${packageJson.version} is up and running at port ${req.app.locals.endpointConfig.PORT}!`,
-    postBaseUrl: `${req.app.locals.endpointConfig.ENDPOINT_URL}/reportspecs`,
+    title: `${packageJson.description} v${packageJson.version} is up and running at port ${process.env.UI_LISTENING_PORT}!`,
+    postBaseUrl: `${req.app.locals.endpointConfig.ACCESS_ENDPOINT_URL}/reportspecs`,
     endpointConfig: req.app.locals.endpointConfig,
   });
 });

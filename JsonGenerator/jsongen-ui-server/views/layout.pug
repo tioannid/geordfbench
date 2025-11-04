@@ -25,53 +25,53 @@ html
                   a(class="nav-link dropdown-toggle show" data-bs-toggle="dropdown" aria-expanded="true" target="_blank") JSON Specification Library Endpoint
                   ul(class="dropdown-menu" data-bs-popper="static")
                     li
-                      a(class="dropdown-item" href=`${locals.endpointConfig.ENDPOINT_URL}` target="_blank") Status
+                      a(class="dropdown-item" href=`${locals.endpointConfig.ACCESS_ENDPOINT_URL}/` target="_blank") Status
                     li
-                      a(class="dropdown-item" href=`${locals.endpointConfig.ENDPOINT_URL}/api-docs` target="_blank") OpenAPI (Swagger)
+                      a(class="dropdown-item" href=`${locals.endpointConfig.ACCESS_ENDPOINT_URL}/api-docs/` target="_blank") OpenAPI (Swagger)
                 //- Link to JSON Specification UI Endpoint (the endpoint serving UI pages to users for easily manipulating JSON spec data)
                 li(class="nav-item dropdown").px-2
                   a(class="nav-link dropdown-toggle show" data-bs-toggle="dropdown" aria-expanded="true" target="_blank") JSON Specification UI Endpoint
                   ul(class="dropdown-menu" data-bs-popper="static")
                     li
-                      a(class="dropdown-item" href=`${locals.endpointConfig.UI_URL}` target="_blank") Status
+                      a(class="dropdown-item" href=`${locals.endpointConfig.ACCESS_UI_URL}/` target="_blank") Status
                 //- Categories menu 
                 li(class="nav-item dropdown").px-2
                   a(class="nav-link dropdown-toggle show" href="#" data-bs-toggle="dropdown" aria-expanded="true") Categories
                   ul(class="dropdown-menu" data-bs-popper="static")
                     li
-                      a(class="dropdown-item" href=`${locals.endpointConfig.UI_URL}/categories` target="_blank") List
+                      a(class="dropdown-item" href=`${locals.endpointConfig.ACCESS_UI_URL}/categories` target="_blank") List
                 //- Report specs menu      
                 li(class="nav-item dropdown").px-2
                   a(class="nav-link dropdown-toggle show" href="#" data-bs-toggle="dropdown" aria-expanded="true") Report Specs
                   ul(class="dropdown-menu" data-bs-popper="static")
                     li
-                      a(class="dropdown-item" href=`${locals.endpointConfig.UI_URL}/reportspecs` target="_blank") List
+                      a(class="dropdown-item" href=`${locals.endpointConfig.ACCESS_UI_URL}/reportspecs` target="_blank") List
                     li
-                      a(class="dropdown-item" href=`${locals.endpointConfig.UI_URL}/reportspecs/new` target="_blank") New
+                      a(class="dropdown-item" href=`${locals.endpointConfig.ACCESS_UI_URL}/reportspecs/new` target="_blank") New
                 //- Host spec menu      
                 li(class="nav-item dropdown").px-2
                   a(class="nav-link dropdown-toggle show" href="#" data-bs-toggle="dropdown" aria-expanded="true") Hosts
                   ul(class="dropdown-menu" data-bs-popper="static")
                     li
-                      a(class="dropdown-item" href=`${locals.endpointConfig.UI_URL}/hosts` target="_blank") List
+                      a(class="dropdown-item" href=`${locals.endpointConfig.ACCESS_UI_URL}/hosts` target="_blank") List
                     li
-                      a(class="dropdown-item" href=`${locals.endpointConfig.UI_URL}/hosts/new` target="_blank") New
+                      a(class="dropdown-item" href=`${locals.endpointConfig.ACCESS_UI_URL}/hosts/new` target="_blank") New
                 //- Execution spec menu      
                 li(class="nav-item dropdown").px-2
                   a(class="nav-link dropdown-toggle show" href="#" data-bs-toggle="dropdown" aria-expanded="true") Executions
                   ul(class="dropdown-menu" data-bs-popper="static")
                     li
-                      a(class="dropdown-item" href=`${locals.endpointConfig.UI_URL}/executionspecs` target="_blank") List
+                      a(class="dropdown-item" href=`${locals.endpointConfig.ACCESS_UI_URL}/executionspecs` target="_blank") List
                     li
-                      a(class="dropdown-item" href=`${locals.endpointConfig.UI_URL}/executionspecs/new` target="_blank") New
+                      a(class="dropdown-item" href=`${locals.endpointConfig.ACCESS_UI_URL}/executionspecs/new` target="_blank") New
                 //- Dataset spec menu      
                 li(class="nav-item dropdown").px-2
                   a(class="nav-link dropdown-toggle show" href="#" data-bs-toggle="dropdown" aria-expanded="true") Datasets
                   ul(class="dropdown-menu" data-bs-popper="static")
                     li
-                      a(class="dropdown-item" href=`${locals.endpointConfig.UI_URL}/datasets` target="_blank") List
+                      a(class="dropdown-item" href=`${locals.endpointConfig.ACCESS_UI_URL}/datasets` target="_blank") List
                     li
-                      a(class="dropdown-item" href=`${locals.endpointConfig.UI_URL}/datasets/new` target="_blank") New
+                      a(class="dropdown-item" href=`${locals.endpointConfig.ACCESS_UI_URL}/datasets/new` target="_blank") New
 
 
     block content
