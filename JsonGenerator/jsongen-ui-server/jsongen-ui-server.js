@@ -59,13 +59,14 @@ app.locals.endpointConfig = {
 // configure app
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-const corsOptions = {
-  origin: [`http://localhost/`],
-};
-app.use(cors(corsOptions));
+// const corsOptions = {
+//   origin: [`http://localhost/`],
+// };
+// app.use(cors(corsOptions));
+app.use(cors()); 
 // app.use(cors({ origin: /http:\/\/localhost/ }));
 // app.options("*", cors());
-app.use("/static", express.static("public"));
+app.use("/static", express.static(path.join(__dirname, 'public')));
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));

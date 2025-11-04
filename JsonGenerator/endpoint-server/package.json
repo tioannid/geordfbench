@@ -22,7 +22,7 @@
   },
   "name": "geordfbench_jsonlib_endpoint_server",
   "description": "GeoRDFBench Framework - JSON Specification Library Endpoint Server",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "main": "endpoint.js",
   "author": "Theofilos Ioannidis"
 }

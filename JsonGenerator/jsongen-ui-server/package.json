@@ -25,7 +25,7 @@
   },
   "name": "geordfbench_jsonlib_ui_server",
   "description": "GeoRDFBench Framework - JSON Specification UI Server",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "main": "jsongen-ui-server.js",
   "author": "Theofilos Ioannidis"
 }

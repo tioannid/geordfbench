@@ -185,7 +185,6 @@ block content
                         ResponseParagraph.value = output;
                     }
                 } catch (error) {
-                    console.error(error.message);
-                    ResponseParagraph.value = output;
+                    ResponseParagraph.value = error.message;
                 }
             };            
