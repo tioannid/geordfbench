@@ -27,7 +27,7 @@ servers:
         enum:
           - http
           - https
-        default: http
+        default: https
 paths:
   "/admin/config":
     get:

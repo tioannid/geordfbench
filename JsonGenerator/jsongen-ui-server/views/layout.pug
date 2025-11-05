@@ -17,7 +17,7 @@ html
         navbar.navbar-expand-lg.navbar-dark.bg-dark
           .container-fluid
             div(class="collapse navbar-collapse justify-content-md-center" id="navbarsExample08")
-              img.rounded.me-1(src="/static/geordfbench_image_favicon.png" alt="" width="50" height="50")
+              img.rounded.me-1(src=`${locals.endpointConfig.ACCESS_UI_URL}/static/geordfbench_image_favicon.png` alt="" width="50" height="50")
               ul(class="navbar-nav")
                 //- .px-2 spaces menus horizontally
                 //- Link to JSON Specification Library Endpoint (which is actually serving the data)
@@ -92,8 +92,8 @@ html
         ul.nav.col-md-4.me-2.justify-content-end.list-unstyled.d-flex
           li.ms-3
             a.text-body-secondary(href="http://www.linkedin.com/in/θεόφιλος-ιωαννίδης-83abb283" aria-label="LinkedIn" target="_blank")
-              img.mt-2.mb-2(src="/static/linkedin.png" alt="" width="40" height="40")
+              img.mt-2.mb-2(src=`${locals.endpointConfig.ACCESS_UI_URL}/static/linkedin.png` alt="" width="40" height="40")
           li.ms-3
             a.text-body-secondary(href="https://www.facebook.com/theofilos.ioannidis.39/" aria-label="Facebook" target="_blank")
-              img.mt-2.mb-2(src="/static/facebook.svg" alt="" width="40" height="40")
+              img.mt-2.mb-2(src=`${locals.endpointConfig.ACCESS_UI_URL}/static/facebook.svg` alt="" width="40" height="40")
 

@@ -20,9 +20,9 @@ block content
                                     td(id="specName_"+recno).col-md-5= record
                                     td.col-md-2
                                         a(id="btnDel_"+recno).me-1.btn.btn-sm.btn-danger Del
-                                            img.rounded.me-1(src="/static/bucket.png" alt="" width="20" height="20")
+                                            img.rounded.me-1(src=`${locals.endpointConfig.ACCESS_UI_URL}/static/bucket.png` alt="" width="20" height="20")
                                         a(id="btnCopy_"+recno).btn.btn-sm.btn-warning Copy
-                                            img.rounded.me-1(src="/static/copy.png" alt="" target="_blank" width="25" height="25")
+                                            img.rounded.me-1(src=`${locals.endpointConfig.ACCESS_UI_URL}/static/copy.png` alt="" target="_blank" width="25" height="25")
         //- Hidden field 'baseUrl' is used to store the initial value passed during pug view rendering
         //- with the base URL for posting the data for the new specification object
         input(type="hidden" id="baseUrl" name="baseUrl" value=`${locals.postBaseUrl}`).form-control

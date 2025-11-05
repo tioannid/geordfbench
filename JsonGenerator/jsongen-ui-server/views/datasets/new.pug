@@ -57,7 +57,7 @@ block content
 
                     h5.bg-secondary.text-light.rounded.ps-2.pb-1= "Simple Datasets"
                         a(id="btnAddSDS").btn
-                            img.rounded(src="/static/add_new.png" alt="" width="30" height="30")
+                            img.rounded(src=`${locals.endpointConfig.ACCESS_UI_URL}/static/add_new.png` alt="" width="30" height="30")
                     .accordion(id="accordionSDSList")
                         //- For each SDS (Simple Data Set)
                         each sds, index in locals.existingSpec.simpleGeospatialDataSetList
@@ -68,7 +68,7 @@ block content
                                     button(type="button" data-bs-toggle="collapse" data-bs-target=`${"#collapse_" + sds_name_nospace}` aria-expanded="false" aria-controls=`${"collapse_" + sds_name_nospace}`).accordion-button.collapsed
                                         strong.text-secondary= sds_name_nospace
                                         a(id=`${"btnDelSDS_" + sds_name_nospace}`).btn.ms-1
-                                            img.rounded(src="/static/delete_existing.png" alt="" width="20" height="20")
+                                            img.rounded(src=`${locals.endpointConfig.ACCESS_UI_URL}/static/delete_existing.png` alt="" width="20" height="20")
                                 div(id=`${"collapse_" + sds_name_nospace}` data-bs-parent="#accordionSDSList").accordion-collapse.collapse
                                     .accordion-body.bg-secondary
                                         .row
