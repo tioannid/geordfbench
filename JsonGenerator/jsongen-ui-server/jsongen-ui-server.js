@@ -66,6 +66,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 // app.use(cors({ origin: /http:\/\/localhost/ }));
 // app.options("*", cors());
+
+// favicon
+app.use("/favicon.ico", express.static("public/favicon.ico"));
+
 app.use(
   "/static",
   express.static(path.join(__dirname, "public"), {
