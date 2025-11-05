@@ -63,10 +63,15 @@ app.use(express.urlencoded({ extended: true }));
 //   origin: [`http://localhost/`],
 // };
 // app.use(cors(corsOptions));
-app.use(cors()); 
+app.use(cors());
 // app.use(cors({ origin: /http:\/\/localhost/ }));
 // app.options("*", cors());
-app.use("/static", express.static(path.join(__dirname, 'public')));
+app.use(
+  "/static",
+  express.static(path.join(__dirname, "public"), {
+    maxAge: `${process.env.EXPIRES_HEADERS_MINUTES}m`,
+  })
+);
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
