@@ -19,6 +19,7 @@ global.REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET;
 const app = express();
 
 // calculate Host, Port and Url for Accessing the Endpoint
+const ACCESS_SCHEME = process.env.ACCESS_UI_ENV === "DEV" ? "http" : "https";
 const ACCESS_ENDPOINT_HOST =
   process.env.ACCESS_ENDPOINT_ENV === "DEV"
     ? process.env.DEV_ACCESS_ENDPOINT_HOST
@@ -27,7 +28,7 @@ const ACCESS_ENDPOINT_PORT =
   process.env.ACCESS_ENDPOINT_ENV === "DEV"
     ? process.env.DEV_ACCESS_ENDPOINT_PORT
     : process.env.PROD_ACCESS_ENDPOINT_PORT;
-var ACCESS_ENDPOINT_URL = `https://${ACCESS_ENDPOINT_HOST}`;
+var ACCESS_ENDPOINT_URL = `${ACCESS_SCHEME}://${ACCESS_ENDPOINT_HOST}`;
 ACCESS_ENDPOINT_URL = ACCESS_ENDPOINT_PORT
   ? `${ACCESS_ENDPOINT_URL}:${ACCESS_ENDPOINT_PORT}`
   : `${ACCESS_ENDPOINT_URL}`;
@@ -40,7 +41,7 @@ const ACCESS_UI_PORT =
   process.env.ACCESS_UI_ENV === "DEV"
     ? process.env.DEV_ACCESS_UI_PORT
     : process.env.PROD_ACCESS_UI_PORT;
-var ACCESS_UI_URL = `https://${ACCESS_UI_HOST}`;
+var ACCESS_UI_URL = `${ACCESS_SCHEME}://${ACCESS_UI_HOST}`;
 ACCESS_UI_URL = ACCESS_UI_PORT
   ? `${ACCESS_UI_URL}:${ACCESS_UI_PORT}`
   : `${ACCESS_UI_URL}`;
@@ -52,6 +53,7 @@ app.locals.endpointConfig = {
   ACCESS_UI_HOST: ACCESS_UI_HOST,
   ACCESS_UI_PORT: ACCESS_UI_PORT,
   ACCESS_UI_URL: ACCESS_UI_URL,
+  ACCESS_SCHEME: ACCESS_SCHEME,
   HOSTNAME: os.hostname(),
   PLATFORM: os.version().concat(" v", os.release(), ", ", os.machine()),
 };
