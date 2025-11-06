@@ -61,10 +61,10 @@ router.get("/", async (req, res) => {
       records: specs,
       UIUrl: `${UIUrl}`,
       specEntity: specEntity,
-    },
-    (err, html) => {
-      res.send(html);
     }
+    // (err, html) => {
+    //   res.send(html);
+    // }
   );
 });
 

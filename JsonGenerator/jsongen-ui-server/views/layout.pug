@@ -72,6 +72,14 @@ html
                       a(class="dropdown-item" href=`${locals.endpointConfig.ACCESS_UI_URL}/datasets` target="_blank") List
                     li
                       a(class="dropdown-item" href=`${locals.endpointConfig.ACCESS_UI_URL}/datasets/new` target="_blank") New
+                //- Report source spec menu      
+                li(class="nav-item dropdown").px-2
+                  a(class="nav-link dropdown-toggle show" href="#" data-bs-toggle="dropdown" aria-expanded="true") Report Sources
+                  ul(class="dropdown-menu" data-bs-popper="static")
+                    li
+                      a(class="dropdown-item" href=`${locals.endpointConfig.ACCESS_UI_URL}/reportsources` target="_blank") List
+                    li
+                      a(class="dropdown-item" href=`${locals.endpointConfig.ACCESS_UI_URL}/reportsources/new` target="_blank") New
 
 
     block content
