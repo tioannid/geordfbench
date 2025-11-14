@@ -11,14 +11,15 @@ block content
                         thead.thead-dark 
                             tr
                                 th.col-md-5= `${locals.specEntity} Specifications`
-                                th.col-md-2
-                                    a(id="btnNew" href=`${locals.UIUrl}/new` target="_blank").btn.btn-md.btn-primary New
+                                th.col-md-4
+                                    a(id="btnNewPostgreSQL" href=`${locals.UIUrl}/new/type/postgresql` target="_blank").btn.btn-md.btn-primary New (PostgreSQL) 
+                                    a(id="btnNewH2Embedded" href=`${locals.UIUrl}/new/type/h2embedded` target="_blank").btn.btn-md.btn-primary.ms-2 New (H2-Embedded)
 
                         tbody.table-group-divider
                             each record, recno in records
                                 tr 
                                     td(id="specName_"+recno).col-md-5= record
-                                    td.col-md-2
+                                    td.col-md-4
                                         a(id="btnDel_"+recno).me-1.btn.btn-sm.btn-danger Del
                                             img.rounded.me-1(src=`${locals.endpointConfig.ACCESS_UI_URL}/static/bucket.png` alt="" width="20" height="20")
                                         a(id="btnCopy_"+recno).btn.btn-sm.btn-warning Copy

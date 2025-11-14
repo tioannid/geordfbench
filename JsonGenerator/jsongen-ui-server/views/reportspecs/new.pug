@@ -8,13 +8,13 @@ block content
             .row
                 .col-xlg-12.col-lg-11.col-md-11.col-sm-11.col-xs-11.ms-3
                     .form-floating.mt-2.ps-2.col-xlg-6.col-lg-7.col-md-11.col-sm-12.col-xs-12
-                        input(type="text" name="name" id="name" placeholder="name" aria-label="name" value=`${(locals.existingSpec) ? locals.existingSpec.name :  "JSON spec file name"}` required).form-control 
+                        input(type="text" name="name" id="name" placeholder="name" title=`${specEntity} name (is also used as filename)` aria-label="name" value=`${(locals.existingSpec) ? locals.existingSpec.name :  locals.specDefaultValues.name}` required).form-control 
                         label(for="name") Name
                         //- Hidden field 'baseUrl' is used to store the initial value passed during pug view rendering
                         //- with the base URL for posting the data for the new specification object
                         input(type="hidden" id="baseUrl" name="baseUrl" value=`${locals.postBaseUrl}`).form-control
-                    .form-floating.mt-2.ps-2.col-xlg-1.col-lg-1.col-md-2.col-sm-2.col-xs-3
-                        input(type="number" name="noQueryResultToReport" id="noQueryResultToReport" placeholder="noQueryResultToReport" aria-label="noQueryResultToReport" value=`${(locals.existingSpec) ? locals.existingSpec.noQueryResultToReport : "1"}` min="0" required).form-control
+                    .form-floating.mt-2.ps-2.col-xlg-2.col-lg-4.col-md-5.col-sm-7.col-xs-9
+                        input(type="number" name="noQueryResultToReport" id="noQueryResultToReport" placeholder="noQueryResultToReport" title="No of results per query execution displayed in the logs" aria-label="noQueryResultToReport" value=`${(locals.existingSpec) ? locals.existingSpec.noQueryResultToReport : locals.specDefaultValues.noQueryResultToReport}` min="0" required).form-control
                         label(for="noQueryResultToReport") noQueryResultToReport
             .row.mt-2.mb-2.justify-content-center
                 .col-2

@@ -7,6 +7,16 @@ block content
             h4.mb-3.fw-normal= locals.title
             .row
                 .col.ms-3
+                    .form-floating.mt-2.ps-2.col-xlg-3.col-lg-4.col-md-5.col-sm-6.col-xs-6
+                        select(id="type_select").form-select  
+                            option(value="Choose Report Source Type" selected)= "Choose Report Source Type" 
+                            br
+                            each val, index in locals.types
+                                option(value=val.items.menuname)= val.items.menuname
+                                br  
+                        label(for="type_select").form-label Type: 
+            .row
+                .col.ms-3
                     .form-floating.mt-2.ps-2.col-xlg-6.col-lg-8.col-md-10.col-sm-12.col-xs-12
                         input(type="text" name="classname" id="classname" placeholder="classname" aria-label="classname" value=`${(locals.existingSpec) ? locals.existingSpec.classname : locals.specDefaultValues.classname }` readonly required).form-control.bg-info.fst-italic 
                         label(for="classname") Class Name
@@ -21,69 +31,70 @@ block content
                         //- Hidden field 'cloneUrl' is used to store the initial value passed during pug view rendering
                         //- with the clone URL for posting the data for updating the edited specification object
                         input(type="hidden" id="cloneURL" value=`${locals.cloneURL}`).form-control
-                        //- Hidden field 'oses' is used to store the list of OSs passed during pug view rendering
-                        //- for populating the data list control
-                        input(type="hidden" id="types" name="types" value=`${locals.types}`).form-control
+                        //- Hidden field 'types' is used to store the list of Report Source types available which is passed 
+                        //- during pug view rendering for populating the data list control
+                        input(type="hidden" id="types" value=`${JSON.stringify(locals.types)}`).form-control
+            .row
+                .col.ms-3 
+                    .form-floating.mt-2.ps-2.col-xlg-6.col-lg-8.col-md-10.col-sm-12.col-xs-12
+                        input(type="text" name="driver" id="driver" placeholder="driver" title="Driver for report source" aria-label="driver" style=`display: ${(locals.existingSpec.driver) ? "block" : "none"}` value=`${(locals.existingSpec) ? ((locals.existingSpec.driver) ? locals.existingSpec.driver : "" ): locals.specDefaultValues.driver }` readonly required).form-control.bg-info.fst-italic 
+                        label(for="driver") Driver
             .row
                 .col.ms-3
                     .form-floating.mt-2.ps-2.col-xlg-6.col-lg-8.col-md-10.col-sm-12.col-xs-12
-                        input(type="text" name="name" id="name" placeholder="name" title="Report source name (is also used as filename)" aria-label="name" value=`${(locals.existingSpec) ? locals.existingSpec.name :  locals.specDefaultValues.name }` required).form-control 
+                        input(type="text" id="name" placeholder="name" title=`${specEntity} name (is also used as filename)` aria-label="name" value=`${(locals.existingSpec) ? locals.existingSpec.name :  locals.specDefaultValues.name }` required).form-control 
                         label(for="name") Name
                         //- Hidden field 'baseUrl' is used to store the initial value passed during pug view rendering
                         //- with the base URL for posting the data for the new specification object
                         input(type="hidden" id="baseUrl" value=`${locals.postBaseUrl}`).form-control
 
+            - var classValue = ((locals.existingSpec) ? locals.existingSpec.classname : locals.specDefaultValues.classname);
+            if (classValue == locals.types[0].items.specDefaultValues.classname)
+                //- PostgreSQL
+                .row
+                    .col.ms-3
+                        .form-floating.mt-2.ps-2.col-xlg-2.col-lg-4.col-md-5.col-sm-7.col-xs-9
+                            input(type="text" name="hostname" id="hostname" placeholder="hostname" title="Name/IP of server hosting the report source" aria-label="hostname" value=`${(locals.existingSpec) ? locals.existingSpec.hostname :  locals.specDefaultValues.hostname }` required).form-control 
+                            label(for="hostname") Host Name
+                .row
+                    .col.ms-3
+                        .form-floating.mt-2.ps-2.col-xlg-2.col-lg-4.col-md-5.col-sm-7.col-xs-9
+                            input(type="text" name="althostname" id="althostname" placeholder="althostname" title="Name/IP of server hosting an alternative report source" aria-label="althostname" value=`${(locals.existingSpec) ? locals.existingSpec.althostname :  locals.specDefaultValues.althostname }` required).form-control 
+                            label(for="althostname") Alternate Host Name
+                .row
+                    .col.ms-3
+                        .form-floating.mt-2.ps-2.col-xlg-2.col-lg-4.col-md-5.col-sm-7.col-xs-9
+                            input(type="number" name="port" id="port" placeholder="port" title="Listening port of report source" aria-label="port" value=`${(locals.existingSpec) ? locals.existingSpec.port :  locals.specDefaultValues.port}` required).form-control
+                            label(for="ram") Port
+            else
+                //- H2 Embedded
+                .row
+                    .col.ms-3 
+                        .form-floating.mt-2.ps-2.col-xlg-2.col-lg-4.col-md-5.col-sm-7.col-xs-9
+                            input(type="text" name="relativeBaseDir" id="relativeBaseDir" placeholder="relativeBaseDir" title="Relative base directory for report source" aria-label="driver" value=`${(locals.existingSpec) ? locals.existingSpec.relativeBaseDir : locals.specDefaultValues.relativeBaseDir }` required).form-control 
+                            label(for="relativeBaseDir") Relative Base Dir
 
-                .col-xlg-12.col-lg-11.col-md-11.col-sm-11.col-xs-11.ms-3
-                    .form-floating.mt-2.ps-2.col-xlg-6.col-lg-7.col-md-11.col-sm-12.col-xs-12
-                        input(type="text" name="name" id="name" placeholder="name" aria-label="name" value=`${(locals.existingSpec) ? locals.existingSpec.name :  "JSON spec file name"}` required).form-control 
-                        label(for="name") Name
-                        //- Hidden field 'baseUrl' is used to store the initial value passed during pug view rendering
-                        //- with the base URL for posting the data for the new specification object
-                        input(type="hidden" id="baseUrl" name="baseUrl" value=`${locals.postBaseUrl}`).form-control
-                    .form-floating.mt-2.ps-2.col-xlg-2.col-lg-3.col-md-5.col-sm-7.col-xs-9
-                        input(type="text" name="ipAddr" id="ipAddr" placeholder="ipAddr" aria-label="ipAddr" value=`${(locals.existingSpec) ? locals.existingSpec.ipAddr :  "127.0.0.1"}` required).form-control 
-                        label(for="ipAddr") IP Address
-                    .form-floating.mt-2.ps-2.col-xlg-1.col-lg-1.col-md-2.col-sm-2.col-xs-3
-                        input(type="number" name="ram" id="ram" placeholder="ram" aria-label="ram" value=`${(locals.existingSpec) ? locals.existingSpec.ram :  "8"}` min="8" max="128" required).form-control
-                        label(for="ram") RAM
-                    .form-floating.mt-2.ps-2.col-xlg-2.col-lg-3.col-md-5.col-sm-7.col-xs-9
-                        select(id="os_select" name="os_select").form-select  
-                            option(value="Choose Os" selected)= "Choose Os" 
-                            br
-                            each os in locals.oses
-                                option(value=os)= os 
-                                br  
-                        label(for="os_select").form-label OS: 
-                    .mt-3.ps-3.bg-light.rounded-1.col-xlg-8.col-lg-10.col-md-12.col-sm-12.col-xs-12
-                        .form-floating.mt-2.pt-2.col-xlg-8.col-lg-11.col-md-12.col-sm-12.col-xs-12.form-control-sm
-                            input(type="text" name="os_classname" id="os_classname" placeholder="os_classname" aria-label="os_classname" value=`${(locals.existingSpec) ? locals.existingSpec.os.classname : ""}` readonly required).form-control.bg-info.fst-italic
-                            label(for="os_classname") Classname
-                        .form-floating.mt-2.col-xlg-8.col-lg-11.col-md-12.col-sm-12.col-xs-12.form-control-sm
-                            input(type="text" name="os_name" id="os_name" placeholder="os_name" aria-label="os_name" value=`${(locals.existingSpec) ? locals.existingSpec.os.name : ""}` readonly required).form-control.bg-info.fst-italic
-                            label(for="os_name") Name
-                        .form-floating.mt-2.col-xlg-8.col-lg-11.col-md-12.col-sm-12.col-xs-12.form-control-sm
-                            input(type="text" name="os_shell_cmd" id="os_shell_cmd" placeholder="os_shell_cmd" aria-label="os_shell_cmd" value=`${(locals.existingSpec) ? locals.existingSpec.os.shell_cmd : ""}` readonly required).form-control.bg-info.fst-italic
-                            label(for="os_shell_cmd") Shell Cmd
-                        .form-floating.mt-2.col-xlg-8.col-lg-11.col-md-12.col-sm-12.col-xs-12.form-control-sm
-                            input(type="text" name="os_sync_cmd" id="os_sync_cmd" placeholder="os_sync_cmd" aria-label="os_sync_cmd" value=`${(locals.existingSpec) ? locals.existingSpec.os.sync_cmd : ""}` readonly required).form-control.bg-info.fst-italic
-                            label(for="os_sync_cmd") Sync Cmd
-                        .form-floating.mt-2.mb-2.pb-2.col-xlg-8.col-lg-11.col-md-12.col-sm-12.col-xs-12.form-control-sm
-                            input(type="text" name="os_clearcache_cmd" id="os_clearcache_cmd" placeholder="os_clearcache_cmd" aria-label="os_clearcache_cmd" value=`${(locals.existingSpec) ? locals.existingSpec.os.clearcache_cmd : ""}` readonly required).form-control.bg-info.bg-info.fst-italic
-                            label(for="os_clearcache_cmd") Clear Cache Cmd
 
-                    .form-floating.mt-2.col-xlg-8.col-lg-10.col-md-12.col-sm-12.col-xs-12
-                        input(type="text" name="sourceFileDir" id="sourceFileDir" placeholder="sourceFileDir" aria-label="sourceFileDir" value=`${(locals.existingSpec) ? locals.existingSpec.sourceFileDir : ""}` required).form-control 
-                        label(for="sourceFileDir") Source File Dir
-                    .form-floating.mt-2.col-xlg-8.col-lg-10.col-md-12.col-sm-12.col-xs-12
-                        input(type="text" name="reposBaseDir" id="reposBaseDir" placeholder="reposBaseDir" aria-label="reposBaseDir" value=`${(locals.existingSpec) ? locals.existingSpec.reposBaseDir : ""}` required).form-control 
-                        label(for="reposBaseDir") Repos Base Dir
-                    .form-floating.mt-2.mb-2.col-xlg-8.col-lg-10.col-md-12.col-sm-12.col-xs-12
-                        input(type="text" name="reportsBaseDir" id="reportsBaseDir" placeholder="reportsBaseDir" aria-label="reportsBaseDir" value=`${(locals.existingSpec) ? locals.existingSpec.reportsBaseDir : ""}` required).form-control 
-                        label(for="reportsBaseDir") Reports Base Dir                                                
+            .row
+                .col.ms-3 
+                    .form-floating.mt-2.ps-2.col-xlg-4.col-lg-4.col-md-4.col-sm-7.col-xs-9
+                        input(type="text" name="database" id="database" placeholder="database" title="Database name of the report source" aria-label="database" value=`${(locals.existingSpec) ? locals.existingSpec.database :  locals.specDefaultValues.database }` required).form-control 
+                        label(for="hostname") Database Name
+            .row
+                .col.ms-3
+                    .form-floating.mt-2.ps-2.col-xlg-4.col-lg-4.col-md-4.col-sm-7.col-xs-9
+                        input(type="text" name="user" id="user" placeholder="user" title="User name for accessing the report source database" aria-label="user" value=`${(locals.existingSpec) ? locals.existingSpec.user :  locals.specDefaultValues.user }` required).form-control 
+                        label(for="hostname") User Name
+            .row
+                .col.ms-3
+                    .form-floating.mt-2.ps-2.col-xlg-4.col-lg-4.col-md-4.col-sm-7.col-xs-9
+                        input(type="password" name="password" id="password" placeholder="password" title="User password for accessing the report source database" aria-label="password" value=`${(locals.existingSpec) ? locals.existingSpec.password :  locals.specDefaultValues.password }` required).form-control 
+                        label(for="hostname") User Password
+
+
             .row.mt-2.mb-2.justify-content-center
                 .col-2
-                    button(type="submit" name="btnAdd" value="add").btn.btn-primary Add
+                    button(type="submit" id="btnAdd" value="add").btn.btn-primary Add
 
         script. 
             //- Get form object through DOM
@@ -91,56 +102,74 @@ block content
             //- register listener function for the form submit event
             myform.addEventListener("submit", submitForm);
 
-            //- alert("Oses retrieved are: " +  myform.elements["oses"].value);
-            //- Get drop down object for OS selection through DOM
-            const selectOSDropdown = document.getElementById('os_select');
-            //- alert("Dropdown's event target is " + selectOSDropdown.name);
+            //- Get drop down object for Type selection through DOM
+            const selectTypeDropdown = document.getElementById('type_select');
+            //- alert("Dropdown's event target is " + selectTypeDropdown.name);
             //- register listener function for the drop down object change event
-            selectOSDropdown.addEventListener("change", selectOs);
+            selectTypeDropdown.addEventListener("change", selectType);
+            //- Set the selected value by looking at the ...
+            const types = JSON.parse(document.getElementById('types').value);
+            //- Deserialize the value of the 'existingSpec' input HTML element into an object
+            var existingSpec = JSON.parse(document.getElementById("existingSpec").value);
+            //- Make sure the select element shows the correct type
+            var classValue = ((existingSpec) ? existingSpec.classname : specDefaultValues.classname);
+            var index = -1;
+            for (i=0; i< types.length; i++){
+                if (classValue == types[i].items.specDefaultValues.classname) {
+                    index = i+1;
+                    break;
+                };
+            };
+            if (index != -1) {
+                selectTypeDropdown.selectedIndex = index;
+            }
+            //- selectTypeDropdownSelectedIndex holds the latest valid index of the select DOM element
+            var selectTypeDropdownSelectedIndex = selectTypeDropdown.selectedIndex;
+            //- alert("After initial form load selectTypeDropdown.selectedIndex = " + selectTypeDropdownSelectedIndex);
 
-            //- the OS drop down box change function
+            //- ==============================================================
+            //- Update the 'existingSpec' element from DOM and its serialized
+            //- alter-ego in the DOM
+            //- ==============================================================
+            function updateExistingSpecFromDOM() {
+                //- Start collecting all form data. This basically means updating the 
+                //- 'existingSpec' input HTML element, which is the serialized version of 
+                //- the locals.existingSpec. NOTE: the main 'name' and SDSs' 'name' properties
+                //- have to be dealt a bit differently (spaces removed) because they are used as 
+                //- DOM element IDs and as filename for the new/modified JSON specification file. 
+                //- 1. Deserialize the value of the 'existingSpec' input HTML element into an object
+                var existingSpec = JSON.parse(document.getElementById("existingSpec").value);
+                //- 2. Update existingSpec main fields from DOM
+                //-    'classname' and 'driver' can be modified, therefore there is need to update them
+                existingSpec.name = document.getElementById("name").value.replace(/\s+/g, "");
+                //- 4. Serialize the updated existingSpec back to the 'existingSpec' input HTML element
+                document.getElementById("existingSpec").value = JSON.stringify(existingSpec);
+            }
+
+            //- the Type drop down box change function
             //- ====================================
-            async function selectOs() {
-                const selectOSDropdown = document.getElementById('os_select');
-                //- alert("Selected index is " + selectOSDropdown.selectedIndex);
-                const selectValue = selectOSDropdown.value;
-                //- alert("Dropdown's new value is " + selectValue);
-
-                if (selectOSDropdown.selectedIndex === 0) {
-                    document.getElementById("os_classname").value = "";
-                    document.getElementById("os_name").value = "";
-                    document.getElementById("os_shell_cmd").value = "";
-                    document.getElementById("os_sync_cmd").value = "";
-                    document.getElementById("os_clearcache_cmd").value = "";
+            async function selectType() {
+                //- get the DOM element for type select
+                const selectTypeDropdown = document.getElementById('type_select');
+                //- alert("Selected index is " + selectTypeDropdown.selectedIndex);
+                //- alert("selectTypeDropdownSelectedIndex = " + selectTypeDropdownSelectedIndex);
+                if (selectTypeDropdown.selectedIndex === 0) {
+                    //- exclude the choice at pos 0 because it is simply used as a label
+                    //- alert("Cannot allow position 0 because it does not reflect a real value but it is a simple label");
+                    selectTypeDropdown.selectedIndex = selectTypeDropdownSelectedIndex;
                 } else {
-                    //- the URL for querying the existing Oses specification objects in the library
-                    //- in the form locals.postBaseUrl + "/" + name
-                    const postURL =
-                        myform.elements["baseUrl"].value +
-                        "/../oses/" +
-                        selectValue;
-                    const ResponseParagraph = document.getElementById("responseparagraph");
-                    //- fetch selected Os data in subform
-                    try {
-                        const response = await fetch(postURL, {
-                            method: "GET",
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                        });
-                        const result = await response.json();
-                        //- alert("Result = " + JSON.stringify(result));
-                        document.getElementById("os_classname").value = result.classname;
-                        document.getElementById("os_name").value = result.name;
-                        document.getElementById("os_shell_cmd").value = result.shell_cmd;
-                        document.getElementById("os_sync_cmd").value = result.sync_cmd;
-                        document.getElementById("os_clearcache_cmd").value = result.clearcache_cmd;
-                    } catch(error) {
-                        console.error(error.message);
-                        ResponseParagraph.value = output;
-                    };
-                    ResponseParagraph.value = ResponseParagraph.value + "\nDropdown's new value is " + selectValue;
-                }
+                    //- allow every other choice and store it in the selectTypeDropdownSelectedIndex
+                    selectTypeDropdownSelectedIndex = selectTypeDropdown.selectedIndex;
+                    //- const selectValue = selectTypeDropdown.value;
+                    //- alert("Dropdown's new value is " + selectValue);
+
+                    //- Get pageMode through DOM
+                    const pageMode = document.getElementById("pageMode").value;
+                    //- Update the 'existingSpec' element from DOM and its serialized
+                    //- alter-ego in the DOM            
+                    updateExistingSpecFromDOM();
+
+                };
             };
 
             //- the form submit function
@@ -161,25 +190,6 @@ block content
                 var formDataJSON = Object.fromEntries(formData);
                 var jsonFormData = JSON.stringify(formDataJSON);
                 const ResponseParagraph = document.getElementById("responseparagraph");
-                //- Create a non-flat version of the Host specification object
-                //-  where Os is a sub-element
-                var jsonData = {
-                    classname: formDataJSON.classname,
-                    name: formDataJSON.name,
-                    ipAddr: formDataJSON.ipAddr,
-                    //- convert RAM from string to number
-                    ram: parseInt(formDataJSON.ram),
-                    os: {
-                        classname: formDataJSON.os_classname,
-                        name: formDataJSON.os_name,
-                        shell_cmd: formDataJSON.os_shell_cmd,
-                        sync_cmd: formDataJSON.os_sync_cmd,
-                        clearcache_cmd: formDataJSON.os_clearcache_cmd,
-                    },
-                    sourceFileDir: formDataJSON.sourceFileDir,
-                    reposBaseDir: formDataJSON.reposBaseDir,
-                    reportsBaseDir: formDataJSON.reportsBaseDir,
-                };
 
                 //- the URL for adding a new specification object is assumed to be
                 //- in the form locals.postBaseUrl + "/" + name
@@ -193,7 +203,7 @@ block content
                         headers: {
                             "Content-Type": "application/json",
                         },                    
-                        body: JSON.stringify(jsonData),
+                        body: jsonFormData,
                     });
                     const result = await response.json();
                     const output = JSON.stringify({

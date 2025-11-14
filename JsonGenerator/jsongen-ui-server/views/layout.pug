@@ -23,7 +23,7 @@ html
                 //- Link to JSON Specification Library Endpoint (which is actually serving the data)
                 li(class="nav-item dropdown").px-2
                   a(class="nav-link dropdown-toggle show" data-bs-toggle="dropdown" aria-expanded="true" target="_blank") JSON Specification Library Endpoint
-                  ul(class="dropdown-menu" data-bs-popper="static")
+                  ul(class="dropdown-menu dropdown-menu-dark" data-bs-popper="static")
                     li
                       a(class="dropdown-item" href=`${locals.endpointConfig.ACCESS_ENDPOINT_URL}/` target="_blank") Status
                     li
@@ -31,19 +31,19 @@ html
                 //- Link to JSON Specification UI Endpoint (the endpoint serving UI pages to users for easily manipulating JSON spec data)
                 li(class="nav-item dropdown").px-2
                   a(class="nav-link dropdown-toggle show" data-bs-toggle="dropdown" aria-expanded="true" target="_blank") JSON Specification UI Endpoint
-                  ul(class="dropdown-menu" data-bs-popper="static")
+                  ul(class="dropdown-menu dropdown-menu-dark" data-bs-popper="static")
                     li
                       a(class="dropdown-item" href=`${locals.endpointConfig.ACCESS_UI_URL}/` target="_blank") Status
                 //- Categories menu 
                 li(class="nav-item dropdown").px-2
                   a(class="nav-link dropdown-toggle show" href="#" data-bs-toggle="dropdown" aria-expanded="true") Categories
-                  ul(class="dropdown-menu" data-bs-popper="static")
+                  ul(class="dropdown-menu dropdown-menu-dark" data-bs-popper="static")
                     li
                       a(class="dropdown-item" href=`${locals.endpointConfig.ACCESS_UI_URL}/categories` target="_blank") List
                 //- Report specs menu      
                 li(class="nav-item dropdown").px-2
                   a(class="nav-link dropdown-toggle show" href="#" data-bs-toggle="dropdown" aria-expanded="true") Report Specs
-                  ul(class="dropdown-menu" data-bs-popper="static")
+                  ul(class="dropdown-menu dropdown-menu-dark" data-bs-popper="static")
                     li
                       a(class="dropdown-item" href=`${locals.endpointConfig.ACCESS_UI_URL}/reportspecs` target="_blank") List
                     li
@@ -51,7 +51,7 @@ html
                 //- Host spec menu      
                 li(class="nav-item dropdown").px-2
                   a(class="nav-link dropdown-toggle show" href="#" data-bs-toggle="dropdown" aria-expanded="true") Hosts
-                  ul(class="dropdown-menu" data-bs-popper="static")
+                  ul(class="dropdown-menu dropdown-menu-dark" data-bs-popper="static")
                     li
                       a(class="dropdown-item" href=`${locals.endpointConfig.ACCESS_UI_URL}/hosts` target="_blank") List
                     li
@@ -59,7 +59,7 @@ html
                 //- Execution spec menu      
                 li(class="nav-item dropdown").px-2
                   a(class="nav-link dropdown-toggle show" href="#" data-bs-toggle="dropdown" aria-expanded="true") Executions
-                  ul(class="dropdown-menu" data-bs-popper="static")
+                  ul(class="dropdown-menu dropdown-menu-dark" data-bs-popper="static")
                     li
                       a(class="dropdown-item" href=`${locals.endpointConfig.ACCESS_UI_URL}/executionspecs` target="_blank") List
                     li
@@ -67,7 +67,7 @@ html
                 //- Dataset spec menu      
                 li(class="nav-item dropdown").px-2
                   a(class="nav-link dropdown-toggle show" href="#" data-bs-toggle="dropdown" aria-expanded="true") Datasets
-                  ul(class="dropdown-menu" data-bs-popper="static")
+                  ul(class="dropdown-menu dropdown-menu-dark" data-bs-popper="static")
                     li
                       a(class="dropdown-item" href=`${locals.endpointConfig.ACCESS_UI_URL}/datasets` target="_blank") List
                     li
@@ -75,11 +75,15 @@ html
                 //- Report source spec menu      
                 li(class="nav-item dropdown").px-2
                   a(class="nav-link dropdown-toggle show" href="#" data-bs-toggle="dropdown" aria-expanded="true") Report Sources
-                  ul(class="dropdown-menu" data-bs-popper="static")
+                  ul(class="dropdown-menu dropdown-menu-dark" data-bs-popper="static")
                     li
                       a(class="dropdown-item" href=`${locals.endpointConfig.ACCESS_UI_URL}/reportsources` target="_blank") List
                     li
-                      a(class="dropdown-item" href=`${locals.endpointConfig.ACCESS_UI_URL}/reportsources/new` target="_blank") New
+                      hr.dropdown-divider.bg-light
+                    li
+                      a(class="dropdown-item" href=`${locals.endpointConfig.ACCESS_UI_URL}/reportsources/new/type/postgresql` target="_blank") New (PostgreSQL)
+                    li
+                      a(class="dropdown-item" href=`${locals.endpointConfig.ACCESS_UI_URL}/reportsources/new/type/h2embedded` target="_blank") New (H2-Embedded)
 
 
     block content

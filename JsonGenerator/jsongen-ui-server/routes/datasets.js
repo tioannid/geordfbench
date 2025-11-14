@@ -89,6 +89,7 @@ router.get("/new", async (req, res, next) => {
         copyURL: copyURL,
         pageMode: "new",
         cloneURL: cloneURL,
+        specEntity: specEntity,
       },
       (err, html) => {
         if (err) {
@@ -158,6 +159,7 @@ router.get("/new/:existingspec", async (req, res, next) => {
         copyURL: copyURL,
         pageMode: pageMode,
         cloneURL: cloneURL,
+        specEntity: specEntity,
       },
       (err, html) => {
         // const output_html = path.join(
@@ -184,7 +186,7 @@ router.post("/clone", async (req, res, next) => {
   const existingspecname = existingSpec.name;
   db.set(existingspecname, existingSpec);
   return res.status(200).json({
-    msg: `Cloned dataset specification ${existingspecname} has been added to UI endpoints database`,
+    msg: `Cloned ${specEntity.toLowerCase()} specification ${existingspecname} has been added to UI endpoints database`,
     dbitems: db,
   });
 });

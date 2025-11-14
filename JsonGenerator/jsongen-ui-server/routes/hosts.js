@@ -35,6 +35,7 @@ router.get("/new", async (req, res, next) => {
     endpointConfig: req.app.locals.endpointConfig,
     oses: oses,
     getOsesUrl: `${url}`,
+    specEntity: specEntity,
   });
 });
 
@@ -58,6 +59,7 @@ router.get("/new/:existingspec", async (req, res, next) => {
     getOsesUrl: `${url}`,
     existingSpec: existingSpec,
     copyURL: copyURL,
+    specEntity: specEntity,
   });
 });
 

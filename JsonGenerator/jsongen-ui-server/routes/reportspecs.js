@@ -8,6 +8,13 @@ const path = require("path");
 const specCategory = "reportspecs";
 const specEntity = "Report";
 
+// Define default values for Report Specifications through
+// a report specification object initializer
+const specDefaultValues = {
+  name: "Report source name",
+  noQueryResultToReport: 1,
+};
+
 // get a list of report specifications for use with a
 // PUG template
 router.get("/", async (req, res) => {
@@ -27,10 +34,14 @@ router.get("/", async (req, res) => {
 // render a "New Report Specification" form
 router.get("/new", async (req, res, next) => {
   const Title = `Create New ${specEntity} Specification`;
+  var existingSpec = {};
+  const existingspecname = specDefaultValues.name;
   res.render(`${specCategory}/new`, {
     title: Title,
     postBaseUrl: `${req.app.locals.endpointConfig.ACCESS_ENDPOINT_URL}/${specCategory}`,
     endpointConfig: req.app.locals.endpointConfig,
+    existingSpec: specDefaultValues,
+    specDefaultValues: specDefaultValues,
   });
 });
 
@@ -45,7 +56,7 @@ router.get("/new/:existingspec", async (req, res, next) => {
   try {
     const { body: existingSpec } = await HTTP.get(url);
     // change the specification name
-    existingSpec.name = specfilenameonly + " (copy)";
+    existingSpec.name = specfilenameonly + "_copy";
     res.render(`${specCategory}/new`, {
       title: Title,
       postBaseUrl: `${req.app.locals.endpointConfig.ACCESS_ENDPOINT_URL}/${specCategory}`,

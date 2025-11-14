@@ -8,10 +8,10 @@ block content
             .row
                 .col-xlg-12.col-lg-11.col-md-11.col-sm-11.col-xs-11.ms-3
                     .form-floating.mt-2.ps-2.col-xlg-8.col-lg-10.col-md-12.col-sm-12.col-xs-12
-                        input(type="text" name="classname" id="classname" placeholder="classname" aria-label="classname" value=`${(locals.existingSpec) ? locals.existingSpec.classname : "gr.uoa.di.rdf.geordfbench.runtime.hosts.impl.SimpleHost"}` readonly required).form-control 
+                        input(type="text" name="classname" id="classname" placeholder="classname" aria-label="classname" value=`${(locals.existingSpec) ? locals.existingSpec.classname : "gr.uoa.di.rdf.geordfbench.runtime.hosts.impl.SimpleHost"}` readonly required).form-control.bg-info.fst-italic 
                         label(for="classname") Class Name
                     .form-floating.mt-2.ps-2.col-xlg-6.col-lg-7.col-md-11.col-sm-12.col-xs-12
-                        input(type="text" name="name" id="name" placeholder="name" aria-label="name" value=`${(locals.existingSpec) ? locals.existingSpec.name :  "JSON spec file name"}` required).form-control 
+                        input(type="text" name="name" id="name" placeholder="name" title=`${specEntity} name (is also used as filename)` aria-label="name" value=`${(locals.existingSpec) ? locals.existingSpec.name :  "JSON spec file name"}` required).form-control 
                         label(for="name") Name
                         //- Hidden field 'baseUrl' is used to store the initial value passed during pug view rendering
                         //- with the base URL for posting the data for the new specification object
@@ -20,14 +20,14 @@ block content
                         //- for populating the data list control
                         input(type="hidden" id="oses" name="oses" value=`${locals.oses}`).form-control
                     .form-floating.mt-2.ps-2.col-xlg-2.col-lg-3.col-md-5.col-sm-7.col-xs-9
-                        input(type="text" name="ipAddr" id="ipAddr" placeholder="ipAddr" aria-label="ipAddr" value=`${(locals.existingSpec) ? locals.existingSpec.ipAddr :  "127.0.0.1"}` required).form-control 
+                        input(type="text" name="ipAddr" id="ipAddr" placeholder="ipAddr" title="IP of the server" aria-label="ipAddr" value=`${(locals.existingSpec) ? locals.existingSpec.ipAddr :  "127.0.0.1"}` required).form-control 
                         label(for="ipAddr") IP Address
                     .form-floating.mt-2.ps-2.col-xlg-1.col-lg-1.col-md-2.col-sm-2.col-xs-3
-                        input(type="number" name="ram" id="ram" placeholder="ram" aria-label="ram" value=`${(locals.existingSpec) ? locals.existingSpec.ram :  "8"}` min="8" max="128" required).form-control
+                        input(type="number" name="ram" id="ram" placeholder="ram" title="RAM of the server in GBs" aria-label="ram" value=`${(locals.existingSpec) ? locals.existingSpec.ram :  "8"}` min="8" max="128" required).form-control
                         label(for="ram") RAM
                     .form-floating.mt-2.ps-2.col-xlg-2.col-lg-3.col-md-5.col-sm-7.col-xs-9
-                        select(id="os_select" name="os_select").form-select  
-                            option(value="Choose Os" selected)= "Choose Os"
+                        select(id="os_select" name="os_select" title="Operating system of the server").form-select  
+                            option(value="Choose Os" selected)= "Choose Os" 
                             br
                             each os in locals.oses
                                 option(value=os)= os 
@@ -41,23 +41,23 @@ block content
                             input(type="text" name="os_name" id="os_name" placeholder="os_name" aria-label="os_name" value=`${(locals.existingSpec) ? locals.existingSpec.os.name : ""}` readonly required).form-control.bg-info.fst-italic
                             label(for="os_name") Name
                         .form-floating.mt-2.col-xlg-8.col-lg-11.col-md-12.col-sm-12.col-xs-12.form-control-sm
-                            input(type="text" name="os_shell_cmd" id="os_shell_cmd" placeholder="os_shell_cmd" aria-label="os_shell_cmd" value=`${(locals.existingSpec) ? locals.existingSpec.os.shell_cmd : ""}` readonly required).form-control.bg-info.fst-italic
+                            input(type="text" name="os_shell_cmd" id="os_shell_cmd" placeholder="os_shell_cmd" title="Shell command" aria-label="os_shell_cmd" value=`${(locals.existingSpec) ? locals.existingSpec.os.shell_cmd : ""}` readonly required).form-control.bg-info.fst-italic
                             label(for="os_shell_cmd") Shell Cmd
                         .form-floating.mt-2.col-xlg-8.col-lg-11.col-md-12.col-sm-12.col-xs-12.form-control-sm
-                            input(type="text" name="os_sync_cmd" id="os_sync_cmd" placeholder="os_sync_cmd" aria-label="os_sync_cmd" value=`${(locals.existingSpec) ? locals.existingSpec.os.sync_cmd : ""}` readonly required).form-control.bg-info.fst-italic
+                            input(type="text" name="os_sync_cmd" id="os_sync_cmd" placeholder="os_sync_cmd" title="Sync caches command" aria-label="os_sync_cmd" value=`${(locals.existingSpec) ? locals.existingSpec.os.sync_cmd : ""}` readonly required).form-control.bg-info.fst-italic
                             label(for="os_sync_cmd") Sync Cmd
                         .form-floating.mt-2.mb-2.pb-2.col-xlg-8.col-lg-11.col-md-12.col-sm-12.col-xs-12.form-control-sm
-                            input(type="text" name="os_clearcache_cmd" id="os_clearcache_cmd" placeholder="os_clearcache_cmd" aria-label="os_clearcache_cmd" value=`${(locals.existingSpec) ? locals.existingSpec.os.clearcache_cmd : ""}` readonly required).form-control.bg-info.bg-info.fst-italic
+                            input(type="text" name="os_clearcache_cmd" id="os_clearcache_cmd" title="Clear caches command" placeholder="os_clearcache_cmd" aria-label="os_clearcache_cmd" value=`${(locals.existingSpec) ? locals.existingSpec.os.clearcache_cmd : ""}` readonly required).form-control.bg-info.bg-info.fst-italic
                             label(for="os_clearcache_cmd") Clear Cache Cmd
 
                     .form-floating.mt-2.col-xlg-8.col-lg-10.col-md-12.col-sm-12.col-xs-12
-                        input(type="text" name="sourceFileDir" id="sourceFileDir" placeholder="sourceFileDir" aria-label="sourceFileDir" value=`${(locals.existingSpec) ? locals.existingSpec.sourceFileDir : ""}` required).form-control 
+                        input(type="text" name="sourceFileDir" id="sourceFileDir" placeholder="sourceFileDir" title="Base directory for RDF datasets" aria-label="sourceFileDir" value=`${(locals.existingSpec) ? locals.existingSpec.sourceFileDir : ""}` required).form-control 
                         label(for="sourceFileDir") Source File Dir
                     .form-floating.mt-2.col-xlg-8.col-lg-10.col-md-12.col-sm-12.col-xs-12
-                        input(type="text" name="reposBaseDir" id="reposBaseDir" placeholder="reposBaseDir" aria-label="reposBaseDir" value=`${(locals.existingSpec) ? locals.existingSpec.reposBaseDir : ""}` required).form-control 
+                        input(type="text" name="reposBaseDir" id="reposBaseDir" placeholder="reposBaseDir" title="Base directory RDF store repositories" aria-label="reposBaseDir" value=`${(locals.existingSpec) ? locals.existingSpec.reposBaseDir : ""}` required).form-control 
                         label(for="reposBaseDir") Repos Base Dir
                     .form-floating.mt-2.mb-2.col-xlg-8.col-lg-10.col-md-12.col-sm-12.col-xs-12
-                        input(type="text" name="reportsBaseDir" id="reportsBaseDir" placeholder="reportsBaseDir" aria-label="reportsBaseDir" value=`${(locals.existingSpec) ? locals.existingSpec.reportsBaseDir : ""}` required).form-control 
+                        input(type="text" name="reportsBaseDir" id="reportsBaseDir" placeholder="reportsBaseDir" title="Base directory for benchmark report logs" aria-label="reportsBaseDir" value=`${(locals.existingSpec) ? locals.existingSpec.reportsBaseDir : ""}` required).form-control 
                         label(for="reportsBaseDir") Reports Base Dir                                                
             .row.mt-2.mb-2.justify-content-center
                 .col-2

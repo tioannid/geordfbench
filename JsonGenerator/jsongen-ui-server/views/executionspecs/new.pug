@@ -8,7 +8,7 @@ block content
             .row
                 .col.ms-3
                     .form-floating.mt-2.ps-2.col-xlg-6.col-lg-8.col-md-10.col-sm-12.col-xs-12
-                        input(type="text" name="classname" id="classname" placeholder="classname" aria-label="classname" value=`${(locals.existingSpec) ? locals.existingSpec.classname : locals.specDefaultValues.classname}` readonly required).form-control 
+                        input(type="text" name="classname" id="classname" placeholder="classname" aria-label="classname" value=`${(locals.existingSpec) ? locals.existingSpec.classname : locals.specDefaultValues.classname}` readonly required).form-control.bg-info.fst-italic 
                         label(for="classname") Class Name
             .row
                 .col.ms-3

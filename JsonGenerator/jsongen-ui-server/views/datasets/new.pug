@@ -26,7 +26,7 @@ block content
             .row
                 .col.ms-3
                     .form-floating.mt-2.ps-2.col-xlg-6.col-lg-8.col-md-10.col-sm-12.col-xs-12
-                        input(type="text" name="name" id="name" placeholder="name" title="Dataset name (is also used as filename)" aria-label="name" value=`${(locals.existingSpec) ? locals.existingSpec.name :  locals.specDefaultValues.name }` required).form-control 
+                        input(type="text" name="name" id="name" placeholder="name" title=`${specEntity} name (is also used as filename)` aria-label="name" value=`${(locals.existingSpec) ? locals.existingSpec.name :  locals.specDefaultValues.name }` required).form-control 
                         label(for="name") Name
                         //- Hidden field 'baseUrl' is used to store the initial value passed during pug view rendering
                         //- with the base URL for posting the data for the new specification object
@@ -34,7 +34,7 @@ block content
             .row
                 .col.ms-3
                     .form-floating.mt-2.ps-2.col-xlg-2.col-lg-4.col-md-6.col-sm-8.col-xs-10
-                        input(type="number" name="scale_n" id="scale_n" placeholder="scale_n" title="Scale factor for datasets with variants (0 = invariant dataset" aria-label="scale_n" value=`${(locals.existingSpec) ? locals.existingSpec.n :  locals.specDefaultValues.n }` min="0" required).form-control 
+                        input(type="number" name="scale_n" id="scale_n" placeholder="scale_n" title="Scale factor for datasets with variants (0 = invariant dataset)" aria-label="scale_n" value=`${(locals.existingSpec) ? locals.existingSpec.n :  locals.specDefaultValues.n }` min="0" required).form-control 
                         label(for="scale_n") Scale Factor
             .row
                 .col.ms-3 
