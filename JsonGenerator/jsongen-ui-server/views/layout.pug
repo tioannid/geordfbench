@@ -84,6 +84,18 @@ html
                       a(class="dropdown-item" href=`${locals.endpointConfig.ACCESS_UI_URL}/reportsources/new/type/postgresql` target="_blank") New (PostgreSQL)
                     li
                       a(class="dropdown-item" href=`${locals.endpointConfig.ACCESS_UI_URL}/reportsources/new/type/h2embedded` target="_blank") New (H2-Embedded)
+                //- Queryset spec menu      
+                li(class="nav-item dropdown").px-2
+                  a(class="nav-link dropdown-toggle show" href="#" data-bs-toggle="dropdown" aria-expanded="true") Querysets
+                  ul(class="dropdown-menu dropdown-menu-dark" data-bs-popper="static")
+                    li
+                      a(class="dropdown-item" href=`${locals.endpointConfig.ACCESS_UI_URL}/querysets` target="_blank") List
+                    li
+                      hr.dropdown-divider.bg-light
+                    li
+                      a(class="dropdown-item" href=`${locals.endpointConfig.ACCESS_UI_URL}/querysets/new/type/statictempparam` target="_blank") New (Static Template Param)
+                    li
+                      a(class="dropdown-item" href=`${locals.endpointConfig.ACCESS_UI_URL}/querysets/new/type/dynamictempparam` target="_blank") New (Dynamic Template Param)
 
 
     block content

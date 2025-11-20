@@ -7,16 +7,6 @@ block content
             h4.mb-3.fw-normal= locals.title
             .row
                 .col.ms-3
-                    .form-floating.mt-2.ps-2.col-xlg-3.col-lg-4.col-md-5.col-sm-6.col-xs-6
-                        select(id="type_select").form-select  
-                            option(value="Choose Report Source Type" selected)= "Choose Report Source Type" 
-                            br
-                            each val, index in locals.types
-                                option(value=val.items.menuname)= val.items.menuname
-                                br  
-                        label(for="type_select").form-label Type: 
-            .row
-                .col.ms-3
                     .form-floating.mt-2.ps-2.col-xlg-6.col-lg-8.col-md-10.col-sm-12.col-xs-12
                         input(type="text" name="classname" id="classname" placeholder="classname" aria-label="classname" value=`${(locals.existingSpec) ? locals.existingSpec.classname : locals.specDefaultValues.classname }` readonly required).form-control.bg-info.fst-italic 
                         label(for="classname") Class Name
@@ -71,7 +61,7 @@ block content
                 .row
                     .col.ms-3 
                         .form-floating.mt-2.ps-2.col-xlg-2.col-lg-4.col-md-5.col-sm-7.col-xs-9
-                            input(type="text" name="relativeBaseDir" id="relativeBaseDir" placeholder="relativeBaseDir" title="Relative base directory for report source" aria-label="driver" value=`${(locals.existingSpec) ? locals.existingSpec.relativeBaseDir : locals.specDefaultValues.relativeBaseDir }` required).form-control 
+                            input(type="text" name="relativeBaseDir" id="relativeBaseDir" placeholder="relativeBaseDir" title="Relative base directory for report source" aria-label="relativeBaseDir" value=`${(locals.existingSpec) ? locals.existingSpec.relativeBaseDir : locals.specDefaultValues.relativeBaseDir }` required).form-control 
                             label(for="relativeBaseDir") Relative Base Dir
 
 
@@ -102,11 +92,6 @@ block content
             //- register listener function for the form submit event
             myform.addEventListener("submit", submitForm);
 
-            //- Get drop down object for Type selection through DOM
-            const selectTypeDropdown = document.getElementById('type_select');
-            //- alert("Dropdown's event target is " + selectTypeDropdown.name);
-            //- register listener function for the drop down object change event
-            selectTypeDropdown.addEventListener("change", selectType);
             //- Set the selected value by looking at the ...
             const types = JSON.parse(document.getElementById('types').value);
             //- Deserialize the value of the 'existingSpec' input HTML element into an object
@@ -120,12 +105,6 @@ block content
                     break;
                 };
             };
-            if (index != -1) {
-                selectTypeDropdown.selectedIndex = index;
-            }
-            //- selectTypeDropdownSelectedIndex holds the latest valid index of the select DOM element
-            var selectTypeDropdownSelectedIndex = selectTypeDropdown.selectedIndex;
-            //- alert("After initial form load selectTypeDropdown.selectedIndex = " + selectTypeDropdownSelectedIndex);
 
             //- ==============================================================
             //- Update the 'existingSpec' element from DOM and its serialized
@@ -145,32 +124,6 @@ block content
                 //- 4. Serialize the updated existingSpec back to the 'existingSpec' input HTML element
                 document.getElementById("existingSpec").value = JSON.stringify(existingSpec);
             }
-
-            //- the Type drop down box change function
-            //- ====================================
-            async function selectType() {
-                //- get the DOM element for type select
-                const selectTypeDropdown = document.getElementById('type_select');
-                //- alert("Selected index is " + selectTypeDropdown.selectedIndex);
-                //- alert("selectTypeDropdownSelectedIndex = " + selectTypeDropdownSelectedIndex);
-                if (selectTypeDropdown.selectedIndex === 0) {
-                    //- exclude the choice at pos 0 because it is simply used as a label
-                    //- alert("Cannot allow position 0 because it does not reflect a real value but it is a simple label");
-                    selectTypeDropdown.selectedIndex = selectTypeDropdownSelectedIndex;
-                } else {
-                    //- allow every other choice and store it in the selectTypeDropdownSelectedIndex
-                    selectTypeDropdownSelectedIndex = selectTypeDropdown.selectedIndex;
-                    //- const selectValue = selectTypeDropdown.value;
-                    //- alert("Dropdown's new value is " + selectValue);
-
-                    //- Get pageMode through DOM
-                    const pageMode = document.getElementById("pageMode").value;
-                    //- Update the 'existingSpec' element from DOM and its serialized
-                    //- alter-ego in the DOM            
-                    updateExistingSpecFromDOM();
-
-                };
-            };
 
             //- the form submit function
             //- ========================

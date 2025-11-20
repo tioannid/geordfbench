@@ -10,7 +10,7 @@ const specEntity = "Report Source";
 
 // A JSON database which will hold the 'existingSpec'
 // pushed by a router.post("/clone") and
-// popped by a the router.get("/cloned").
+// popped by a the router.get("/new").
 // The key for pushing and popping will be the 'specfilenameonly'
 var db = new Map();
 

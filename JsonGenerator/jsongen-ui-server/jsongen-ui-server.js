@@ -99,7 +99,7 @@ const mapRouters = [
   { root: "/executionspecs", router: require("./routes/executionspecs") },
   { root: "/hosts", router: require("./routes/hosts") },
   { root: "/datasets", router: require("./routes/datasets") },
-  // { root: "/querysets", router: require("./routes/querysets") },
+  { root: "/querysets", router: require("./routes/querysets") },
   { root: "/reportspecs", router: require("./routes/reportspecs") },
   { root: "/reportsources", router: require("./routes/reportsources") },
   // { root: "/workloads", router: require("./routes/workloads") },

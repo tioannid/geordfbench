@@ -12,8 +12,8 @@ block content
                             tr
                                 th.col-md-5= `${locals.specEntity} Specifications`
                                 th.col-md-4
-                                    a(id="btnNewPostgreSQL" href=`${locals.UIUrl}/new/type/postgresql` target="_blank").btn.btn-sm.btn-primary New (PostgreSQL) 
-                                    a(id="btnNewH2Embedded" href=`${locals.UIUrl}/new/type/h2embedded` target="_blank").btn.btn-sm.btn-primary.ms-2 New (H2-Embedded)
+                                    a(id="btnNewStaticTempParam" href=`${locals.UIUrl}/new/type/statictempparam` target="_blank").btn.btn-sm.btn-primary New (Static Template) 
+                                    a(id="btnNewDynamicTempParam" href=`${locals.UIUrl}/new/type/dynamictempparam` target="_blank").btn.btn-sm.btn-primary.ms-2 New (Dynamic Template)
 
                         tbody.table-group-divider
                             each record, recno in records
@@ -28,6 +28,9 @@ block content
         //- with the base URL for posting the data for the new specification object
         input(type="hidden" id="baseUrl" name="baseUrl" value=`${locals.postBaseUrl}`).form-control
         input(type="hidden" id="UIUrl" name="UIUrl" value=`${locals.UIUrl}`).form-control
+        //- Hidden field 'types' is used to store the list of Report Source types available which is passed 
+        //- during pug view rendering for populating the data list control
+        input(type="hidden" id="types" value=`${JSON.stringify(locals.types)}`).form-control
 
         script. 
             //- Get number of rows in first table body object through DOM
@@ -65,7 +68,19 @@ block content
                             // create a new page and preload the data with a different
                             // specification name
                             const returnedSpec = await response.json();
-                            ResponseParagraph.innerHTML = JSON.stringify(returnedSpec, null, 2);
+                            // only allow the clone to proceed in the retrieved specification is one
+                            // of the supported queryset types 
+                            //- Set the selected value by looking at the ...
+                            const types = JSON.parse(document.getElementById('types').value);
+                            const typefound = types.filter((type) => type.items.specDefaultValues.classname == returnedSpec.classname)[0];
+                            if (typefound){
+                                ResponseParagraph.innerHTML = JSON.stringify(returnedSpec, null, 2);
+                                //- alert("Will navigate to " + document.getElementById("UIUrl").value + "/new/" + document.getElementById("specName_" + btnCopy.id.split("_")[1]).innerHTML);
+                                //- location.href = document.getElementById("UIUrl").value + "/new/" + document.getElementById("specName_" + btnCopy.id.split("_")[1]).innerHTML;
+                                window.open(document.getElementById("UIUrl").value + "/new/" + document.getElementById("specName_" + btnCopy.id.split("_")[1]).innerHTML, '_blank');
+                            } else {
+                                ResponseParagraph.innerHTML = `Queryset type ${returnedSpec.classname} is not supported yet by this UI`;
+                            }
                         }
                     } else {
                         const resourceNotRetrieved = "Resource was not retrieved!";
@@ -76,9 +91,6 @@ block content
                     //- console.error(error.message);
                     ResponseParagraph.innerHTML = error.message;
                 }
-                //- alert("Will navigate to " + document.getElementById("UIUrl").value + "/new/" + document.getElementById("specName_" + btnCopy.id.split("_")[1]).innerHTML);
-                //- location.href = document.getElementById("UIUrl").value + "/new/" + document.getElementById("specName_" + btnCopy.id.split("_")[1]).innerHTML;
-                window.open(document.getElementById("UIUrl").value + "/new/" + document.getElementById("specName_" + btnCopy.id.split("_")[1]).innerHTML, '_blank');
             };
 
             //- the "Delete" buttons' click function

@@ -1,0 +1,207 @@
+extends ../layout
+
+block content
+
+    .container-fluid
+        form(id="myform" name="myform").col-xlg-12.col-lg-12.col-md-12.col-sm-12.col-xs-12
+            h4.mb-3.fw-normal= locals.title
+            .row
+                .col.ms-3
+                    .form-floating.mt-2.ps-2.col-xlg-6.col-lg-8.col-md-10.col-sm-12.col-xs-12
+                        input(type="text" name="classname" id="classname" placeholder="classname" aria-label="classname" value=`${(locals.existingSpec) ? locals.existingSpec.classname : locals.specDefaultValues.classname }` readonly required).form-control.bg-info.fst-italic 
+                        label(for="classname") Class Name
+                        //- Hidden field 'existingSpec' is used to store the initial values for a new PostgreSQL Report Source
+                        input(type="hidden" id="existingSpec" value=`${(locals.existingSpec)?JSON.stringify(locals.existingSpec):"null"}`).form-control
+                        //- Hidden field which holds the page operation mode ("new" for starting from scratch, "copy" from an existing persisted specification, 
+                        //- "clone" from an transient specification in a UI page)
+                        input(type="hidden" id="pageMode" value=`${locals.pageMode}`).form-control
+                        //- Hidden field 'copyUrl' is used to store the initial value passed during pug view rendering
+                        //- with the copy URL for posting the data for updating the edited specification object
+                        input(type="hidden" id="copyURL" value=`${locals.copyURL}`).form-control
+                        //- Hidden field 'cloneUrl' is used to store the initial value passed during pug view rendering
+                        //- with the clone URL for posting the data for updating the edited specification object
+                        input(type="hidden" id="cloneURL" value=`${locals.cloneURL}`).form-control
+                        //- Hidden field 'types' is used to store the list of Report Source types available which is passed 
+                        //- during pug view rendering for populating the data list control
+                        input(type="hidden" id="types" value=`${JSON.stringify(locals.types)}`).form-control
+            .row
+                .col.ms-3
+                    .form-floating.mt-2.ps-2.col-xlg-6.col-lg-8.col-md-10.col-sm-12.col-xs-12
+                        input(type="text" name="name" id="name" placeholder="name" title=`${specEntity} name (is also used as filename)` aria-label="name" value=`${(locals.existingSpec) ? locals.existingSpec.name :  locals.specDefaultValues.name }` required).form-control 
+                        label(for="name") Name
+                        //- Hidden field 'baseUrl' is used to store the initial value passed during pug view rendering
+                        //- with the base URL for posting the data for the new specification object
+                        input(type="hidden" id="baseUrl" value=`${locals.postBaseUrl}`).form-control
+            .row
+                .col.ms-3 
+                    .form-floating.mt-2.ps-2.col-xlg-2.col-lg-4.col-md-5.col-sm-7.col-xs-9
+                        input(type="text" name="relativeBaseDir" id="relativeBaseDir" placeholder="relativeBaseDir" title="Relative base directory for queryset" aria-label="relativeBaseDir" value=`${(locals.existingSpec) ? locals.existingSpec.relativeBaseDir : locals.specDefaultValues.relativeBaseDir }` required).form-control 
+                        label(for="relativeBaseDir") Relative Base Dir
+            .row 
+                .col.ms-3 
+                    .form-floating.mt-2.ps-2.col-xlg-2.col-lg-4.col-md-5.col-sm-7.col-xs-9
+                        form-check.form-switch
+                            input(type="checkbox" id="hasPredicateQueriesAlso" checked=`${(locals.existingSpec) ? (String(locals.existingSpec.hasPredicateQueriesAlso).toLowerCase() === 'true') : (String(locals.specDefaultValues.hasPredicateQueriesAlso).toLowerCase() === 'true') }`).form-check-input 
+                            label(for="hasPredicateQueriesAlso").form-check-label Has Predicate Queries
+            .row
+                .col.ms-3
+                    .form-floating.mt-2.ps-2.col-xlg-6.col-lg-8.col-md-10.col-sm-12.col-xs-12
+                        textarea(name="mapQueries" id="mapQueries" style="height: 100px" title=`Map of queries, e.g. {"0" : {"label" : "SC1_Geometries_Intersects_GivenPolygon", "text" : "SELECT ?s1 ?o1 WHERE { \n ?s1 geo:asWKT ?o1 . \n  FILTER(geof:FUNCTION(?o1, GIVEN_SPATIAL_LITERAL)). \n} \n", "usePredicate" : false, "expectedResults" : -1}}`).form-control.form-control-sm= `${(locals.existingSpec) ? JSON.stringify(locals.existingSpec.mapQueries, null, 2) : JSON.stringify(locals.specDefaultValues.mapQueries, null, 2) }` 
+                        label(for="mapQueries") Queries
+            .row
+                .col.ms-3
+                    .form-floating.mt-2.ps-2.col-xlg-6.col-lg-8.col-md-10.col-sm-12.col-xs-12
+                        textarea(name="mapUsefulNamespacePrefixes" id="mapUsefulNamespacePrefixes" style="height: 100px" title=`Map of useful namespace prefixes, e.g. {"uom" : "<http://www.opengis.net/def/uom/OGC/1.0/>", "strdf" : "<http://strdf.di.uoa.gr/ontology#>"}`).form-control.form-control-sm= `${(locals.existingSpec) ? JSON.stringify(locals.existingSpec.mapUsefulNamespacePrefixes, null, 2) : JSON.stringify(locals.specDefaultValues.mapUsefulNamespacePrefixes, null, 2) }` 
+                        label(for="mapUsefulNamespacePrefixes") Namespace Prefixes
+
+            - var classValue = ((locals.existingSpec) ? locals.existingSpec.classname : locals.specDefaultValues.classname);
+            if (classValue == locals.types[0].items.specDefaultValues.classname)
+                //- Static Template Parameters
+                .row
+                    .col.ms-3
+                        .form-floating.mt-2.ps-2.col-xlg-6.col-lg-8.col-md-10.col-sm-12.col-xs-12
+                            textarea(name="mapTemplateParams" id="mapTemplateParams" style="height: 100px" title=`Map of template parameters, e.g. {"FUNCTION" : "sfIntersects"}`).form-control.form-control-sm= `${(locals.existingSpec) ? JSON.stringify(locals.existingSpec.mapTemplateParams, null, 2) : JSON.stringify(locals.specDefaultValues.mapTemplateParams, null, 2) }` 
+                            label(for="mapTemplateParams") Template Parameters
+                .row
+                    .col.ms-3
+                        .form-floating.mt-2.ps-2.col-xlg-6.col-lg-8.col-md-10.col-sm-12.col-xs-12
+                            textarea(name="mapGraphPrefixes" id="mapGraphPrefixes" style="height: 100px" title=`Map of graph prefixes, e.g. {"GRAPH1" : "<http://geographica.di.uoa.gr/dataset/geonames>", "strdf" : "<http://strdf.di.uoa.gr/ontology#>"}`).form-control.form-control-sm= `${(locals.existingSpec) ? JSON.stringify(locals.existingSpec.mapGraphPrefixes, null, 2) : JSON.stringify(locals.specDefaultValues.mapGraphPrefixes, null, 2) }` 
+                            label(for="mapGraphPrefixes") Graph Prefixes
+            else
+                //- Dynamic Template Parameters
+                .row
+                    .col.ms-3
+                        .form-floating.mt-2.ps-2.col-xlg-6.col-lg-8.col-md-10.col-sm-12.col-xs-12
+                            textarea(name="mapQueryTemplates" id="mapQueryTemplates" style="height: 100px" title=`Map of query templates, e.g. {"NONTOP_BUFFER" : "SELECT (geof:<FUNCTION1>(?o1, 4, uom:metre) AS ?ret) \nWHERE {\n\tGRAPH <GRAPH1> {\n\t\t?s1 <ASWKT1> ?o1\n\t}\n}"}`).form-control.form-control-sm= `${(locals.existingSpec) ? JSON.stringify(locals.existingSpec.mapQueryTemplates, null, 2) : JSON.stringify(locals.specDefaultValues.mapQueryTemplates, null, 2) }` 
+                            label(for="mapQueryTemplates") Template Parameters
+                .row
+                    .col.ms-3
+                        .form-floating.mt-2.ps-2.col-xlg-6.col-lg-8.col-md-10.col-sm-12.col-xs-12
+                            textarea(name="mapLiteralValues" id="mapLiteralValues" style="height: 100px" title=`Map of literal values, e.g. {"LL_fn_buffer" : "buffer"}`).form-control.form-control-sm= `${(locals.existingSpec) ? JSON.stringify(locals.existingSpec.mapLiteralValues, null, 2) : JSON.stringify(locals.specDefaultValues.mapLiteralValues, null, 2) }` 
+                            label(for="mapLiteralValues") Literal Values
+                .row
+                    .col.ms-3
+                        .form-floating.mt-2.ps-2.col-xlg-6.col-lg-8.col-md-10.col-sm-12.col-xs-12
+                            textarea(name="templateDynamicParamNameList" id="templateDynamicParamNameList" style="height: 100px" title=`List of parameter names, e.g. [ "<FUNCTION1>", "<ASWKT1>", "<GRAPH1>"]`).form-control.form-control-sm= `${(locals.existingSpec) ? JSON.stringify(locals.existingSpec.templateDynamicParamNameList, null, 2) : JSON.stringify(locals.specDefaultValues.templateDynamicParamNameList, null, 2) }` 
+                            label(for="templateDynamicParamNameList") Parameter Names List
+                .row
+                    .col.ms-3
+                        .form-floating.mt-2.ps-2.col-xlg-6.col-lg-8.col-md-10.col-sm-12.col-xs-12
+                            textarea(name="templateParamValueMatrix" id="templateParamValueMatrix" style="height: 100px" title=`Template Parameter Value Matrix, e.g. {"mapTemplateParamValues" : {"1##<FUNCTION1>" : "LL_fn_buffer"}}`).form-control.form-control-sm= `${(locals.existingSpec) ? JSON.stringify(locals.existingSpec.templateParamValueMatrix, null, 2) : JSON.stringify(locals.specDefaultValues.templateParamValueMatrix, null, 2) }` 
+                            label(for="templateParamValueMatrix") Parameter Names List
+
+            .row.mt-2.mb-2.justify-content-center
+                .col-2
+                    button(type="submit" id="btnAdd" value="add").btn.btn-primary Add
+
+
+        script. 
+            //- Get form object through DOM
+            var myform = document.getElementById("myform");
+            //- register listener function for the form submit event
+            myform.addEventListener("submit", submitForm);
+
+            //- Set the selected value by looking at the ...
+            const types = JSON.parse(document.getElementById('types').value);
+            //- Deserialize the value of the 'existingSpec' input HTML element into an object
+            var existingSpec = JSON.parse(document.getElementById("existingSpec").value);
+            //- Make sure the select element shows the correct type
+            var classValue = ((existingSpec) ? existingSpec.classname : specDefaultValues.classname);
+            var index = -1;
+            for (i=0; i< types.length; i++){
+                if (classValue == types[i].items.specDefaultValues.classname) {
+                    index = i+1;
+                    break;
+                };
+            };
+
+
+            //- ==============================================================
+            //- Update the 'existingSpec' element from DOM and its serialized
+            //- alter-ego in the DOM
+            //- ==============================================================
+            function updateExistingSpecFromDOM() {
+                //- Start collecting all form data. This basically means updating the 
+                //- 'existingSpec' input HTML element, which is the serialized version of 
+                //- the locals.existingSpec. NOTE: the main 'name' and SDSs' 'name' properties
+                //- have to be dealt a bit differently (spaces removed) because they are used as 
+                //- DOM element IDs and as filename for the new/modified JSON specification file. 
+                //- 1. Deserialize the value of the 'existingSpec' input HTML element into an object
+                var existingSpec = JSON.parse(document.getElementById("existingSpec").value);
+                //- 2. Update existingSpec main fields from DOM
+                //-    'classname' and 'driver' can be modified, therefore there is need to update them
+                existingSpec.name = document.getElementById("name").value.replace(/\s+/g, "");
+                existingSpec.relativeBaseDir = document.getElementById("relativeBaseDir").value;
+                //- 'hasPredicateQueriesAlso' element value should be translated to a boolean
+                existingSpec.hasPredicateQueriesAlso= document.getElementById("hasPredicateQueriesAlso").checked;
+                existingSpec.mapQueries = JSON.parse(document.getElementById("mapQueries").value);
+                existingSpec.mapUsefulNamespacePrefixes = JSON.parse(document.getElementById("mapUsefulNamespacePrefixes").value);
+                var classValue = existingSpec.classname;
+                const types = JSON.parse(document.getElementById('types').value);
+                if (classValue == types[0].items.specDefaultValues.classname) { 
+                    //- Static Template Parameters
+                    existingSpec.mapTemplateParams = JSON.parse(document.getElementById("mapTemplateParams").value);
+                    existingSpec.mapGraphPrefixes = JSON.parse(document.getElementById("mapGraphPrefixes").value);
+                } else {
+                    //- Dynamic Template Parameters
+                    existingSpec.mapQueryTemplates = JSON.parse(document.getElementById("mapQueryTemplates").value);
+                    existingSpec.mapLiteralValues = JSON.parse(document.getElementById("mapLiteralValues").value);
+                    existingSpec.templateDynamicParamNameList = JSON.parse(document.getElementById("templateDynamicParamNameList").value);
+                    existingSpec.templateParamValueMatrix = JSON.parse(document.getElementById("templateParamValueMatrix").value);
+                    //- There is no need for the user to control this property, since a new or cloned dynamic queryset
+                    //- is always assumed to not have been translated 
+                    existingSpec.isTranslated = false;
+                }
+                //- 4. Serialize the updated existingSpec back to the 'existingSpec' input HTML element
+                document.getElementById("existingSpec").value = JSON.stringify(existingSpec);
+            }
+
+            //- the form submit function
+            //- ========================
+            async function submitForm(e) {
+                //- cancel the event's default action if it is cancelable
+                if (e.cancelable) {
+                    e.preventDefault();
+                    //- alert("Event is cancelable and it's default action has been canceled.");
+                    //- alert("The element that triggered the event is " + e.currentTarget);
+                }
+
+                //- var myform = document.getElementById("myform");
+                var myform = e.currentTarget 
+                var submitter = document.querySelector("button[value=add]");
+                var formData = new FormData(myform, submitter);
+                //- get form data as a JSON object
+                var formDataJSON = Object.fromEntries(formData);
+                formDataJSON.hasPredicateQueriesAlso = (document.getElementById("hasPredicateQueriesAlso").checked);
+                var jsonFormData = JSON.stringify(formDataJSON);
+                const ResponseParagraph = document.getElementById("responseparagraph");
+
+                //- the URL for adding a new specification object is assumed to be
+                //- in the form locals.postBaseUrl + "/" + name
+                const postURL =
+                    myform.elements["baseUrl"].value +
+                    "/" +
+                    myform.elements["name"].value;
+                try {
+                    const response = await fetch(postURL, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },                    
+                        body: jsonFormData,
+                    });
+                    const result = await response.json();
+                    const output = JSON.stringify({
+                        returnStatus: response.status,
+                        returnMessage: result,
+                    },null,2);
+
+                    if (response.status > 400) {
+                        ResponseParagraph.value = output;
+                    } else {
+                        ResponseParagraph.value = output;
+                    }
+                } catch (error) {
+                    ResponseParagraph.value = error.message;
+                }
+            };            

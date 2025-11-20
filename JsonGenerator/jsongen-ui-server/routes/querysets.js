@@ -5,8 +5,8 @@ const pug = require("pug");
 const fs = require("fs");
 const path = require("path");
 
-const specCategory = "datasets";
-const specEntity = "Dataset";
+const specCategory = "querysets";
+const specEntity = "Queryset";
 
 // A JSON database which will hold the 'existingSpec'
 // pushed by a router.post("/clone") and
@@ -14,45 +14,59 @@ const specEntity = "Dataset";
 // The key for pushing and popping will be the 'specfilenameonly'
 var db = new Map();
 
-// Compile the PUG source files
-const viewsbasedir = path.join(__dirname, "../views");
-const listCompiledFunction = pug.compileFile(
-  `${viewsbasedir}/${specCategory}/list.pug`
-);
-const newCompiledFunction = pug.compileFile(
-  `${viewsbasedir}/${specCategory}/new.pug`
-);
+// available types of Querysets and their dependent fields default values
+// TODO: add macro specializations when needed
+const validtypes = ["statictempparam", "dynamictempparam"];
+const types = [
+  {
+    name: validtypes[0], // "statictempparam"
+    items: {
+      menuname: "Static Template Parameters",
+      specDefaultValues: {
+        "classname":
+          "gr.uoa.di.rdf.geordfbench.runtime.querysets.complex.impl.StaticTempParamQS",
+        "name": "Static Template Parameters name",
+        "relativeBaseDir": "",
+        "hasPredicateQueriesAlso": false,
+        "mapQueries": {},
+        "mapUsefulNamespacePrefixes": {},
+        "mapTemplateParams": {},
+        "mapGraphPrefixes": {},
+      },
+    },
+  },
+  {
+    name: validtypes[1], // "dynamictempparam"
+    items: {
+      menuname: "Dynamic Template Parameters",
+      specDefaultValues: {
+        "classname":
+          "gr.uoa.di.rdf.geordfbench.runtime.querysets.complex.impl.DynamicTempParamQS",
+        "name": "Dynamic Template Parameters name",
+        "relativeBaseDir": "",
+        "hasPredicateQueriesAlso": false,
+        "mapQueries": {},
+        "mapUsefulNamespacePrefixes": {},
+        "mapQueryTemplates": {},
+        "mapLiteralValues": {},
+        "templateDynamicParamNameList": [],
+        "templateParamValueMatrix": {
+          "mapTemplateParamValues": {},
+        },
+        "isTranslated": false,
+      },
+    },
+  },
+];
 
-// Define default values for Simple Datasets
-const childSpecDefaultValues = {
-  name: "Simple Dataset Name", // it has spaces and this causes extra problem in DOM manipulation
-  relativeBaseDir: "",
-  dataFile: "datafile.nt",
-  rdfFormat: "N-TRIPLES",
-  mapUsefulNamespacePrefixes: {},
-  mapAsWKT: {},
-  mapHasGeometry: {},
-};
-
-// Define default values for Complex Datasets through
-// a dataset specification object initializer
-const specDefaultValues = {
-  classname:
-    "gr.uoa.di.rdf.geordfbench.runtime.datasets.complex.impl.GeographicaDS",
-  name: "Dataset name",
-  n: 0,
-  relativeBaseDir: "",
-  simpleGeospatialDataSetList: [childSpecDefaultValues],
-  mapDataSetContexts: {},
-};
-
-// get a list of dataset specifications for use with a
+// get a list of queryset specifications for use with a
 // PUG template
 router.get("/", async (req, res) => {
   const Title = `List of ${specEntity} Specifications`;
   const endpointUrl = `${req.app.locals.endpointConfig.ACCESS_ENDPOINT_URL}/${specCategory}`;
   const { body: specs } = await HTTP.get(endpointUrl);
   const UIUrl = `${req.app.locals.endpointConfig.ACCESS_UI_URL}/${specCategory}`;
+
   return res.render(
     `${specCategory}/list`,
     {
@@ -61,6 +75,7 @@ router.get("/", async (req, res) => {
       records: specs,
       UIUrl: `${UIUrl}`,
       specEntity: specEntity,
+      types: types,
     }
     // (err, html) => {
     //   res.send(html);
@@ -68,10 +83,17 @@ router.get("/", async (req, res) => {
   );
 });
 
-// render a "New Dataset Specification" form
-router.get("/new", async (req, res, next) => {
-  const Title = `Create New ${specEntity} Specification`;
-  var existingSpec = {};
+// render a "New Queryset Specification" form
+router.get("/new/type/:typename", async (req, res, next) => {
+  const typename = req.params.typename;
+  // check if it is a valid type
+  if (!validtypes.includes(typename)) {
+    return; // TODO: send descriptive HTML error listing the allowed values
+  }
+  const Title = `Create New ${specEntity} Specification of type '${typename}'`;
+  // return the specDefaultValues based on the type name
+  const specDefaultValues = types.filter((type) => type.name == typename)[0]
+    .items.specDefaultValues;
   const existingspecname = specDefaultValues.name;
   // try to retrieve the existingspec from the JSON Library endpoint
   const copyURL = `${req.app.locals.endpointConfig.ACCESS_UI_URL}/${specCategory}/new/${existingspecname}`;
@@ -85,19 +107,20 @@ router.get("/new", async (req, res, next) => {
         endpointConfig: req.app.locals.endpointConfig,
         existingSpec: specDefaultValues,
         specDefaultValues: specDefaultValues,
-        childSpecDefaultValues: childSpecDefaultValues,
         copyURL: copyURL,
         pageMode: "new",
         cloneURL: cloneURL,
+        types: types,
         specEntity: specEntity,
       },
       (err, html) => {
-        if (err) {
-          console.error(err.message);
-        }
+        // if (err) {
+        //   console.error(err.message);
+        //   return;
+        // }
         // const output_html = path.join(
         //   __dirname,
-        //   "../html/pug_datasets_new.html"
+        //   "../html/pug_querysets_new.html"
         // );
         // fs.writeFileSync(output_html, html);
         res.send(html);
@@ -108,7 +131,7 @@ router.get("/new", async (req, res, next) => {
   }
 });
 
-// render a "New Dataset Specification" form based either from an existing specification
+// render a "New Report Source Specification" form based either from an existing specification
 // or from a transient specification stored in this module's 'db' map database
 router.get("/new/:existingspec", async (req, res, next) => {
   const Title = `Create New ${specEntity} Specification (from an existing one)`;
@@ -137,47 +160,42 @@ router.get("/new/:existingspec", async (req, res, next) => {
       );
       existingSpec = response.body;
       // change the specification name
-      existingSpec.name = specfilenameonly + "_copy";
+      existingSpec.name = existingSpec.name + "_copy";
       pageMode = "copy";
     } catch (error) {
       console.error(error.message);
     }
   }
 
+  // return the specDefaultValues based on the type classname
+  const specDefaultValues = types.filter(
+    (type) => type.items.specDefaultValues.classname == existingSpec.classname
+  )[0].items.specDefaultValues;
+
   // try to retrieve the existingspec from the JSON Library endpoint
   const copyURL = `${req.app.locals.endpointConfig.ACCESS_UI_URL}/${specCategory}/new/${existingspecname}`;
   const cloneURL = `${req.app.locals.endpointConfig.ACCESS_UI_URL}/${specCategory}/clone`;
   try {
-    res.render(
-      `${specCategory}/new`,
-      {
-        title: Title,
-        postBaseUrl: `${req.app.locals.endpointConfig.ACCESS_ENDPOINT_URL}/${specCategory}`,
-        endpointConfig: req.app.locals.endpointConfig,
-        existingSpec: existingSpec,
-        childSpecDefaultValues: childSpecDefaultValues,
-        copyURL: copyURL,
-        pageMode: pageMode,
-        cloneURL: cloneURL,
-        specEntity: specEntity,
-      },
-      (err, html) => {
-        // const output_html = path.join(
-        //   __dirname,
-        //   "../html/pug_datasets_new.html"
-        // );
-        // fs.writeFileSync(output_html, html);
-        res.send(html);
-      }
-    );
+    res.render(`${specCategory}/new`, {
+      title: Title,
+      postBaseUrl: `${req.app.locals.endpointConfig.ACCESS_ENDPOINT_URL}/${specCategory}`,
+      endpointConfig: req.app.locals.endpointConfig,
+      existingSpec: existingSpec,
+      specDefaultValues: specDefaultValues,
+      copyURL: copyURL,
+      pageMode: pageMode,
+      cloneURL: cloneURL,
+      types: types,
+      specEntity: specEntity,
+    });
   } catch (error) {
     console.error(error.message);
   }
 });
 
-// Store a cloned "Dataset Specification" to the 'db' database.
-// Used from a rendered (new or copy spec) page when the number of detailed (child) records are being
-// modified.
+// Store a cloned "Report Source Specification" to the 'db' database.
+// Used from a rendered (new or copy spec) page when either the number of detailed (child) records are being
+// modified or when the main fields differ (concrete subclasses of the main abstract class exist)
 // This router.post("/clone") is invoked by javascript code in the initial rendered HTML page on the client
 // and it should always be followed by a router.get("/cloned") which will render the updated HTML page on the client.
 router.post("/clone", async (req, res, next) => {
